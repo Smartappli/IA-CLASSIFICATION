@@ -25,8 +25,8 @@ import matplotlib.pyplot as plt
 
 
 VERBOSE = 1
-EPOCH1 = 5
-EPOCH2 = 5
+EPOCH1 = 3
+EPOCH2 = 3
 
 data_dir = 'c:/IA/Data'
 batch_size = 32
@@ -286,11 +286,11 @@ for i in range(30):
     with open(model_name[i]+'.json', 'w') as json_file:
         json_file.write(model_json)
     
-    hist_ = pd.DataFramne(hist[i].history)
+    hist_ = pd.DataFrame(hist[i].history)
     hist_
 
     plt.figure(figsize=(15,5))
-
+    plt.title(model_name[i])
     plt.subplot(1,2,1)
     plt.plot(hist_['loss'],label='Train_Loss')
     plt.plot(hist_['val_loss'],label='Validation_Loss')
@@ -301,6 +301,8 @@ for i in range(30):
     plt.plot(hist_['val_accuracy'],label='Validation_Accuracy')
     plt.title('Train_Accuracy & Validation_Accuracy',fontsize=20)
     plt.legend()
+    plt.savefig("./fig/"+model_name[i]+'1.png')
+    plt.show()
     
     x_val = np.array(list(val_ds.map(lambda x: x['image'])))
     y_val = np.array(list(val_ds.map(lambda y: y['label'])))
@@ -319,6 +321,7 @@ for i in range(30):
     ax.set_xlabel('Predicted labels')
     ax.set_ylabel('True labels') 
     ax.set_title('Confusion Matrix')
+    plt.savefig("./fig/"+model_name[i]+'2.png')
     plt.show()
     CM
 

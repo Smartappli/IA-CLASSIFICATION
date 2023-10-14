@@ -23,17 +23,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 VERBOSE = 1
 EPOCH1 = 5
 EPOCH2 = 5
 
+data_dir = 'c:/IA/Data'
+batch_size = 32
+img_height = 224 #256
+img_width = 224 #256
+
 print(tf.config.list_physical_devices('GPU'))
 
 # Load the data
-data_dir = 'c:/IA/Data'
-batch_size = 64
-img_height = 224 #256
-img_width = 224 #256
 
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
@@ -320,7 +322,7 @@ for i in range(30):
     plt.show()
     CM
 
-    #ClassificationReport = classification_report(y_val,y_pred)
-    #print('Classification Report is : ', ClassificationReport )
+    ClassificationReport = classification_report(y_val,y_pred)
+    print('Classification Report is : ', ClassificationReport )
     
     print ("\n------------------------\n")

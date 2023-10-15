@@ -6,6 +6,7 @@ Created on Sat Oct 14 11:18:56 2023
 """
 
 import tensorflow as tf
+#import tensorflow_datasets as tfds
 from tensorflow.keras import layers
 from tensorflow.keras.applications import Xception, VGG16, VGG19
 from tensorflow.keras.applications import ResNet50, ResNet101, ResNet152
@@ -16,6 +17,7 @@ from tensorflow.keras.applications import DenseNet121, DenseNet169, DenseNet201
 from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
 from tensorflow.keras.applications import EfficientNetV2B0, EfficientNetV2B1, EfficientNetV2B2, EfficientNetV2B3
 from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, EfficientNetV2L
+from tensorflow.keras.applications import ConvNeXtTiny, ConvNeXtSmall, ConvNeXtBase, ConvNeXtLarge, ConvNeXtXLarge
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
@@ -25,8 +27,8 @@ import matplotlib.pyplot as plt
 
 
 VERBOSE = 1
-EPOCH1 = 3
-EPOCH2 = 3
+EPOCH1 = 50
+EPOCH2 = 50
 
 data_dir = 'c:/IA/Data'
 batch_size = 32
@@ -155,101 +157,134 @@ base_model[14] = MobileNetV3Large(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
+### DenseNet 121 ###
+model_name[15] = "DenseNet121"
+base_model[15] = DenseNet121(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### DenseNet 169 ###
+model_name[16] = "DenseNet169"
+base_model[16] = DenseNet169(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### DenseNet 201 ###
+model_name[17] = "DenseNet201"
+base_model[17] = DenseNet201(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
 ### EfficientNetB0 ###
-model_name[15] = "EfficientNet_B0"
-base_model[15] = EfficientNetB0(input_shape=(img_height, img_width, 3),
+model_name[18] = "EfficientNet_B0"
+base_model[18] = EfficientNetB0(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB1 ###
-model_name[16] = "EfficientNet_B1"
-base_model[16] = EfficientNetB1(input_shape=(img_height, img_width, 3),
+model_name[19] = "EfficientNet_B1"
+base_model[19] = EfficientNetB1(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB2 ###
-model_name[17] = "EfficientNet_B2"
-base_model[17] = EfficientNetB2(input_shape=(img_height, img_width, 3),
+model_name[20] = "EfficientNet_B2"
+base_model[20] = EfficientNetB2(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB3 ###
-model_name[18] = "EfficientNet_B3"
-base_model[18] = EfficientNetB3(input_shape=(img_height, img_width, 3),
+model_name[21] = "EfficientNet_B3"
+base_model[21] = EfficientNetB3(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB4 ###
-model_name[19] = "EfficientNet_B4"
-base_model[19] = EfficientNetB4(input_shape=(img_height, img_width, 3),
+model_name[22] = "EfficientNet_B4"
+base_model[22] = EfficientNetB4(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB5 ###
-model_name[20] = "EfficientNet_B5"
-base_model[20] = EfficientNetB5(input_shape=(img_height, img_width, 3),
+model_name[23] = "EfficientNet_B5"
+base_model[23] = EfficientNetB5(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB6 ###
-model_name[21] = "EfficientNet_B6"
-base_model[21] = EfficientNetB6(input_shape=(img_height, img_width, 3),
+model_name[24] = "EfficientNet_B6"
+base_model[24] = EfficientNetB6(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB7 ###
-model_name[22] = "EfficientNet_B7"
-base_model[22] = EfficientNetB7(input_shape=(img_height, img_width, 3),
+model_name[25] = "EfficientNet_B7"
+base_model[25] = EfficientNetB7(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB0 V2 ###
-model_name[23] = "EfficientNet_B0_V2"
-base_model[23] = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
+model_name[26] = "EfficientNet_B0_V2"
+base_model[26] = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB1 V2 ###
-model_name[24] = "EfficientNet_B1_V2"
-base_model[24] = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
+model_name[27] = "EfficientNet_B1_V2"
+base_model[27] = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB2 V2 ###
-model_name[25] = "EfficientNet_B2_V2"
-base_model[25] = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
+model_name[28] = "EfficientNet_B2_V2"
+base_model[28] = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB3 V2 ###
-model_name[26] = "EfficientNet_B3_V2"
-base_model[26] = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
+model_name[29] = "EfficientNet_B3_V2"
+base_model[29] = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2S ###
-model_name[27] = "EfficientNet_V2_Small"
-base_model[27] = EfficientNetV2S(input_shape=(img_height, img_width, 3),
+model_name[30] = "EfficientNet_V2_Small"
+base_model[30] = EfficientNetV2S(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2M ###
-model_name[28] = "EfficientNet_V2_Medium"
-base_model[28] = EfficientNetV2M(input_shape=(img_height, img_width, 3),
+model_name[31] = "EfficientNet_V2_Medium"
+base_model[31] = EfficientNetV2M(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2L ###
-model_name[29] = "EfficientNet_V2_Large"
-base_model[29] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
+model_name[32] = "EfficientNet_V2_Large"
+base_model[32] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
-for i in range(30):
+# This function keeps the initial learning rate for the first ten epochs
+# and decreases it exponentially after that.
+def scheduler(epoch, lr):
+    if epoch < 5:
+        return lr
+    else:
+       return lr * tf.math.exp(-0.1)
+
+for i in range(33):
     callbacks = [
-        tf.keras.callbacks.ModelCheckpoint(model_name[i]+".h5", verbose=1, save_best_only=True),
+        tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.TensorBoard(log_dir='./logs'),
-        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)
+        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
+    ]
+    
+    callbacks2 = [
+        tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
+        tf.keras.callbacks.TensorBoard(log_dir='./logs'),
+        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
+        tf.keras.callbacks.LearningRateScheduler(scheduler, verbose=1)
     ]
     
     # Freeze the base model
@@ -276,14 +311,14 @@ for i in range(30):
     # Fine-tune the base model
     base_model[i].trainable = True
     
-    model[i].compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
+    model[i].compile(optimizer=tf.keras.optimizers.Adam(1e-4), # Low learning rate for fine-tuning
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                   metrics=['accuracy'])
     
-    hist[i] = model[i].fit(train_ds, validation_data=val_ds, epochs=EPOCH2, callbacks=callbacks)
+    hist[i] = model[i].fit(train_ds, validation_data=val_ds, epochs=EPOCH2, callbacks=callbacks2)
     
     model_json = model[i].to_json()
-    with open(model_name[i]+'.json', 'w') as json_file:
+    with open('model/'+model_name[i]+'.json', 'w') as json_file:
         json_file.write(model_json)
     
     hist_ = pd.DataFrame(hist[i].history)
@@ -296,36 +331,37 @@ for i in range(30):
     plt.plot(hist_['val_loss'],label='Validation_Loss')
     plt.title('Train_Loss & Validation_Loss',fontsize=20)
     plt.legend()
+
     plt.subplot(1,2,2)
     plt.plot(hist_['accuracy'],label='Train_Accuracy')
     plt.plot(hist_['val_accuracy'],label='Validation_Accuracy')
     plt.title('Train_Accuracy & Validation_Accuracy',fontsize=20)
     plt.legend()
-    plt.savefig("./fig/"+model_name[i]+'1.png')
+    plt.savefig("./fig/"+model_name[i]+'_model_performance.png')
     plt.show()
     
-    x_val = np.array(list(val_ds.map(lambda x: x['image'])))
-    y_val = np.array(list(val_ds.map(lambda y: y['label'])))
-    
-    y_pred = []
-    predictions=model.predict(np.array(x_val))
-    for j in predictions:
-        y_pred.append(np.argmax(j))
+    x_val,y_val,y_pred=[],[],[]
+    for images, labels in val_ds:
+        y_val.extend(labels.numpy())
+        x_val.extend(images.numpy())
+    predictions=model[i].predict(np.array(x_val))
+    for i in predictions:
+        y_pred.append(np.argmax(i))
     df=pd.DataFrame()
     df['Actual'],df['Prediction']=y_val,y_pred
     df
-
-    ax= plt.subplot()
-    CM = confusion_matrix(y_val,y_pred)
-    sns.heatmap(CM, annot=True, fmt='g', ax=ax,cbar=False,cmap='RdBu')
+    
+    ax = plt.subplot()
+    CM = confusion_matrix(y_val, y_pred)
+    sns.heatmap(CM, annot=True, fmt='g', ax=ax, cbar=False, cmap='RdBu')
     ax.set_xlabel('Predicted labels')
     ax.set_ylabel('True labels') 
     ax.set_title('Confusion Matrix')
-    plt.savefig("./fig/"+model_name[i]+'2.png')
+    #6plt.savefig("./fig/"+model_name[i]+'_confusion_matrix.png')
     plt.show()
     CM
 
-    ClassificationReport = classification_report(y_val,y_pred)
+    ClassificationReport = classification_report(y_val, y_pred)
     print('Classification Report is : ', ClassificationReport )
     
     print ("\n------------------------\n")

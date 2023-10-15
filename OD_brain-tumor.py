@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 
 
 VERBOSE = 1
-EPOCH1 = 50
+EPOCH1 = 10
 EPOCH2 = 50
 
 data_dir = 'c:/IA/Data'
@@ -34,7 +34,7 @@ batch_size = 32
 img_height = 224 #256
 img_width = 224 #256
 
-print(tf.config.list_physical_devices('GPU'))
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 # Load the data
 
@@ -341,7 +341,7 @@ for i in range(38):
     # Fine-tune the base model
     base_model[i].trainable = True
     
-    model[i].compile(optimizer=tf.keras.optimizers.Adam(1e-4), # Low learning rate for fine-tuning
+    model[i].compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
                   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                   metrics=['accuracy'])
     

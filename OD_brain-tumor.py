@@ -13,6 +13,7 @@ from tensorflow.keras.applications import ResNet50V2, ResNet101V2, ResNet152V2
 from tensorflow.keras.applications import InceptionV3, InceptionResNetV2
 from tensorflow.keras.applications import MobileNet, MobileNetV2, MobileNetV3Small, MobileNetV3Large
 from tensorflow.keras.applications import DenseNet121, DenseNet169, DenseNet201
+from tensorflow.keras.applications import NASNetMobile, NASNetLarge
 from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
 from tensorflow.keras.applications import EfficientNetV2B0, EfficientNetV2B1, EfficientNetV2B2, EfficientNetV2B3
 from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, EfficientNetV2L
@@ -173,125 +174,136 @@ model_name[17] = "DenseNet201"
 base_model[17] = DenseNet201(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
+### NASNetMobile ###
+model_name[18] = "NASNetMobile"
+base_model[18] = NASNetMobile(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### NASNetLarge ###
+model_name[19] = "NASNetLarge"
+base_model[19] = NASNetLarge(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
 
 ### EfficientNetB0 ###
-model_name[18] = "EfficientNet_B0"
-base_model[18] = EfficientNetB0(input_shape=(img_height, img_width, 3),
+model_name[20] = "EfficientNet_B0"
+base_model[20] = EfficientNetB0(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB1 ###
-model_name[19] = "EfficientNet_B1"
-base_model[19] = EfficientNetB1(input_shape=(img_height, img_width, 3),
+model_name[21] = "EfficientNet_B1"
+base_model[21] = EfficientNetB1(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB2 ###
-model_name[20] = "EfficientNet_B2"
-base_model[20] = EfficientNetB2(input_shape=(img_height, img_width, 3),
+model_name[22] = "EfficientNet_B2"
+base_model[22] = EfficientNetB2(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB3 ###
-model_name[21] = "EfficientNet_B3"
-base_model[21] = EfficientNetB3(input_shape=(img_height, img_width, 3),
+model_name[23] = "EfficientNet_B3"
+base_model[23] = EfficientNetB3(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB4 ###
-model_name[22] = "EfficientNet_B4"
-base_model[22] = EfficientNetB4(input_shape=(img_height, img_width, 3),
+model_name[24] = "EfficientNet_B4"
+base_model[24] = EfficientNetB4(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB5 ###
-model_name[23] = "EfficientNet_B5"
-base_model[23] = EfficientNetB5(input_shape=(img_height, img_width, 3),
+model_name[25] = "EfficientNet_B5"
+base_model[25] = EfficientNetB5(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB6 ###
-model_name[24] = "EfficientNet_B6"
-base_model[24] = EfficientNetB6(input_shape=(img_height, img_width, 3),
+model_name[26] = "EfficientNet_B6"
+base_model[26] = EfficientNetB6(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB7 ###
-model_name[25] = "EfficientNet_B7"
-base_model[25] = EfficientNetB7(input_shape=(img_height, img_width, 3),
+model_name[27] = "EfficientNet_B7"
+base_model[27] = EfficientNetB7(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB0 V2 ###
-model_name[26] = "EfficientNet_B0_V2"
-base_model[26] = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
+model_name[28] = "EfficientNet_B0_V2"
+base_model[28] = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB1 V2 ###
-model_name[27] = "EfficientNet_B1_V2"
-base_model[27] = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
+model_name[29] = "EfficientNet_B1_V2"
+base_model[29] = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB2 V2 ###
-model_name[28] = "EfficientNet_B2_V2"
-base_model[28] = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
+model_name[30] = "EfficientNet_B2_V2"
+base_model[30] = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNetB3 V2 ###
-model_name[29] = "EfficientNet_B3_V2"
-base_model[29] = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
+model_name[31] = "EfficientNet_B3_V2"
+base_model[31] = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2S ###
-model_name[30] = "EfficientNet_V2_Small"
-base_model[30] = EfficientNetV2S(input_shape=(img_height, img_width, 3),
+model_name[32] = "EfficientNet_V2_Small"
+base_model[32] = EfficientNetV2S(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2M ###
-model_name[31] = "EfficientNet_V2_Medium"
-base_model[31] = EfficientNetV2M(input_shape=(img_height, img_width, 3),
+model_name[33] = "EfficientNet_V2_Medium"
+base_model[33] = EfficientNetV2M(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### EfficientNet2L ###
-model_name[32] = "EfficientNet_V2_Large"
-base_model[32] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
+model_name[34] = "EfficientNet_V2_Large"
+base_model[34] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 
 ### ConvNeXtTiny ###
-model_name[33] = "ConvNeXtTiny"
-base_model[33] = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
+model_name[35] = "ConvNeXtTiny"
+base_model[35] = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### ConvNeXtSmall ###
-model_name[34] = "ConvNeXtSmall"
-base_model[34] = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
+model_name[36] = "ConvNeXtSmall"
+base_model[36] = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### ConvNeXtBase ###
-model_name[35] = "ConvNeXtBase"
-base_model[35] = ConvNeXtBase(input_shape=(img_height, img_width, 3),
+model_name[37] = "ConvNeXtBase"
+base_model[37] = ConvNeXtBase(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### ConvNeXtLarge ###
-model_name[36] = "ConvNeXtLarge"
-base_model[36] = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
+model_name[38] = "ConvNeXtLarge"
+base_model[38] = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
 ### ConvNeXtXLarge ###
-model_name[37] = "ConvNeXtXLarge"
-base_model[37] = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
+model_name[39] = "ConvNeXtXLarge"
+base_model[39] = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
@@ -303,7 +315,7 @@ def scheduler(epoch, lr):
     else:
        return lr * tf.math.exp(-0.1)
 
-for i in range(38):
+for i in range(40):
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.TensorBoard(log_dir='./logs'),

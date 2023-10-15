@@ -17,7 +17,7 @@ from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, Effici
 from tensorflow.keras.applications import EfficientNetV2B0, EfficientNetV2B1, EfficientNetV2B2, EfficientNetV2B3
 from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, EfficientNetV2L
 from tensorflow.keras.applications import ConvNeXtTiny, ConvNeXtSmall, ConvNeXtBase, ConvNeXtLarge, ConvNeXtXLarge
-from keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 import numpy as np

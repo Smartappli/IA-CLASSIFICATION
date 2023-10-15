@@ -2,11 +2,10 @@
 """
 Created on Sat Oct 14 11:18:56 2023
 
-@author: 532807
+@author: UMONS - 532807
 """
 
 import tensorflow as tf
-#import tensorflow_datasets as tfds
 from tensorflow.keras import layers
 from tensorflow.keras.applications import Xception, VGG16, VGG19
 from tensorflow.keras.applications import ResNet50, ResNet101, ResNet152
@@ -265,6 +264,37 @@ base_model[32] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
                             include_top=False,
                             weights='imagenet')
 
+
+### ConvNeXtTiny ###
+model_name[33] = "ConvNeXtTiny"
+base_model[33] = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### ConvNeXtSmall ###
+model_name[34] = "ConvNeXtSmall"
+base_model[34] = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### ConvNeXtBase ###
+model_name[35] = "ConvNeXtBase"
+base_model[35] = ConvNeXtBase(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### ConvNeXtLarge ###
+model_name[36] = "ConvNeXtLarge"
+base_model[36] = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
+### ConvNeXtXLarge ###
+model_name[37] = "ConvNeXtXLarge"
+base_model[37] = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
+                            include_top=False,
+                            weights='imagenet')
+
 # This function keeps the initial learning rate for the first ten epochs
 # and decreases it exponentially after that.
 def scheduler(epoch, lr):
@@ -273,7 +303,7 @@ def scheduler(epoch, lr):
     else:
        return lr * tf.math.exp(-0.1)
 
-for i in range(33):
+for i in range(38):
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.TensorBoard(log_dir='./logs'),

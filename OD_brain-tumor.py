@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Oct 14 11:18:56 2023
+Created on Thu Oct 19 18:06:12 2023
 
-@author: UMONS - 532807
+@author: 532807
 """
 
+import tkinter as tk
+from tkinter import ttk
 import tensorflow as tf
+import keras  as k
 from tensorflow.keras import layers
 from tensorflow.keras.applications import Xception, VGG16, VGG19
 from tensorflow.keras.applications import ResNet50, ResNet101, ResNet152
@@ -19,17 +22,21 @@ from tensorflow.keras.applications import EfficientNetV2B0, EfficientNetV2B1, Ef
 from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, EfficientNetV2L
 from tensorflow.keras.applications import ConvNeXtTiny, ConvNeXtSmall, ConvNeXtBase, ConvNeXtLarge, ConvNeXtXLarge
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D , Flatten
 from sklearn.metrics import confusion_matrix, classification_report
+import sklearn as sk
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
+import os.path
 
+numgpu = len(tf.config.list_physical_devices('GPU'))
 
-VERBOSE = 1
-EPOCH1 = 10
-EPOCH2 = 50
-
+variables = dict()
+ 
 data_dir = 'c:/IA/Data'
 batch_size = 32
 img_height = 224 #256
@@ -60,350 +67,1304 @@ AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
 val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
 
-# Create the base model from the pre-trained EfficientNet
+root = tk.Tk()
+root.title('AI Classifier')
+root.columnconfigure(0, weight=1)
 
-base_model = {}
-model = {}
-model_name = {}
-hist = {}
-
-### Xception ###
-model_name[0] = "Xception"
-base_model[0] = Xception(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### VGG16 ###
-model_name[1] = "VGG16"
-base_model[1] = VGG16(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### VGG19 ###
-model_name[2] = "VGG19"
-base_model[2] = VGG19(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet50 ###
-model_name[3] = "ResNet50"
-base_model[3] = ResNet50(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet101 ###
-model_name[4] = "ResNet101"
-base_model[4] = ResNet101(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet152 ###
-model_name[5] = "ResNet152"
-base_model[5] = ResNet152(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet50 V2 ###
-model_name[6] = "ResNet50_V2"
-base_model[6] = ResNet50V2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet101 V2 ###
-model_name[7] = "ResNet101_V2"
-base_model[7] = ResNet101V2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### ResNet152 V2 ###
-model_name[8] = "ResNet152_V2"
-base_model[8] = ResNet152V2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### Inception V3 ###
-model_name[9] = "Inception_V3"
-base_model[9] = InceptionV3(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### InceptionResNet V2 ###
-model_name[10] = "InceptionResNet_V2"
-base_model[10] = InceptionResNetV2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### MobileNet ###
-model_name[11] = "MobileNet"
-base_model[11] = MobileNet(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### MobileNet V2 ###
-model_name[12] = "MobileNet_V2"
-base_model[12] = MobileNetV2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### MobileNet V3 Small ###
-model_name[13] = "MobileNet_V3_Small"
-base_model[13] = MobileNetV3Small(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### MobileNet V3 Large ###
-model_name[14] = "MobileNet_V3_Large"
-base_model[14] = MobileNetV3Large(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### DenseNet 121 ###
-model_name[15] = "DenseNet121"
-base_model[15] = DenseNet121(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### DenseNet 169 ###
-model_name[16] = "DenseNet169"
-base_model[16] = DenseNet169(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### DenseNet 201 ###
-model_name[17] = "DenseNet201"
-base_model[17] = DenseNet201(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-### NASNetMobile ###
-model_name[18] = "NASNetMobile"
-base_model[18] = NASNetMobile(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### NASNetLarge ###
-model_name[19] = "NASNetLarge"
-base_model[19] = NASNetLarge(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB0 ###
-model_name[20] = "EfficientNet_B0"
-base_model[20] = EfficientNetB0(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB1 ###
-model_name[21] = "EfficientNet_B1"
-base_model[21] = EfficientNetB1(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB2 ###
-model_name[22] = "EfficientNet_B2"
-base_model[22] = EfficientNetB2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB3 ###
-model_name[23] = "EfficientNet_B3"
-base_model[23] = EfficientNetB3(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB4 ###
-model_name[24] = "EfficientNet_B4"
-base_model[24] = EfficientNetB4(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB5 ###
-model_name[25] = "EfficientNet_B5"
-base_model[25] = EfficientNetB5(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB6 ###
-model_name[26] = "EfficientNet_B6"
-base_model[26] = EfficientNetB6(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB7 ###
-model_name[27] = "EfficientNet_B7"
-base_model[27] = EfficientNetB7(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB0 V2 ###
-model_name[28] = "EfficientNet_B0_V2"
-base_model[28] = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB1 V2 ###
-model_name[29] = "EfficientNet_B1_V2"
-base_model[29] = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB2 V2 ###
-model_name[30] = "EfficientNet_B2_V2"
-base_model[30] = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNetB3 V2 ###
-model_name[31] = "EfficientNet_B3_V2"
-base_model[31] = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNet2S ###
-model_name[32] = "EfficientNet_V2_Small"
-base_model[32] = EfficientNetV2S(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNet2M ###
-model_name[33] = "EfficientNet_V2_Medium"
-base_model[33] = EfficientNetV2M(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
-
-### EfficientNet2L ###
-model_name[34] = "EfficientNet_V2_Large"
-base_model[34] = EfficientNetV2L(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
+mc = ttk.Frame(root)
+mc.grid(padx=10, pady=10, sticky=(tk.W + tk.E))
+mc.columnconfigure(0, weight=1)
 
 
-### ConvNeXtTiny ###
-model_name[35] = "ConvNeXtTiny"
-base_model[35] = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
 
-### ConvNeXtSmall ###
-model_name[36] = "ConvNeXtSmall"
-base_model[36] = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
+data_info = ttk.LabelFrame(mc, text='Data Parameters')
+data_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(4):
+    data_info.columnconfigure(i, weight=1)
+    
+variables["imgresizing"] = tk.StringVar()
+ttk.Label(data_info, text="Image Resizing (pixels)").grid(row=0, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+listsize = ['128 x 128', '224 x 224', '256 x 256', '300 x 300', '400 x 400', '512 x 512']
+imgresize = ttk.Combobox(data_info, values=listsize, textvariable=variables["imgresizing"], state='readonly')
+imgresize.grid(row=1, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+imgresize.current(1)
 
-### ConvNeXtBase ###
-model_name[37] = "ConvNeXtBase"
-base_model[37] = ConvNeXtBase(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
+variables["channel"] = tk.IntVar()
+ttk.Label(data_info, text="Number of channels").grid(row=0, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+channel = ttk.Spinbox(data_info, textvariable=variables["channel"], from_=1, to=4, increment=1, state='readonly')
+channel.grid(row=1, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+channel.set(3)
 
-### ConvNeXtLarge ###
-model_name[38] = "ConvNeXtLarge"
-base_model[38] = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
+variables["classes"] = tk.IntVar()
+ttk.Label(data_info, text="Number of classes").grid(row=0, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+classes = ttk.Spinbox(data_info, textvariable=variables["classes"], from_=2, to=1000, increment=1, state='readonly')
+classes.grid(row=1, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+classes.set(4)
 
-### ConvNeXtXLarge ###
-model_name[39] = "ConvNeXtXLarge"
-base_model[39] = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
-                            include_top=False,
-                            weights='imagenet')
+variables["valsplit"] = tk.DoubleVar()
+ttk.Label(data_info, text="Validation Split").grid(row=0, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+valsplit = ttk.Spinbox(data_info, textvariable=variables["valsplit"], from_=0, to=1, increment=0.01, state='readonly')
+valsplit.grid(row=1, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+valsplit.set(0.2)
 
-# This function keeps the initial learning rate for the first ten epochs
-# and decreases it exponentially after that.
+
+
+augment_info = ttk.LabelFrame(mc, text='Data Augmentation')
+augment_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(4):
+    augment_info.columnconfigure(i, weight=1)
+   
+
+   
+def augment_sel():
+    if (variables["augment"].get() == 0):
+        crop['state'] = 'disabled'
+        crop.state(['!selected'])
+        horizflip['state'] = 'disabled'
+        horizflip.state(['!selected'])
+        vertiflip['state'] = 'disabled'
+        vertiflip.state(['!selected'])
+        translation['state'] = 'disabled'
+        translation.state(['selected'])
+        rotation['state'] = 'disabled'   
+        rotation.state(['!selected'])
+        zoom['state'] = 'disabled'
+        zoom.state(['!selected'])
+        contrast['state'] = 'disabled'
+        contrast.state(['!selected'])
+        brightness['state'] = 'disabled'
+        brightness.state(['!selected'])
+    else:
+        crop['state'] = 'enabled'
+        horizflip['state'] = 'enabled'
+        vertiflip['state'] = 'enabled'
+        translation['state'] = 'enabled'
+        rotation['state'] = 'enabled'        
+        zoom['state'] = 'enabled'
+        contrast['state'] = 'enabled'
+        brightness['state'] = 'enabled'      
+        
+        
+variables["augment"] = tk.IntVar()
+augment = ttk.Checkbutton(augment_info, text="Activate Data Augmentation", variable=variables["augment"], command=augment_sel)
+augment.grid(row=0, columnspan=5)
+
+ttk.Separator(augment_info, orient='horizontal').grid(row=1, columnspan=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+variables["crop"] = tk.IntVar() 
+crop = ttk.Checkbutton(augment_info, text="Cropping", variable=variables["crop"], onvalue = 1, offvalue = 0)
+crop.grid(row=2, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+crop['state'] = 'disabled'
+
+variables['horizflip'] = tk.IntVar()
+horizflip = ttk.Checkbutton(augment_info, text="Horizontal Flip", variable=variables["horizflip"], onvalue = 1, offvalue = 0)
+horizflip.grid(row=2, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+horizflip['state'] = 'disabled'
+
+variables['vertiflip'] = tk.IntVar()
+vertiflip = ttk.Checkbutton(augment_info, text="Verticial Flip", variable=variables["vertiflip"], onvalue = 1, offvalue = 0)
+vertiflip.grid(row=2, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+vertiflip['state'] = 'disabled'
+
+variables['translation'] = tk.IntVar()
+translation = ttk.Checkbutton(augment_info, text="Translation", variable=variables["translation"], onvalue = 1, offvalue = 0)
+translation.grid(row=2, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+translation['state'] = 'disabled'
+
+variables['rotation'] = tk.IntVar()
+rotation = ttk.Checkbutton(augment_info, text="Rotation", variable=variables["rotation"], onvalue = 1, offvalue = 0)
+rotation.grid(row=3, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+rotation['state'] = 'disabled'
+
+variables['zoom'] = tk.IntVar()
+zoom = ttk.Checkbutton(augment_info, text="Zoom", variable=variables["zoom"], onvalue = 1, offvalue = 0)
+zoom.grid(row=3, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+zoom['state'] = 'disabled'
+
+variables['contrast'] = tk.IntVar()
+contrast = ttk.Checkbutton(augment_info, text="Contrast", variable=variables["contrast"], onvalue = 1, offvalue = 0)
+contrast.grid(row=3, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+contrast['state'] = 'disabled'
+
+variables['brightness'] = tk.IntVar()
+brightness = ttk.Checkbutton(augment_info, text="Brightness", variable=variables["brightness"], onvalue = 1, offvalue = 0)
+brightness.grid(row=3, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+brightness['state'] = 'disabled'
+
+
+
+mc_info = ttk.LabelFrame(mc, text='Model(s) selection')
+mc_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(5):
+    mc_info.columnconfigure(i, weight=1)
+    
+# Xception       
+variables['Xception'] = tk.BooleanVar()
+model_Xception = ttk.Checkbutton(mc_info, text="Xception", variable=variables['Xception'], onvalue = 1, offvalue = 0)
+model_Xception.grid(row=1, column=0, sticky=(tk.W + tk.E))
+
+# VGG 16
+variables['VGG16'] = tk.BooleanVar()
+model_VGG16 = ttk.Checkbutton(mc_info, text="VGG16", variable=variables['VGG16'], onvalue = 1, offvalue = 0)
+model_VGG16.grid(row=1, column=1, sticky=(tk.W + tk.E))
+
+# VGG 19
+variables['VGG19'] = tk.BooleanVar()
+model_VGG19 = ttk.Checkbutton(mc_info, text="VGG19", variable=variables['VGG19'], onvalue = 1, offvalue = 0)
+model_VGG19.grid(row=1, column=2, sticky=(tk.W + tk.E))
+
+# ResNet 50
+variables['ResNet50'] = tk.BooleanVar()
+model_ResNet50 = ttk.Checkbutton(mc_info, text="ResNet50", variable=variables['ResNet50'], onvalue = 1, offvalue = 0)
+model_ResNet50.grid(row=1, column=3, sticky=(tk.W + tk.E))
+
+# ResNet 50 Version 2
+variables['ResNet50V2'] = tk.BooleanVar()
+model_ResNet50V2 = ttk.Checkbutton(mc_info, text="ResNet50V2", variable=variables['ResNet50V2'], onvalue = 1, offvalue = 0)
+model_ResNet50V2.grid(row=1, column=4, sticky=(tk.W + tk.E))
+
+
+
+# ResNet 101
+variables['ResNet101'] = tk.BooleanVar()
+model_ResNet101 = ttk.Checkbutton(mc_info, text="ResNet101", variable=variables["ResNet101"], onvalue = 1, offvalue = 0)
+model_ResNet101.grid(row=2, column=0, sticky=(tk.W + tk.E))
+
+# ResNet 101 Version 2
+variables["ResNet101V2"] = tk.BooleanVar()
+model_ResNet101V2 = ttk.Checkbutton(mc_info, text="ResNet101V2", variable=variables["ResNet101V2"], onvalue = 1, offvalue = 0)
+model_ResNet101V2.grid(row=2, column=1, sticky=(tk.W + tk.E))
+
+# ResNet 152
+variables["ResNet152"] = tk.BooleanVar()
+model_ResNet152 = ttk.Checkbutton(mc_info, text="ResNet152", variable=variables["ResNet152"], onvalue = 1, offvalue = 0)
+model_ResNet152.grid(row=2, column=2, sticky=(tk.W + tk.E))
+
+# ResNet 152 Version 2
+variables["ResNet152V2"] = tk.BooleanVar()
+model_ResNet152V2 = ttk.Checkbutton(mc_info, text="ResNet152V2", variable=variables["ResNet152V2"], onvalue = 1, offvalue = 0)
+model_ResNet152V2.grid(row=2, column=3, sticky=(tk.W + tk.E))
+
+# Inception V3
+variables["InceptionV3"] = tk.BooleanVar()
+model_InceptionV3 = ttk.Checkbutton(mc_info, text="InceptionV3", variable=variables["InceptionV3"], onvalue = 1, offvalue = 0)
+model_InceptionV3.grid(row=2, column=4, sticky=(tk.W + tk.E))
+
+
+
+# Incception ResNet Version 2
+variables["InceptionResNetV2"] = tk.BooleanVar()
+model_InceptionResNetV2 = ttk.Checkbutton(mc_info, text="InceptionResNetV2", variable=variables["InceptionResNetV2"], onvalue = 1, offvalue = 0)
+model_InceptionResNetV2.grid(row=3, column=0, sticky=(tk.W + tk.E))
+
+# MobileNet
+variables["MobileNet"] = tk.BooleanVar()
+model_MobileNet = ttk.Checkbutton(mc_info, text="MobileNet", variable=variables["MobileNet"], onvalue = 1, offvalue = 0)
+model_MobileNet.grid(row=3, column=1, sticky=(tk.W + tk.E))
+
+# MobileNet Version 2
+variables["MobileNetV2"] = tk.BooleanVar()
+model_MobileNetV2 = ttk.Checkbutton(mc_info, text="MobileNetV2", variable=variables["MobileNetV2"], onvalue = 1, offvalue = 0)
+model_MobileNetV2.grid(row=3, column=2, sticky=(tk.W + tk.E))
+
+# MobileNet Version 3 Small
+variables["MobileNetV3Small"] = tk.BooleanVar()
+model_MobileNetV3Small = ttk.Checkbutton(mc_info, text="MobileNetV3Small", variable=variables["MobileNetV3Small"], onvalue = 1, offvalue = 0)
+model_MobileNetV3Small.grid(row=3, column=3, sticky=(tk.W + tk.E))
+
+# MobileNet Version 3 Large
+variables["MobileNetV3Large"] = tk.BooleanVar()
+model_MobileNetV3Large = ttk.Checkbutton(mc_info, text="MobileNetV3Large", variable=variables["MobileNetV3Large"], onvalue = 1, offvalue = 0)
+model_MobileNetV3Large.grid(row=3, column=4, sticky=(tk.W + tk.E))
+
+
+
+# DenseNet 121
+variables["DenseNet121"] = tk.BooleanVar()
+model_DenseNet121 = ttk.Checkbutton(mc_info, text="DenseNet121", variable=variables["DenseNet121"], onvalue = 1, offvalue = 0)
+model_DenseNet121.grid(row=4, column=0, sticky=(tk.W + tk.E))
+
+# DenseNet 169
+variables["DenseNet169"] = tk.BooleanVar()
+model_DenseNet169 = ttk.Checkbutton(mc_info, text="DenseNet169", variable=variables["DenseNet169"], onvalue = 1, offvalue = 0)
+model_DenseNet169.grid(row=4, column=1, sticky=(tk.W + tk.E))
+
+# DenseNet 201
+variables["DenseNet201"] = tk.BooleanVar()
+model_DenseNet201 = ttk.Checkbutton(mc_info, text="DenseNet201", variable=variables["DenseNet201"], onvalue = 1, offvalue = 0)
+model_DenseNet201.grid(row=4, column=2, sticky=(tk.W + tk.E))
+
+# NASNet Mobile
+variables["NASNetMobile"] = tk.BooleanVar()
+model_NASNetMobile = ttk.Checkbutton(mc_info, text="NASNetMobile", variable=variables["NASNetMobile"], onvalue = 1, offvalue = 0)
+model_NASNetMobile.grid(row=4, column=3, sticky=(tk.W + tk.E))
+
+# NASNet Large
+variables["NASNetLarge"] = tk.BooleanVar()
+model_NASNetLarge = ttk.Checkbutton(mc_info, text="NASNetLarge", variable=variables["NASNetLarge"], onvalue = 1, offvalue = 0)
+model_NASNetLarge.grid(row=4, column=4, sticky=(tk.W + tk.E))
+
+
+
+# EfficientNet B0
+variables["EfficientNetB0"] = tk.BooleanVar()
+model_EfficientNetB0 = ttk.Checkbutton(mc_info, text="EfficientNetB0", variable=variables["EfficientNetB0"], onvalue = 1, offvalue = 0)
+model_EfficientNetB0.grid(row=5, column=0, sticky=(tk.W + tk.E))
+
+# EfficientNet B0 Version 2
+variables["EfficientNetB0V2"] = tk.BooleanVar()
+model_EfficientNetB0V2 = ttk.Checkbutton(mc_info, text="EfficientNetB0V2", variable=variables["EfficientNetB0V2"], onvalue = 1, offvalue = 0)
+model_EfficientNetB0V2.grid(row=5, column=1, sticky=(tk.W + tk.E))
+
+# EfficientNet B1
+variables["EfficientNetB1"] = tk.BooleanVar()
+model_EfficientNetB1 = ttk.Checkbutton(mc_info, text="EfficientNetB1", variable=variables["EfficientNetB1"], onvalue = 1, offvalue = 0)
+model_EfficientNetB1.grid(row=5, column=2, sticky=(tk.W + tk.E))
+
+# EfficientNet B1 Version 2
+variables["EfficientNetB1V2"] = tk.BooleanVar()
+model_EfficientNetB1V2 = ttk.Checkbutton(mc_info, text="EfficientNetB1V2", variable=variables["EfficientNetB1V2"], onvalue = 1, offvalue = 0)
+model_EfficientNetB1V2.grid(row=5, column=3, sticky=(tk.W + tk.E))
+
+# EfficientNet B2
+variables["EfficientNetB2"] = tk.BooleanVar()
+model_EfficientNetB2 = ttk.Checkbutton(mc_info, text="EfficientNetB2", variable=variables["EfficientNetB2"], onvalue = 1, offvalue = 0)
+model_EfficientNetB2.grid(row=5, column=4, sticky=(tk.W + tk.E))
+
+
+
+# EfficientNet B2 Version 2
+variables["EfficientNetB2V2"] = tk.BooleanVar()
+model_EfficientNetB2V2 = ttk.Checkbutton(mc_info, text="EfficientNetB2V2", variable=variables["EfficientNetB2V2"], onvalue = 1, offvalue = 0)
+model_EfficientNetB2V2.grid(row=6, column=0, sticky=(tk.W + tk.E))
+
+# EfficientNet B3
+variables["EfficientNetB3"] = tk.BooleanVar()
+model_EfficientNetB3 = ttk.Checkbutton(mc_info, text="EfficientNetB3", variable=variables["EfficientNetB3"], onvalue = 1, offvalue = 0)
+model_EfficientNetB3.grid(row=6, column=1, sticky=(tk.W + tk.E))
+
+# EfficientNet B3 Version 2
+variables["EfficientNetB3V2"] = tk.BooleanVar()
+model_EfficientNetB3V2 = ttk.Checkbutton(mc_info, text="EfficientNetB3V2", variable=variables["EfficientNetB3V2"], onvalue = 1, offvalue = 0)
+model_EfficientNetB3V2.grid(row=6, column=2, sticky=(tk.W + tk.E))
+
+# EfficientNet B4
+variables["EfficientNetB4"] = tk.BooleanVar()
+model_EfficientNetB4 = ttk.Checkbutton(mc_info, text="EfficientNetB4", variable=variables["EfficientNetB4"], onvalue = 1, offvalue = 0)
+model_EfficientNetB4.grid(row=6, column=3, sticky=(tk.W + tk.E))
+
+# EfficientNet B5
+variables["EfficientNetB5"] = tk.BooleanVar()
+model_EfficientNetB5 = ttk.Checkbutton(mc_info, text="EfficientNetB5", variable=variables["EfficientNetB5"], onvalue = 1, offvalue = 0)
+model_EfficientNetB5.grid(row=6, column=4, sticky=(tk.W + tk.E))
+
+
+
+# EfficientNet B6
+variables["EfficientNetB6"] = tk.BooleanVar()
+model_EfficientNetB6 = ttk.Checkbutton(mc_info, text="EfficientNetB6", variable=variables["EfficientNetB6"], onvalue = 1, offvalue = 0)
+model_EfficientNetB6.grid(row=7, column=0, sticky=(tk.W + tk.E))
+
+# EfficientNet B7
+variables["EfficientNetB7"] = tk.BooleanVar()
+model_EfficientNetB7 = ttk.Checkbutton(mc_info, text="EfficientNetB7", variable=variables["EfficientNetB7"], onvalue = 1, offvalue = 0)
+model_EfficientNetB7.grid(row=7, column=1, sticky=(tk.W + tk.E))
+
+# EfficientNet Version 2 Smalll
+variables["EfficientNetV2Small"] = tk.BooleanVar()
+model_EfficientNetV2Small = ttk.Checkbutton(mc_info, text="EfficientNetV2Small", variable=variables["EfficientNetV2Small"], onvalue = 1, offvalue = 0)
+model_EfficientNetV2Small.grid(row=7, column=2, sticky=(tk.W + tk.E))
+
+# EfficientNet Version 2 Medium
+variables["EfficientNetV2Medium"] = tk.BooleanVar()
+model_EfficientNetV2Medium = ttk.Checkbutton(mc_info, text="EfficientNetV2Medium", variable=variables["EfficientNetV2Medium"], onvalue = 1, offvalue = 0)
+model_EfficientNetV2Medium.grid(row=7, column=3, sticky=(tk.W + tk.E))
+
+# EfficientNet Version 2 Large
+variables["EfficientNetV2Large"] = tk.BooleanVar()
+model_EfficientNetV2Large = ttk.Checkbutton(mc_info, text="EfficientNetV2Large", variable=variables["EfficientNetV2Large"], onvalue = 1, offvalue = 0)
+model_EfficientNetV2Large.grid(row=7, column=4, sticky=(tk.W + tk.E))
+
+
+
+# ConvNetXt Tiny
+variables["ConvNeXtTiny"] = tk.BooleanVar()
+model_ConvNeXtTiny = ttk.Checkbutton(mc_info, text="ConvNeXtTiny", variable=variables["ConvNeXtTiny"], onvalue = 1, offvalue = 0)
+model_ConvNeXtTiny.grid(row=8, column=0, sticky=(tk.W + tk.E))
+
+# ConvNetXt Small
+variables["ConvNeXtSmall"] = tk.BooleanVar()
+model_ConvNeXtSmall = ttk.Checkbutton(mc_info, text="ConvNeXtSmall", variable=variables["ConvNeXtSmall"], onvalue = 1, offvalue = 0)
+model_ConvNeXtSmall.grid(row=8, column=1, sticky=(tk.W + tk.E))
+
+# ConvNetXt Base
+variables["ConvNeXtBase"] = tk.BooleanVar()
+model_ConvNeXtBase = ttk.Checkbutton(mc_info, text="ConvNeXtBase", variable=variables["ConvNeXtBase"], onvalue = 1, offvalue = 0)
+model_ConvNeXtBase.grid(row=8, column=2, sticky=(tk.W + tk.E))
+
+# ConvNetXt Large
+variables["ConvNeXtLarge"] = tk.BooleanVar()
+model_ConvNeXtLarge = ttk.Checkbutton(mc_info, text="ConvNeXtLarge", variable=variables["ConvNeXtLarge"], onvalue = 1, offvalue = 0)
+model_ConvNeXtLarge.grid(row=8, column=3, sticky=(tk.W + tk.E))
+
+# ConvNetXt XLarge
+variables["ConvNeXtXLarge"] = tk.BooleanVar()
+model_ConvNeXtXLarge = ttk.Checkbutton(mc_info, text="ConvNeXtXLarge", variable=variables["ConvNeXtXLarge"], onvalue = 1, offvalue = 0)
+model_ConvNeXtXLarge.grid(row=8, column=4, sticky=(tk.W + tk.E))
+
+def sel():
+    if (variables['strategie'].get()==1):
+        optimizer2['state']='disabled'
+        optimizer3['state']='disabled'
+        
+        loss2['state']='disabled'
+        loss3['state']='disabled'
+        
+        epoch2['state']='disabled'
+        epoch3['state']='disabled'
+        
+        batch2["state"] = 'disabled'
+        batch3["state"] = 'disabled'
+        
+    elif(variables['strategie'].get()==2):
+        optimizer2['state']='readonly'
+        optimizer3['state']='disabled'
+        
+        loss2['state']='readonly'
+        loss3['state']='disabled'
+        
+        epoch2['state']='readonly'
+        epoch3['state']='disabled'
+        
+        batch2["state"] = 'readonly'
+        batch3["state"] = 'disabled'
+        
+    else:
+        optimizer1['state']='readonly'
+        optimizer2['state']='readonly'
+        optimizer3['state']='readonly'
+        
+        loss1['state']='readonly'
+        loss2['state']='readonly'
+        loss3['state']='readonly'
+        
+        epoch1['state']='readonly'
+        epoch2['state']='readonly'
+        epoch3['state']='readonly'
+        
+        batch1["state"] = 'readonly'
+        batch2["state"] = 'readonly'
+        batch3["state"] = 'readonly'
+
+
+train_info = ttk.LabelFrame(mc, text='Training parameters')
+train_info.grid(sticky=(tk.W + tk.E))
+for i in range(5):
+    train_info.columnconfigure(i, weight=1)
+    
+variables['strategie'] = tk.IntVar()    
+ttk.Label(train_info, text="Training step(s)").grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, text='1 Step', value='1', variable=variables['strategie'], command=sel).grid(row=1, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, text='2 Steps', value='2', variable=variables['strategie'], command=sel).grid(row=1, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, text='3 Steps', value='3', variable=variables['strategie'], command=sel) .grid(row=1, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+variables['strategie'].set(1)
+
+variables["multigpu"] = tk.IntVar()
+ttk.Label(train_info, text="Parallelization").grid(row=0, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+multi_gpu = ttk.Checkbutton(train_info, text="Multi GPU", variable=variables["multigpu"], onvalue = 1, offvalue = 0)
+multi_gpu.grid(row=1, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+multi_gpu.state(['disabled'])
+variables["multigpu"].set(0)
+
+if (numgpu > 1) :
+    multi_gpu.state(['enabled'])
+    multi_gpu.state(['selected'])
+    variables["multigpu"].set(1)
+    
+variables['checkpoint'] = tk.IntVar()
+ttk.Label(train_info, text="Save & Restore").grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Checkbutton(train_info, text="Checkpoint", variable=variables["checkpoint"]).grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+
+ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+listOptimizer = ('SGD',
+                 'RMSProp',
+                 'Adam',
+                 'AdamW',
+                 'Adadelta',
+                 'Adagrad',
+                 'Adamax',
+                 'Adafactor',
+                 'Nadam',
+                 'Ftrl')
+
+ttk.Label(train_info, text="Step 1").grid(row=3, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 2").grid(row=4, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 3").grid(row=5, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+variables['optimizer1'] = tk.StringVar()
+variables['optimizer2'] = tk.StringVar()
+variables['optimizer3'] = tk.StringVar()
+
+
+ttk.Label(train_info, text="Optimizer").grid(row=3, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer1 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer1'], state='readonly')
+optimizer1.grid(row=4, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer1.current(2)
+optimizer2 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer2'], state='disabled')
+optimizer2.grid(row=5, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer2.current(2)
+optimizer3 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer3'], state='disabled')
+optimizer3.grid(row=6, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer3.current(2)
+
+listLoss = ('BinaryCrossentropy', 
+            'CategoricalCrossentropy', 
+            'SparseCategoricalCrossentropy', 
+            'Poisson',
+            'KLDivergence',
+            'MeanSquaredError',
+            'MeanAbsoluteError',
+            'MeanAbsolutePercentageError',
+            'MeanSquaredLogarithmicError',
+            'CosineSimilarity',
+            'Huber',
+            'LogCosh',
+            'Hinge',
+            'SquaredHinge',
+            'CategoricalHinge') 
+
+variables['loos1'] = tk.StringVar()
+variables['loos2'] = tk.StringVar()
+variables['loos3'] = tk.StringVar()
+
+ttk.Label(train_info, text="Loss").grid(row=3, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss1 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loos1'], state='reaonly')
+loss1.grid(row=4, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss1.current(2)
+loss2 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loos2'], state='disabled')
+loss2.grid(row=5, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss2.current(2)
+loss3 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loos3'], state='disabled')
+loss3.grid(row=6, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss3.current(2)
+
+listEpoch = list(range(1,501))
+
+variables['epoch1'] = tk.StringVar()
+variables['epoch2'] = tk.StringVar()
+variables['epoch3'] = tk.StringVar()
+
+ttk.Label(train_info, text="Epoh").grid(row=3, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch1 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch1'], state='readonly')
+epoch1.grid(row=4, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch1.current(9)
+epoch2 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch2'], state='disabled')
+epoch2.grid(row=5, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch2.current(9)
+epoch3 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch3'], state='disabled')
+epoch3.grid(row=6, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch3.current(49)
+
+listBatch = [1,2,4,8,16,32,64,128,256]
+
+variables['batch1'] = tk.StringVar()
+variables['batch2'] = tk.StringVar()
+variables['batch3'] = tk.StringVar()
+
+ttk.Label(train_info, text="Batch Size").grid(row=3, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+batch1 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch1'], state='readonly')
+batch1.grid(row=4, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+batch1.current(5)
+batch2 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch2'], state='disabled')
+batch2.grid(row=5, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+batch2.current(5)
+batch3 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch3'], state='disabled')
+batch3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+batch3.current(5)
+
+
+# Output Section
+output_info = ttk.LabelFrame(mc, text='Output')
+output_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(5):
+    output_info.columnconfigure(i, weight=1)
+    
+# Chechkbox Save mODEL
+variables["savemodel"] = tk.IntVar()
+savemodel = ttk.Checkbutton(output_info, text="Save Model", variable=variables['savemodel'], onvalue = 1, offvalue = 0)
+savemodel.grid(row=0, column=0, sticky=(tk.W + tk.E))
+savemodel.state(['selected'])
+variables["savemodel"].set(1)
+
+# Checkbox Training / Validation Graphs
+variables["traingraph"] = tk.IntVar()
+traingraph = ttk.Checkbutton(output_info, text="Training / Validation Graphs", variable=variables["traingraph"], onvalue = 1, offvalue = 0)
+traingraph.grid(row=0, column=1, sticky=(tk.W + tk.E))
+traingraph.state(['selected'])
+variables["traingraph"].set(1)
+
+# Confusion Matrix
+variables["confmatrix"] = tk.IntVar()   
+confmatrix = ttk.Checkbutton(output_info, text="Confusion Matrix", variable=variables["confmatrix"], onvalue = 1, offvalue = 0)
+confmatrix.grid(row=0, column=2, sticky=(tk.W + tk.E))
+confmatrix.state(['selected'])
+variables["confmatrix"].set(1)
+
+# Classification Report
+variables["classreport"] = tk.IntVar()
+classreport = ttk.Checkbutton(output_info, text="Classification Report", variable=variables["classreport"], onvalue = 1, offvalue = 0)
+classreport.grid(row=0, column=3, sticky=(tk.W + tk.E))
+classreport.state(['selected'])
+variables["classreport"].set(1)
+
+# Conversion of the model in TFLite
+variables["tflite"] = tk.IntVar()
+tflite = ttk.Checkbutton(output_info, text="TFLite Conversion", variable=variables["tflite"], onvalue = 1, offvalue = 0)
+tflite.grid(row=0, column=4, sticky=(tk.W + tk.E))
+tflite.state(['!selected'])
+
+
+
+# Info Section
+info_info = ttk.LabelFrame(mc, text='Info')
+info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(1):
+    info_info.columnconfigure(i, weight=1)
+    
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "- Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+
+
+def reset():
+    print("reset")
+    augment.state(['!selected'])
+    variables["augment"].set(0)
+    
+    imgresize.current(1)
+    channel.set(3)
+    classes.set(4)
+    valsplit.set(0.2)
+    
+    crop['state'] = 'disabled'
+    crop.state(['!selected'])
+    variables["crop"].set(0)
+    horizflip['state'] = 'disabled'
+    horizflip.state(['!selected'])
+    variables["horizflip"].set(0)
+    vertiflip['state'] = 'disabled'
+    vertiflip.state(['!selected'])
+    variables["vertiflip"].set(0)
+    translation['state'] = 'disabled'
+    translation.state(['selected'])
+    variables["translation"].set(0)
+    rotation['state'] = 'disabled'   
+    rotation.state(['!selected'])
+    variables["rotation"].set(0)
+    zoom['state'] = 'disabled'
+    zoom.state(['!selected'])
+    variables["zoom"].set(0)
+    contrast['state'] = 'disabled'
+    contrast.state(['!selected'])
+    variables["contrast"].set(0)
+    brightness['state'] = 'disabled'
+    brightness.state(['!selected'])
+    variables["brightness"].set(0)
+    
+    model_Xception.state(['!selected'])
+    variables["Xception"].set(0)
+    model_VGG16.state(['!selected'])
+    variables["VGG16"].set(0)
+    model_VGG19.state(['!selected'])
+    variables["VGG19"].set(0)
+    model_ResNet50.state(['!selected'])
+    variables["ResNet50"].set(0)
+    model_ResNet50V2.state(['!selected'])
+    variables["ResNet50V2"].set(0)
+    
+    model_ResNet101.state(['!selected'])
+    variables["ResNet101"].set(0)
+    model_ResNet101V2.state(['!selected'])
+    variables["ResNet101V2"].set(0)
+    model_ResNet152.state(['!selected'])
+    variables["ResNet152"].set(0)
+    model_ResNet152V2.state(['!selected'])
+    variables["ResNet152V2"].set(0)
+    model_InceptionV3.state(['!selected'])
+    variables["InceptionV3"].set(0)
+    
+    model_InceptionResNetV2.state(['!selected'])
+    variables["InceptionResNetV2"].set(0)
+    model_MobileNet.state(['!selected'])
+    variables["MobileNet"].set(0)
+    model_MobileNetV2.state(['!selected'])
+    variables["MobileNetV2"].set(0)
+    model_MobileNetV3Small.state(['!selected'])
+    variables["MobileNetV3Small"].set(0)
+    model_MobileNetV3Large.state(['!selected'])
+    variables["MobileNetV3Large"].set(0)
+    
+    model_DenseNet121.state(['!selected'])
+    variables["DenseNet121"].set(0)
+    model_DenseNet169.state(['!selected'])
+    variables["DenseNet169"].set(0)
+    model_DenseNet201.state(['!selected'])
+    variables["DenseNet201"].set(0)
+    model_NASNetMobile.state(['!selected'])
+    variables["NASNetMobile"].set(0)
+    model_NASNetLarge.state(['!selected'])
+    variables["NASNetLarge"].set(0)
+    
+    model_EfficientNetB0.state(['!selected'])
+    variables["EfficientNetB0"].set(0)
+    model_EfficientNetB0V2.state(['!selected'])
+    variables["EfficientNetB0V2"].set(0)
+    model_EfficientNetB1.state(['!selected'])
+    variables["EfficientNetB1"].set(0)
+    model_EfficientNetB1V2.state(['!selected'])
+    variables["EfficientNetB1V2"].set(0)
+    model_EfficientNetB2.state(['!selected'])
+    variables["EfficientNetB2"].set(0)
+    
+    model_EfficientNetB2V2.state(['!selected'])
+    variables["EfficientNetB2V2"].set(0)
+    model_EfficientNetB3.state(['!selected'])
+    variables["EfficientNetB3"].set(0)
+    model_EfficientNetB3V2.state(['!selected']) 
+    variables["EfficientNetB3V2"].set(0)
+    model_EfficientNetB4.state(['!selected'])
+    variables["EfficientNetB4"].set(0)
+    model_EfficientNetB5.state(['!selected'])
+    variables["EfficientNetB5"].set(0)
+    
+    model_EfficientNetB6.state(['!selected'])
+    variables["EfficientNetB6"].set(0)
+    model_EfficientNetB7.state(['!selected'])
+    variables["EfficientNetB7"].set(0)
+    model_EfficientNetV2Small.state(['!selected'])
+    variables["EfficientNetV2Small"].set(0)
+    model_EfficientNetV2Medium.state(['!selected'])
+    variables["EfficientNetV2Medium"].set(0)
+    model_EfficientNetV2Large.state(['!selected'])
+    variables["EfficientNetV2Large"].set(0)
+    
+    model_ConvNeXtTiny.state(['!selected'])
+    variables["ConvNeXtTiny"].set(0)
+    model_ConvNeXtSmall.state(['!selected'])
+    variables["ConvNeXtSmall"].set(0)
+    model_ConvNeXtBase.state(['!selected'])
+    variables["ConvNeXtBase"].set(0)
+    model_ConvNeXtLarge.state(['!selected'])
+    variables["ConvNeXtLarge"].set(0)
+    model_ConvNeXtXLarge.state(['!selected'])
+    variables["ConvNeXtXLarge"].set(0)
+    
+    optimizer1.current(2)
+    optimizer2.current(2)
+    optimizer3.current(2)
+    
+    loss1.current(2)
+    loss2.current(2)
+    loss3.current(2)
+    
+    epoch1.current(9)
+    epoch2.current(9)
+    epoch3.current(49)
+    
+    batch1.current(5)
+    batch2.current(5)
+    batch3.current(5)
+    
+    savemodel.state(['selected'])
+    variables["savemodel"].set(1)
+    traingraph.state(['selected'])
+    variables["traingraph"].set(1)
+    confmatrix.state(['selected'])
+    variables["confmatrix"].set(1)
+    classreport.state(['selected'])
+    variables["classreport"].set(1)
+    tflite.state(['!selected'])
+    variables["tflite"].set(0)
+     
+def clean():
+    print("clean")
+    
 def scheduler(epoch, lr):
     if epoch < 5:
         return lr
     else:
-       return lr * tf.math.exp(-0.1)
-
-for i in range(40):
+       return lr * tf.math.exp(-0.1)    
+    
+def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epoch1, optimizer2, loss2, epoch2, optimizer3, loss3, epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     callbacks = [
-        tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
+        tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.TensorBoard(log_dir='./logs'),
-        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
+        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
+                                         ),
     ]
     
     callbacks2 = [
-        tf.keras.callbacks.ModelCheckpoint('model/'+model_name[i]+".tf", verbose=1, save_best_only=True),
+        tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.TensorBoard(log_dir='./logs'),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
         tf.keras.callbacks.LearningRateScheduler(scheduler, verbose=1)
     ]
     
-    # Freeze the base model
+    print (model_name)
     
-    print("\nTraining of model " + str(i+1) + " " + model_name[i] + "\n")
-    
-    base_model[i].trainable = False
-    
-    # Add a new classifier layers on top of the base model
-    inputs = tf.keras.Input(shape=(img_height, img_width, 3))
-    x = base_model[i](inputs, training=False)
-    x = layers.GlobalAveragePooling2D()(x)
-    outputs = layers.Dense(4)(x) # Assuming you have 4 classes
-    model[i] = tf.keras.Model(inputs, outputs)
-    
-    # Compile the model
-    model[i].compile(optimizer='adam',
-                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy'])
-    
-    # Train the model
-    hist[i] = model[i].fit(train_ds, validation_data=val_ds, epochs=EPOCH1, callbacks=callbacks)
-    
-    # Fine-tune the base model
-    base_model[i].trainable = True
-    
-    model[i].compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
-                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-                  metrics=['accuracy'])
-    
-    hist[i] = model[i].fit(train_ds, validation_data=val_ds, epochs=EPOCH2, callbacks=callbacks2)
-    
-    model_json = model[i].to_json()
-    with open('model/'+model_name[i]+'.json', 'w') as json_file:
-        json_file.write(model_json)
-    
-    hist_ = pd.DataFrame(hist[i].history)
-    hist_
+    # Multi GPU
+    if (multigpu == 1): 
 
-    plt.figure(figsize=(15,5))
-    plt.title(model_name[i])
-    plt.subplot(1,2,1)
-    plt.plot(hist_['loss'],label='Train_Loss')
-    plt.plot(hist_['val_loss'],label='Validation_Loss')
-    plt.title('Train_Loss & Validation_Loss',fontsize=20)
-    plt.legend()
+        strategy = tf.distribute.MirroredStrategy()
+        
+        with strategy.scope():
+           
+            base_model.trainable = False
+            
+            # Add a new classifier layers on top of the base model
+            inputs = tf.keras.Input(shape=(img_height, img_width, 3))
+            x = base_model(inputs, training=False)
+            x = layers.GlobalAveragePooling2D()(x)
+            outputs = layers.Dense(variables["classes"].get())(x) 
+            model = tf.keras.Model(inputs, outputs)
+            
+            # Compile the model
+            model.compile(optimizer=optimizer1,
+                          loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                          metrics=['accuracy'])
+        
+        # Train the model
+        hist = model.fit(ds_train, validation_data=ds_valid, epochs=epoch1, callbacks=callbacks)   
+        
+        if (variables["strategie"].get() == 2):
+            with strategy.scope():
+                
+                # Fine-tune the base model
+                base_model.trainable = True
+                
+                model.compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
+                              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                              metrics=['accuracy'])
+                
+            #hist[i] += model[i].fit(train_ds, validation_data=val_ds, epochs=epoch2, callbacks=callbacks2)    
+                
+        if (variables["strategie"].get() == 3):
+            with strategy.scope():
+                # Compile the model
+                model.compile(optimizer=optimizer2,
+                              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                              metrics=['accuracy'])
+         
+             # Train the model
+             #hist = model.fit(train_ds, validation_data=val_ds, epochsepoch2, callbacks=callbacks)                
+                
+            
+            with strategy.scope():
+                
+                # Fine-tune the base model
+                base_model.trainable = True
+                
+                model.compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
+                              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                              metrics=['accuracy'])
+                
+            #hist += model.fit(train_ds, validation_data=val_ds, epochs=epoch3, callbacks=callbacks2)            
+        
+    # CPU or single GPU   
+    else:
+        base_model.trainable = False
+        # Add a new classifier layers on top of the base model
+        inputs = tf.keras.Input(shape=(img_height, img_width, 3))
+        x = base_model(inputs, training=False)
+        x = layers.GlobalAveragePooling2D()(x)
+        outputs = layers.Dense(variables["classes"].get())(x) 
+        model = tf.keras.Model(inputs, outputs)
+        
+        # Compile the model
+        model.compile(optimizer=optimizer1,
+                      loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                      metrics=['accuracy'])
+    
+        # Train the model
+        hist = model.fit(ds_train, validation_data=ds_valid, epochs=10, callbacks=callbacks) 
+    
+    #Output
+    if (savemodel == 1):
+        model_json = model.to_json()
+        with open('model/'+model_name+'.json', 'w') as json_file:
+            json_file.write(model_json)        
 
-    plt.subplot(1,2,2)
-    plt.plot(hist_['accuracy'],label='Train_Accuracy')
-    plt.plot(hist_['val_accuracy'],label='Validation_Accuracy')
-    plt.title('Train_Accuracy & Validation_Accuracy',fontsize=20)
-    plt.legend()
-    plt.savefig("./fig/"+model_name[i]+'_model_performance.png')
-    plt.show()
-    
-    x_val,y_val,y_pred=[],[],[]
-    for images, labels in val_ds:
-        y_val.extend(labels.numpy())
-        x_val.extend(images.numpy())
-    predictions=model[i].predict(np.array(x_val))
-    for i in predictions:
-        y_pred.append(np.argmax(i))
-    df=pd.DataFrame()
-    df['Actual'],df['Prediction']=y_val,y_pred
-    df
-    
-    ax = plt.subplot()
-    CM = confusion_matrix(y_val, y_pred)
-    sns.heatmap(CM, annot=True, fmt='g', ax=ax, cbar=False, cmap='RdBu')
-    ax.set_xlabel('Predicted labels')
-    ax.set_ylabel('True labels') 
-    ax.set_title('Confusion Matrix')
-    #6plt.savefig("./fig/"+model_name[i]+'_confusion_matrix.png')
-    plt.show()
-    CM
+    if (traingraph == 1):
+        hist_ = pd.DataFrame(hist.history)
+        hist_
 
-    ClassificationReport = classification_report(y_val, y_pred)
-    print('Classification Report is : ', ClassificationReport )
+        plt.figure(figsize=(15,5))
+        plt.title(model_name)
+        plt.subplot(1,2,1)
+        plt.plot(hist_['loss'],label='Train_Loss')
+        plt.plot(hist_['val_loss'],label='Validation_Loss')
+        plt.title('Train_Loss & Validation_Loss',fontsize=20)
+        plt.legend()
+
+        plt.subplot(1,2,2)
+        plt.plot(hist_['accuracy'],label='Train_Accuracy')
+        plt.plot(hist_['val_accuracy'],label='Validation_Accuracy')
+        plt.title('Train_Accuracy & Validation_Accuracy',fontsize=20)
+        plt.legend()
+        plt.savefig("./fig/"+model_name+'_model_performance.png')
+        plt.show()
+        
+    if (confmatrix == 1):
+        x_val,y_val,y_pred=[],[],[]
+        for images, labels in val_ds:
+            y_val.extend(labels.numpy())
+            x_val.extend(images.numpy())
+        predictions=model.predict(np.array(x_val))
+        for i in predictions:
+            y_pred.append(np.argmax(i))
+        df=pd.DataFrame()
+        df['Actual'],df['Prediction']=y_val,y_pred
+        df
+        
+        ax = plt.subplot()
+        CM = confusion_matrix(y_val, y_pred)
+        sns.heatmap(CM, annot=True, fmt='g', ax=ax, cbar=False, cmap='RdBu')
+        ax.set_xlabel('Predicted labels')
+        ax.set_ylabel('True labels') 
+        ax.set_title('Confusion Matrix')
+        #6plt.savefig("./fig/"+model_name[i]+'_confusion_matrix.png')
+        plt.show()
+        CM
+        
+    if (classreport == 1):
+        ClassificationReport = classification_report(y_val, y_pred)
+        print('Classification Report is : ', ClassificationReport )
+        
+    if (tflite == 1):
+        path = 'model/'+model_name+".tf"    
+            
+        if os.path.exists(path) :
+            print("Conversion in TFLite")
+            # Convert the model.
+            converter = tf.lite.TFLiteConverter.from_saved_model(path)
+            tflite_model = converter.convert()
+            
+            # Save the model.
+            with open('model/'+model_name+'.tflite', 'wb') as f:
+                f.write(tflite_model)
+
+def run():
+    print("Start")
     
-    print ("\n------------------------\n")
+    ### Xception Model ##    
+    if (variables["Xception"].get() == 1):
+        model_name = "Xception"  
+        base_model = Xception(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+            
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### VGG16 Model ###
+    if (variables["VGG16"].get() == 1):
+        model_name = "VGG16"
+        base_model = VGG16(input_shape=(img_height, img_width, 3),
+                           include_top=False,
+                           weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### VGG19 model ###
+    if (variables["VGG19"].get() == 1):
+        model_name = "VGG19"
+        base_model = VGG19(input_shape=(img_height, img_width, 3),
+                           include_top=False,
+                           weights='imagenet')  
+      
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ResNet50 ###
+    if (variables["ResNet50"].get() == 1):
+        model_name = "ResNet50"
+        base_model = ResNet50(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ResNet101 ###
+    if (variables["ResNet101"].get() == 1):
+        model_name = "ResNet101"
+        base_model = ResNet101(input_shape=(img_height, img_width, 3),
+                               include_top=False,
+                               weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ResNet152 ###
+    if (variables["ResNet152"].get() == 1):
+        model_name = "ResNet152"
+        base_model = ResNet152(input_shape=(img_height, img_width, 3),
+                               include_top=False,
+                               weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ResNet50 V2 ###
+    if (variables["ResNet50V2"].get() == 1):
+        model_name = "ResNet50_V2"
+        base_model = ResNet50V2(input_shape=(img_height, img_width, 3),
+                                include_top=False,
+                                weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        
+    ### ResNet101 V2 ###
+    if (variables["ResNet101V2"].get() == 1):
+        model_name = "ResNet101_V2"
+        base_model = ResNet101V2(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ResNet152 V2 ###
+    if (variables["ResNet152V2"].get() == 1):
+        model_name = "ResNet152_V2"
+        base_model = ResNet152V2(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### Inception V3 ###
+    if (variables["InceptionV3"].get() == 1):
+        model_name = "Inception_V3"
+        base_model = InceptionV3(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### InceptionResNet V2 ###
+    if (variables["InceptionResNetV2"].get() == 1):
+        model_name = "InceptionResNet_V2"
+        base_model = InceptionResNetV2(input_shape=(img_height, img_width, 3),
+                                       include_top=False,
+                                       weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### MobileNet ###
+    if (variables["MobileNet"].get() == 1):
+        model_name = "MobileNet"
+        base_model = MobileNet(input_shape=(img_height, img_width, 3),
+                               include_top=False,
+                               weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### MobileNet V2 ###
+    if (variables["MobileNetV2"].get() == 1):
+        model_name = "MobileNet_V2"
+        base_model = MobileNetV2(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### MobileNet V3 Small ###
+    if (variables["MobileNetV3Small"].get() == 1):
+        model_name = "MobileNet_V3_Small"
+        base_model = MobileNetV3Small(input_shape=(img_height, img_width, 3),
+                                      include_top=False,
+                                      weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### MobileNet V3 Large ###
+    if (variables["MobileNetV3Large"].get() == 1):
+        model_name = "MobileNet_V3_Large"
+        base_model = MobileNetV3Large(input_shape=(img_height, img_width, 3),
+                                      include_top=False,
+                                      weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### DenseNet 121 ###
+    if (variables["DenseNet121"].get() == 1):
+        model_name = "DenseNet121"
+        base_model = DenseNet121(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### DenseNet 169 ###
+    if (variables["DenseNet169"].get() == 1):
+        model_name = "DenseNet169"
+        base_model = DenseNet169(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        
+    ### DenseNet 201 ###
+    if (variables["DenseNet201"].get() == 1):
+        model_name = "DenseNet201"
+        base_model = DenseNet201(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### NASNetMobile ###
+    if (variables["NASNetMobile"].get() == 1):
+        model_name = "NASNetMobile"
+        base_model = NASNetMobile(input_shape=(img_height, img_width, 3),
+                                  include_top=False,
+                                  weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### NASNetLarge ###
+    if (variables["NASNetLarge"].get() == 1):
+        model_name = "NASNetLarge"
+        base_model = NASNetLarge(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB0 ###
+    if (variables["EfficientNetB0"].get() == 1):
+        model_name = "EfficientNet_B0"
+        base_model = EfficientNetB0(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    ### EfficientNetB1 ###
+    if (variables["EfficientNetB1"].get() == 1):
+        model_name = "EfficientNet_B1"
+        base_model = EfficientNetB1(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB2 ###
+    if (variables["EfficientNetB2"].get() == 1):
+        model_name = "EfficientNet_B2"
+        base_model = EfficientNetB2(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB3 ###
+    if (variables["EfficientNetB3"].get() == 1):
+        model_name = "EfficientNet_B3"
+        base_model = EfficientNetB3(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB4 ###
+    if (variables["EfficientNetB4"].get() == 1):
+        model_name = "EfficientNet_B4"
+        base_model = EfficientNetB4(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB5 ###
+    if (variables["EfficientNetB5"].get() == 1):
+        model_name = "EfficientNet_B5"
+        base_model = EfficientNetB5(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB6 ###
+    if (variables["EfficientNetB6"].get() == 1):
+        model_name = "EfficientNet_B6"
+        base_model = EfficientNetB6(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB7 ###
+    if (variables["EfficientNetB7"].get() == 1):
+        model_name = "EfficientNet_B7"
+        base_model = EfficientNetB7(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB0 V2 ###
+    if (variables["EfficientNetB0V2"].get() == 1):
+        model_name = "EfficientNet_B0_V2"
+        base_model = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB1 V2 ###
+    if (variables["EfficientNetB1V2"].get() == 1):
+        model_name = "EfficientNet_B1_V2"
+        base_model = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB2 V2 ###
+    if (variables["EfficientNetB2V2"].get() == 1):
+        model_name = "EfficientNet_B2_V2"
+        base_model = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNetB3 V2 ###
+    if (variables["EfficientNetB3V2"].get() == 1):
+        model_name = "EfficientNet_B3_V2"
+        base_model = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNet2S ###
+    if (variables["EfficientNetV2Small"].get() == 1): 
+        model_name = "EfficientNet_V2_Small"
+        base_model = EfficientNetV2S(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNet2M ###
+    if (variables["EfficientNetV2Medium"].get() == 1):
+        model_name = "EfficientNet_V2_Medium"
+        base_model = EfficientNetV2M(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### EfficientNet2L ###
+    if (variables["EfficientNetV2Large"].get() == 1):
+        model_name = "EfficientNet_V2_Large"
+        base_model = EfficientNetV2L(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ConvNeXtTiny ###
+    if (variables["ConvNeXtTiny"].get() == 1):
+        model_name = "ConvNeXtTiny"
+        base_model = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ConvNeXtSmall ###
+    if (variables["ConvNeXtSmall"].get() == 1):
+        model_name = "ConvNeXtSmall"
+        base_model = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ConvNeXtBase ###
+    if (variables["ConvNeXtBase"].get() == 1):
+        model_name = "ConvNeXtBase"
+        base_model = ConvNeXtBase(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ConvNeXtLarge ###
+    if (variables["ConvNeXtLarge"].get() == 1):
+        model_name = "ConvNeXtLarge"
+        base_model = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+    
+    ### ConvNeXtXLarge ###
+    if (variables["ConvNeXtLarge"].get() == 1):
+        model_name = "ConvNeXtXLarge"
+        base_model = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+# Execution
+exec_info = ttk.LabelFrame(mc, text='Execution')
+exec_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(5):
+    exec_info.columnconfigure(i, weight=1)
+
+ttk.Button(exec_info, text="Reset", command=reset).grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Button(exec_info, text="Clean", command=clean).grid(row=0, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Button(exec_info, text="Run", command=run).grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+
+
+# Show the window 
+root.mainloop()

@@ -2,7 +2,7 @@
 """
 Created on Thu Oct 19 18:06:12 2023
 
-@author: 532807
+@author: UMONS - 532807
 """
 
 import tkinter as tk
@@ -79,33 +79,52 @@ mc.columnconfigure(0, weight=1)
 
 data_info = ttk.LabelFrame(mc, text='Data Parameters')
 data_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
-for i in range(4):
+for i in range(5):
     data_info.columnconfigure(i, weight=1)
-    
+ 
+variables["datapath"] = tk.StringVar()
+ttk.Label(data_info, text="Data Path").grid(row=0, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+datapath = ttk.Entry(data_info, textvariable=variables["datapath"])
+datapath.grid(row=1, columnspan=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+variables["datapath"].set('c:/IA/Data')
+
+variables["outputdata"] = tk.StringVar()
+ttk.Label(data_info, text="Output Path").grid(row=0, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+outputpath = ttk.Entry(data_info, textvariable=variables["outputdata"])
+outputpath.grid(row=1, columnspan=2, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+variables["outputdata"].set('c:/IA/Data')
+
 variables["imgresizing"] = tk.StringVar()
-ttk.Label(data_info, text="Image Resizing (pixels)").grid(row=0, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+ttk.Label(data_info, text="Image Resizing (pixels)").grid(row=2, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
 listsize = ['128 x 128', '224 x 224', '256 x 256', '300 x 300', '400 x 400', '512 x 512']
 imgresize = ttk.Combobox(data_info, values=listsize, textvariable=variables["imgresizing"], state='readonly')
-imgresize.grid(row=1, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
+imgresize.grid(row=3, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
 imgresize.current(1)
 
 variables["channel"] = tk.IntVar()
-ttk.Label(data_info, text="Number of channels").grid(row=0, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+ttk.Label(data_info, text="Number of channels").grid(row=2, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
 channel = ttk.Spinbox(data_info, textvariable=variables["channel"], from_=1, to=4, increment=1, state='readonly')
-channel.grid(row=1, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
+channel.grid(row=3, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
 channel.set(3)
 
 variables["classes"] = tk.IntVar()
-ttk.Label(data_info, text="Number of classes").grid(row=0, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+ttk.Label(data_info, text="Number of classes").grid(row=2, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
 classes = ttk.Spinbox(data_info, textvariable=variables["classes"], from_=2, to=1000, increment=1, state='readonly')
-classes.grid(row=1, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
+classes.grid(row=3, column=2, sticky=(tk.W + tk.E), padx=5, pady=5)
 classes.set(4)
 
 variables["valsplit"] = tk.DoubleVar()
-ttk.Label(data_info, text="Validation Split").grid(row=0, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+ttk.Label(data_info, text="Validation Split").grid(row=2, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
 valsplit = ttk.Spinbox(data_info, textvariable=variables["valsplit"], from_=0, to=1, increment=0.01, state='readonly')
-valsplit.grid(row=1, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
+valsplit.grid(row=3, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
 valsplit.set(0.2)
+
+variables["batchsize"] = tk.IntVar()
+ttk.Label(data_info, text="Batch Size").grid(row=2, column=4, sticky=(tk.W + tk.E), padx=5, pady=5)
+listbatch = [1,2,4,8,16,32,64,128,256,512]
+batchsize = ttk.Combobox(data_info, values=listbatch, textvariable=variables["batchsize"], state='readonly')
+batchsize.grid(row=3, column=4, sticky=(tk.W + tk.E), padx=5, pady=5)
+batchsize.current(5)
 
 
 
@@ -423,8 +442,8 @@ def sel():
         epoch2['state']='disabled'
         epoch3['state']='disabled'
         
-        batch2["state"] = 'disabled'
-        batch3["state"] = 'disabled'
+        lr2["state"] = 'disabled'
+        lr3["state"] = 'disabled'
         
     elif(variables['strategie'].get()==2):
         optimizer2['state']='readonly'
@@ -436,8 +455,8 @@ def sel():
         epoch2['state']='readonly'
         epoch3['state']='disabled'
         
-        batch2["state"] = 'readonly'
-        batch3["state"] = 'disabled'
+        lr2["state"] = 'readonly'
+        lr3["state"] = 'disabled'
         
     else:
         optimizer1['state']='readonly'
@@ -452,9 +471,9 @@ def sel():
         epoch2['state']='readonly'
         epoch3['state']='readonly'
         
-        batch1["state"] = 'readonly'
-        batch2["state"] = 'readonly'
-        batch3["state"] = 'readonly'
+        lr1["state"] = 'readonly'
+        lr2["state"] = 'readonly'
+        lr3["state"] = 'readonly'
 
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
@@ -499,9 +518,9 @@ listOptimizer = ('SGD',
                  'Nadam',
                  'Ftrl')
 
-ttk.Label(train_info, text="Step 1").grid(row=3, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Label(train_info, text="Step 2").grid(row=4, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Label(train_info, text="Step 3").grid(row=5, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 1").grid(row=4, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 2").grid(row=5, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 3").grid(row=6, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 variables['optimizer1'] = tk.StringVar()
 variables['optimizer2'] = tk.StringVar()
@@ -567,22 +586,22 @@ epoch3 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoc
 epoch3.grid(row=6, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
 epoch3.current(49)
 
-listBatch = [1,2,4,8,16,32,64,128,256]
+listlr = [0.1,0.01,0.001,0.0001,0.00001]
 
-variables['batch1'] = tk.StringVar()
-variables['batch2'] = tk.StringVar()
-variables['batch3'] = tk.StringVar()
+variables['lr1'] = tk.DoubleVar()
+variables['lr2'] = tk.DoubleVar()
+variables['lr3'] = tk.DoubleVar()
 
-ttk.Label(train_info, text="Batch Size").grid(row=3, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-batch1 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch1'], state='readonly')
-batch1.grid(row=4, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-batch1.current(5)
-batch2 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch2'], state='disabled')
-batch2.grid(row=5, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-batch2.current(5)
-batch3 = ttk.Combobox(train_info, values=listBatch, textvariable=variables['batch3'], state='disabled')
-batch3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-batch3.current(5)
+ttk.Label(train_info, text="Learning Rate").grid(row=3, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr1 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr1'], state='readonly')
+lr1.grid(row=4, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr1.current(1)
+lr2 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr2'], state='disabled')
+lr2.grid(row=5, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr2.current(1)
+lr3 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr3'], state='disabled')
+lr3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr3.current(1)
 
 
 # Output Section
@@ -633,7 +652,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "- Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "                                           - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 
 
@@ -772,9 +791,9 @@ def reset():
     epoch2.current(9)
     epoch3.current(49)
     
-    batch1.current(5)
-    batch2.current(5)
-    batch3.current(5)
+    lr1.current(1)
+    lr2.current(1)
+    lr3.current(1)
     
     savemodel.state(['selected'])
     variables["savemodel"].set(1)
@@ -789,6 +808,7 @@ def reset():
      
 def clean():
     print("clean")
+    
     
 def scheduler(epoch, lr):
     if epoch < 5:
@@ -847,7 +867,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            #hist[i] += model[i].fit(train_ds, validation_data=val_ds, epochs=epoch2, callbacks=callbacks2)    
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
                 
         if (variables["strategie"].get() == 3):
             with strategy.scope():
@@ -856,8 +876,8 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
          
-             # Train the model
-             #hist = model.fit(train_ds, validation_data=val_ds, epochsepoch2, callbacks=callbacks)                
+            # Train the model
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
                 
             
             with strategy.scope():
@@ -869,7 +889,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            #hist += model.fit(train_ds, validation_data=val_ds, epochs=epoch3, callbacks=callbacks2)            
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
         
     # CPU or single GPU   
     else:
@@ -888,6 +908,37 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
     
         # Train the model
         hist = model.fit(ds_train, validation_data=ds_valid, epochs=10, callbacks=callbacks) 
+
+        if (variables["strategie"].get() == 2):
+                
+            # Fine-tune the base model
+            base_model.trainable = True
+            
+            model.compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
+                          loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                          metrics=['accuracy'])
+            
+        hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
+                
+        if (variables["strategie"].get() == 3):
+
+            # Compile the model
+            model.compile(optimizer=optimizer2,
+                          loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                          metrics=['accuracy'])
+         
+            # Train the model
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
+                
+            # Fine-tune the base model
+            base_model.trainable = True
+            
+            model.compile(optimizer=tf.keras.optimizers.Adam(1e-5), # Low learning rate for fine-tuning
+                          loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                          metrics=['accuracy'])
+                
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
+
     
     #Output
     if (savemodel == 1):

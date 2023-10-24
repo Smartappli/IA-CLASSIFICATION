@@ -39,5 +39,17 @@
 - EfficientNet B2
 - EfficientNet B2 V2
 - EfficientNet B3
+- EfficientNet B4
+- EfficientNet B5
+- EfficientNet B6
+- EfficientNet B7
+- EfficientNet V2 Small
+- EfficientNet V2 Medium
+- EfficientNet V2 Large
+- ConvNeXtTiny
+- ConvNeXtSmall
+- ConvNeXtBase
+- ConvNeXtLarge
+- ConvNeXtXLarge
 - EfficientNet B3 V2
 - 

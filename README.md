@@ -7,3 +7,5 @@
  - pip install numpy
  - pip install matplotlib
  - pip install sklearn
+
+## Models implemented

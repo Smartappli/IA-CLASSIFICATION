@@ -652,7 +652,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "                                           - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + " - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 
 
@@ -804,11 +804,7 @@ def reset():
     classreport.state(['selected'])
     variables["classreport"].set(1)
     tflite.state(['!selected'])
-    variables["tflite"].set(0)
-     
-def clean():
-    print("clean")
-    
+    variables["tflite"].set(0)   
     
 def scheduler(epoch, lr):
     if epoch < 5:
@@ -1413,7 +1409,6 @@ for i in range(5):
     exec_info.columnconfigure(i, weight=1)
 
 ttk.Button(exec_info, text="Reset", command=reset).grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Button(exec_info, text="Clean", command=clean).grid(row=0, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
 ttk.Button(exec_info, text="Run", command=run).grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 

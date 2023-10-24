@@ -39,6 +39,7 @@
 - EfficientNet B2
 - EfficientNet B2 V2
 - EfficientNet B3
+- EfficientNet B3 V2
 - EfficientNet B4
 - EfficientNet B5
 - EfficientNet B6
@@ -50,6 +51,4 @@
 - ConvNeXtSmall
 - ConvNeXtBase
 - ConvNeXtLarge
-- ConvNeXtXLarge
-- EfficientNet B3 V2
-- 
+- ConvNeXtXLarge 

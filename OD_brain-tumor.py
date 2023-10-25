@@ -654,7 +654,12 @@ for i in range(1):
     
 ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 
-
+def merge_dictionaries(dict1, dict2):
+    #merged_dict = dict1.copy()
+    #merged_dict.update(dict2)
+    #return merged_dict
+    res = dict1 | dict2
+    return res 
 
 def reset():
     print("reset")
@@ -861,7 +866,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
                 
         if (strategie == 3):
             with strategy.scope():
@@ -871,7 +876,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               metrics=['accuracy'])
          
             # Train the model
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
                 
             
             with strategy.scope():
@@ -883,7 +888,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
         
     # CPU or single GPU   
     else:
@@ -912,17 +917,17 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
             
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks2)    
                 
         if (strategie == 3):
 
             # Compile the model
-            model.compile(optimizer=optimizer2,
+            model.compile(optimizer=optimizer3,
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
          
             # Train the model
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
                 
             # Fine-tune the base model
             base_model.trainable = True
@@ -931,7 +936,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
                 
-            hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
 
     
     #Output
@@ -941,7 +946,13 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
             json_file.write(model_json)        
 
     if (traingraph == 1):
-        hist_ = pd.DataFrame(hist.history)
+        if (strategie == 1):
+            hist_ = pd.DataFrame(hist.history)
+        elif(strategie == 2):
+            hist_ = pd.DataFrame(merge_dictionaries(hist.history, hist2.history))
+        else:
+            hist_ = pd.DataFrame(merge_dictionaries(merge_dictionaries(hist.history, hist2.history), hist3.history))
+            
         hist_
 
         plt.figure(figsize=(15,5))
@@ -977,7 +988,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         sns.heatmap(CM, annot=True, fmt='g', ax=ax, cbar=False, cmap='RdBu')
         ax.set_xlabel('Predicted labels')
         ax.set_ylabel('True labels') 
-        ax.set_title('Confusion Matrix')
+        ax.set_title(model_name + ' - Confusion Matrix')
         #6plt.savefig("./fig/"+model_name[i]+'_confusion_matrix.png')
         plt.show()
         CM
@@ -1399,6 +1410,8 @@ def run():
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+    print ("End")
 
 # Execution
 exec_info = ttk.LabelFrame(mc, text='Execution')

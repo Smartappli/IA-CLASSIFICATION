@@ -901,7 +901,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                       metrics=['accuracy'])
     
         # Train the model
-        hist = model.fit(ds_train, validation_data=ds_valid, epochs=10, callbacks=callbacks) 
+        hist = model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks) 
 
         if (strategie == 2):
                 
@@ -912,7 +912,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
             
-        hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
+            hist += model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks2)    
                 
         if (strategie == 3):
 

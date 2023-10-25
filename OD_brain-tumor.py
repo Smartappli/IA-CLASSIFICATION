@@ -652,7 +652,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + " - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 
 
@@ -815,14 +815,12 @@ def scheduler(epoch, lr):
 def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epoch1, optimizer2, loss2, epoch2, optimizer3, loss3, epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
-        tf.keras.callbacks.TensorBoard(log_dir='./logs'),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
                                          ),
     ]
     
     callbacks2 = [
         tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
-        tf.keras.callbacks.TensorBoard(log_dir='./logs'),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
         tf.keras.callbacks.LearningRateScheduler(scheduler, verbose=1)
     ]
@@ -853,7 +851,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         # Train the model
         hist = model.fit(ds_train, validation_data=ds_valid, epochs=epoch1, callbacks=callbacks)   
         
-        if (variables["strategie"].get() == 2):
+        if (strategie == 2):
             with strategy.scope():
                 
                 # Fine-tune the base model
@@ -865,7 +863,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                 
             hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
                 
-        if (variables["strategie"].get() == 3):
+        if (strategie == 3):
             with strategy.scope():
                 # Compile the model
                 model.compile(optimizer=optimizer2,
@@ -905,7 +903,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         # Train the model
         hist = model.fit(ds_train, validation_data=ds_valid, epochs=10, callbacks=callbacks) 
 
-        if (variables["strategie"].get() == 2):
+        if (strategie == 2):
                 
             # Fine-tune the base model
             base_model.trainable = True
@@ -916,7 +914,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
             
         hist += model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
                 
-        if (variables["strategie"].get() == 3):
+        if (strategie == 3):
 
             # Compile the model
             model.compile(optimizer=optimizer2,

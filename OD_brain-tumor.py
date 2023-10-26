@@ -32,20 +32,29 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os.path
+from pathlib import Path
+import platform
+
 
 numgpu = len(tf.config.list_physical_devices('GPU'))
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
 variables = dict()
  
-data_dir = 'c:/IA/Data'
+p = Path()
+if (platform.system() == "Windows"):
+    data_dir = str(p) + '\Data'
+    output_dir = str(p) + '\Output'  
+else :
+    data_dir = str(p) + '/Data'
+    output_dir = str(p) + '/Output'
+
 batch_size = 32
 img_height = 224 #256
 img_width = 224 #256
 
-print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
-
 # Load the data
-
+print("Data Processing...")
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
   data_dir,
   validation_split=0.2,
@@ -62,6 +71,7 @@ val_ds = tf.keras.preprocessing.image_dataset_from_directory(
   image_size=(img_height, img_width),
   batch_size=batch_size)
 
+print("Dataset configuration")
 # Configure the dataset for performance
 AUTOTUNE = tf.data.AUTOTUNE
 train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
@@ -86,13 +96,13 @@ variables["datapath"] = tk.StringVar()
 ttk.Label(data_info, text="Data Path").grid(row=0, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
 datapath = ttk.Entry(data_info, textvariable=variables["datapath"])
 datapath.grid(row=1, columnspan=2, padx=5, pady=5, sticky=(tk.W + tk.E))
-variables["datapath"].set('c:/IA/Data')
+variables["datapath"].set(data_dir)
 
 variables["outputdata"] = tk.StringVar()
 ttk.Label(data_info, text="Output Path").grid(row=0, column=3, sticky=(tk.W + tk.E), padx=5, pady=5)
 outputpath = ttk.Entry(data_info, textvariable=variables["outputdata"])
 outputpath.grid(row=1, columnspan=2, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
-variables["outputdata"].set('c:/IA/Data')
+variables["outputdata"].set(output_dir)
 
 variables["imgresizing"] = tk.StringVar()
 ttk.Label(data_info, text="Image Resizing (pixels)").grid(row=2, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
@@ -819,13 +829,13 @@ def scheduler(epoch, lr):
     
 def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epoch1, optimizer2, loss2, epoch2, optimizer3, loss3, epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     callbacks = [
-        tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
+        tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
                                          ),
     ]
     
     callbacks2 = [
-        tf.keras.callbacks.ModelCheckpoint('model/'+model_name+".tf", verbose=1, save_best_only=True),
+        tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
         tf.keras.callbacks.LearningRateScheduler(scheduler, verbose=1)
     ]
@@ -942,7 +952,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
     #Output
     if (savemodel == 1):
         model_json = model.to_json()
-        with open('model/'+model_name+'.json', 'w') as json_file:
+        with open(output_dir+'/model/'+model_name+'.json', 'w') as json_file:
             json_file.write(model_json)        
 
     if (traingraph == 1):
@@ -968,7 +978,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         plt.plot(hist_['val_accuracy'],label='Validation_Accuracy')
         plt.title('Train_Accuracy & Validation_Accuracy',fontsize=20)
         plt.legend()
-        plt.savefig("./fig/"+model_name+'_model_performance.png')
+        plt.savefig(output_dir+"/fig/"+model_name+'_model_performance.png')
         plt.show()
         
     if (confmatrix == 1):
@@ -989,7 +999,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         ax.set_xlabel('Predicted labels')
         ax.set_ylabel('True labels') 
         ax.set_title(model_name + ' - Confusion Matrix')
-        #6plt.savefig("./fig/"+model_name[i]+'_confusion_matrix.png')
+        plt.savefig(output_dir+"/fig/"+model_name+'_confusion_matrix.png')
         plt.show()
         CM
         
@@ -998,16 +1008,16 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         print('Classification Report is : ', ClassificationReport )
         
     if (tflite == 1):
-        path = 'model/'+model_name+".tf"    
+        path = output_dir+'/model/'+model_name+".tf"    
             
         if os.path.exists(path) :
             print("Conversion in TFLite")
             # Convert the model.
-            converter = tf.lite.TFLiteConverter.from_saved_model(path)
+            converter = tf. lite.TFLiteConverter.from_saved_model(path)
             tflite_model = converter.convert()
             
             # Save the model.
-            with open('model/'+model_name+'.tflite', 'wb') as f:
+            with open(output_dir+'/model/'+model_name+'.tflite', 'wb') as f:
                 f.write(tflite_model)
 
 def run():

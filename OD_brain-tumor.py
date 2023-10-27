@@ -1333,9 +1333,12 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
 
 def run():
     print("Start")
-    
+     
     total = 0
     cpt = 0
+    
+    pgb.set(0)
+    mc.update()
 
     # Progressbar configuration
     

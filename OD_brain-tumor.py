@@ -603,6 +603,442 @@ model_RegNetY320.grid(row=9, column=6, sticky=(tk.W + tk.E))
 
 
 
+def selectall():
+    model_Xception.state(['selected'])
+    variables["Xception"].set(1)
+
+    model_VGG16.state(['selected'])
+    variables["VGG16"].set(1)
+
+    model_VGG19.state(['selected'])
+    variables["VGG19"].set(1)
+
+    model_ResNet50.state(['selected'])
+    variables["ResNet50"].set(1)
+
+    model_ResNet50V2.state(['selected'])
+    variables["ResNet50V2"].set(1)
+    
+    model_ResNetRS50.state(['selected'])
+    variables["ResNetRS50"].set(1)
+    
+    model_ResNet101.state(['selected'])
+    variables["ResNet101"].set(1)
+
+    model_ResNet101V2.state(['selected'])
+    variables["ResNet101V2"].set(1)
+    
+    model_ResNetRS101.state(['selected'])
+    variables["ResNetRS101"].set(1)
+    
+    model_ResNet152.state(['selected'])
+    variables["ResNet152"].set(1)
+    
+    model_ResNet152V2.state(['selected'])
+    variables["ResNet152V2"].set(1)
+    
+    model_ResNetRS152.state(['selected'])
+    variables["ResNetRS152"].set(1)
+
+    model_ResNetRS200.state(['selected'])
+    variables["ResNetRS200"].set(1)
+    
+    model_ResNetRS270.state(['selected'])
+    variables["ResNetRS270"].set(1)
+    
+    model_ResNetRS350.state(['selected'])
+    variables["ResNetRS350"].set(1)
+    
+    model_ResNetRS420.state(['selected'])
+    variables["ResNetRS420"].set(1)
+    
+    model_InceptionV3.state(['selected'])
+    variables["InceptionV3"].set(1)
+    
+    model_InceptionResNetV2.state(['selected'])
+    variables["InceptionResNetV2"].set(1)
+    
+    model_MobileNet.state(['selected'])
+    variables["MobileNet"].set(1)
+    
+    model_MobileNetV2.state(['selected'])
+    variables["MobileNetV2"].set(1)
+    
+    model_MobileNetV3Small.state(['selected'])
+    variables["MobileNetV3Small"].set(1)
+
+    model_MobileNetV3Large.state(['selected'])
+    variables["MobileNetV3Large"].set(1)
+    
+    model_DenseNet121.state(['selected'])
+    variables["DenseNet121"].set(1)
+
+    model_DenseNet169.state(['selected'])
+    variables["DenseNet169"].set(1)
+
+    model_DenseNet201.state(['selected'])
+    variables["DenseNet201"].set(1)
+
+    model_NASNetMobile.state(['selected'])
+    variables["NASNetMobile"].set(1)
+
+    model_NASNetLarge.state(['selected'])
+    variables["NASNetLarge"].set(1)
+    
+    model_EfficientNetB0.state(['selected'])
+    variables["EfficientNetB0"].set(1)
+
+    model_EfficientNetB0V2.state(['selected'])
+    variables["EfficientNetB0V2"].set(1)
+
+    model_EfficientNetB1.state(['selected'])
+    variables["EfficientNetB1"].set(1)
+
+    model_EfficientNetB1V2.state(['selected'])
+    variables["EfficientNetB1V2"].set(1)
+
+    model_EfficientNetB2.state(['selected'])
+    variables["EfficientNetB2"].set(1)
+    
+    model_EfficientNetB2V2.state(['selected'])
+    variables["EfficientNetB2V2"].set(1)
+
+    model_EfficientNetB3.state(['selected'])
+    variables["EfficientNetB3"].set(1)
+
+    model_EfficientNetB3V2.state(['selected']) 
+    variables["EfficientNetB3V2"].set(1)
+
+    model_EfficientNetB4.state(['selected'])
+    variables["EfficientNetB4"].set(1)
+
+    model_EfficientNetB5.state(['selected'])
+    variables["EfficientNetB5"].set(1)
+    
+    model_EfficientNetB6.state(['selected'])
+    variables["EfficientNetB6"].set(1)
+
+    model_EfficientNetB7.state(['selected'])
+    variables["EfficientNetB7"].set(1)
+
+    model_EfficientNetV2Small.state(['selected'])
+    variables["EfficientNetV2Small"].set(1)
+
+    model_EfficientNetV2Medium.state(['selected'])
+    variables["EfficientNetV2Medium"].set(1)
+
+    model_EfficientNetV2Large.state(['selected'])
+    variables["EfficientNetV2Large"].set(1)
+    
+    model_ConvNeXtTiny.state(['selected'])
+    variables["ConvNeXtTiny"].set(1)
+
+    model_ConvNeXtSmall.state(['selected'])
+    variables["ConvNeXtSmall"].set(1)
+
+    model_ConvNeXtBase.state(['selected'])
+    variables["ConvNeXtBase"].set(1)
+
+    model_ConvNeXtLarge.state(['selected'])
+    variables["ConvNeXtLarge"].set(1)
+
+    model_ConvNeXtXLarge.state(['selected'])
+    variables["ConvNeXtXLarge"].set(1)
+    
+    model_RegNetX002.state(['selected'])
+    variables["RegNetX002"].set(1)
+    
+    model_RegNetY002.state(['selected'])
+    variables["RegNetY002"].set(1)
+
+    model_RegNetX004.state(['selected'])
+    variables["RegNetX004"].set(1)
+
+    model_RegNetY004.state(['selected'])
+    variables["RegNetY004"].set(1)
+
+    model_RegNetX006.state(['selected'])
+    variables["RegNetX006"].set(1)
+
+    model_RegNetY006.state(['selected'])
+    variables["RegNetY006"].set(1)    
+
+    model_RegNetX008.state(['selected'])
+    variables["RegNetX008"].set(1)
+
+    model_RegNetY008.state(['selected'])
+    variables["RegNetY008"].set(1)
+
+    model_RegNetX016.state(['selected'])
+    variables["RegNetX016"].set(1)
+
+    model_RegNetY016.state(['selected'])
+    variables["RegNetY016"].set(1)
+    
+    model_RegNetX032.state(['selected'])
+    variables["RegNetX032"].set(1)
+
+    model_RegNetY032.state(['selected'])
+    variables["RegNetY032"].set(1)
+    
+    model_RegNetX040.state(['selected'])
+    variables["RegNetX040"].set(1)
+
+    model_RegNetY040.state(['selected'])
+    variables["RegNetY040"].set(1)  
+    
+    model_RegNetX064.state(['selected'])
+    variables["RegNetX064"].set(1)
+
+    model_RegNetY064.state(['selected'])
+    variables["RegNetY064"].set(1)  
+    
+    model_RegNetX080.state(['selected'])
+    variables["RegNetX080"].set(1)
+
+    model_RegNetY080.state(['selected'])
+    variables["RegNetY080"].set(1)  
+
+    model_RegNetX120.state(['selected'])
+    variables["RegNetX120"].set(1)
+
+    model_RegNetY120.state(['selected'])
+    variables["RegNetY120"].set(1)  
+
+    model_RegNetX160.state(['selected'])
+    variables["RegNetX160"].set(1)
+
+    model_RegNetY160.state(['selected'])
+    variables["RegNetY160"].set(1)  
+
+    model_RegNetX320.state(['selected'])
+    variables["RegNetX320"].set(1)
+
+    model_RegNetY320.state(['selected'])
+    variables["RegNetY320"].set(1)
+
+
+
+def unselect():
+    model_Xception.state(['!selected'])
+    variables["Xception"].set(0)
+
+    model_VGG16.state(['!selected'])
+    variables["VGG16"].set(0)
+
+    model_VGG19.state(['!selected'])
+    variables["VGG19"].set(0)
+
+    model_ResNet50.state(['!selected'])
+    variables["ResNet50"].set(0)
+
+    model_ResNet50V2.state(['!selected'])
+    variables["ResNet50V2"].set(0)
+    
+    model_ResNetRS50.state(['!selected'])
+    variables["ResNetRS50"].set(0)
+    
+    model_ResNet101.state(['!selected'])
+    variables["ResNet101"].set(0)
+
+    model_ResNet101V2.state(['!selected'])
+    variables["ResNet101V2"].set(0)
+    
+    model_ResNetRS101.state(['!selected'])
+    variables["ResNetRS101"].set(0)
+    
+    model_ResNet152.state(['!selected'])
+    variables["ResNet152"].set(0)
+    
+    model_ResNet152V2.state(['!selected'])
+    variables["ResNet152V2"].set(0)
+    
+    model_ResNetRS152.state(['!selected'])
+    variables["ResNetRS152"].set(0)
+
+    model_ResNetRS200.state(['!selected'])
+    variables["ResNetRS200"].set(0)
+    
+    model_ResNetRS270.state(['!selected'])
+    variables["ResNetRS270"].set(0)
+    
+    model_ResNetRS350.state(['!selected'])
+    variables["ResNetRS350"].set(0)
+    
+    model_ResNetRS420.state(['!selected'])
+    variables["ResNetRS420"].set(0)
+    
+    model_InceptionV3.state(['!selected'])
+    variables["InceptionV3"].set(0)
+    
+    model_InceptionResNetV2.state(['!selected'])
+    variables["InceptionResNetV2"].set(0)
+    
+    model_MobileNet.state(['!selected'])
+    variables["MobileNet"].set(0)
+    
+    model_MobileNetV2.state(['!selected'])
+    variables["MobileNetV2"].set(0)
+    
+    model_MobileNetV3Small.state(['!selected'])
+    variables["MobileNetV3Small"].set(0)
+
+    model_MobileNetV3Large.state(['!selected'])
+    variables["MobileNetV3Large"].set(0)
+    
+    model_DenseNet121.state(['!selected'])
+    variables["DenseNet121"].set(0)
+
+    model_DenseNet169.state(['!selected'])
+    variables["DenseNet169"].set(0)
+
+    model_DenseNet201.state(['!selected'])
+    variables["DenseNet201"].set(0)
+
+    model_NASNetMobile.state(['!selected'])
+    variables["NASNetMobile"].set(0)
+
+    model_NASNetLarge.state(['!selected'])
+    variables["NASNetLarge"].set(0)
+    
+    model_EfficientNetB0.state(['!selected'])
+    variables["EfficientNetB0"].set(0)
+
+    model_EfficientNetB0V2.state(['!selected'])
+    variables["EfficientNetB0V2"].set(0)
+
+    model_EfficientNetB1.state(['!selected'])
+    variables["EfficientNetB1"].set(0)
+
+    model_EfficientNetB1V2.state(['!selected'])
+    variables["EfficientNetB1V2"].set(0)
+
+    model_EfficientNetB2.state(['!selected'])
+    variables["EfficientNetB2"].set(0)
+    
+    model_EfficientNetB2V2.state(['!selected'])
+    variables["EfficientNetB2V2"].set(0)
+
+    model_EfficientNetB3.state(['!selected'])
+    variables["EfficientNetB3"].set(0)
+
+    model_EfficientNetB3V2.state(['!selected']) 
+    variables["EfficientNetB3V2"].set(0)
+
+    model_EfficientNetB4.state(['!selected'])
+    variables["EfficientNetB4"].set(0)
+
+    model_EfficientNetB5.state(['!selected'])
+    variables["EfficientNetB5"].set(0)
+    
+    model_EfficientNetB6.state(['!selected'])
+    variables["EfficientNetB6"].set(0)
+
+    model_EfficientNetB7.state(['!selected'])
+    variables["EfficientNetB7"].set(0)
+
+    model_EfficientNetV2Small.state(['!selected'])
+    variables["EfficientNetV2Small"].set(0)
+
+    model_EfficientNetV2Medium.state(['!selected'])
+    variables["EfficientNetV2Medium"].set(0)
+
+    model_EfficientNetV2Large.state(['!selected'])
+    variables["EfficientNetV2Large"].set(0)
+    
+    model_ConvNeXtTiny.state(['!selected'])
+    variables["ConvNeXtTiny"].set(0)
+
+    model_ConvNeXtSmall.state(['!selected'])
+    variables["ConvNeXtSmall"].set(0)
+
+    model_ConvNeXtBase.state(['!selected'])
+    variables["ConvNeXtBase"].set(0)
+
+    model_ConvNeXtLarge.state(['!selected'])
+    variables["ConvNeXtLarge"].set(0)
+
+    model_ConvNeXtXLarge.state(['!selected'])
+    variables["ConvNeXtXLarge"].set(0)
+    
+    model_RegNetX002.state(['!selected'])
+    variables["RegNetX002"].set(0)
+    
+    model_RegNetY002.state(['!selected'])
+    variables["RegNetY002"].set(0)
+
+    model_RegNetX004.state(['!selected'])
+    variables["RegNetX004"].set(0)
+
+    model_RegNetY004.state(['!selected'])
+    variables["RegNetY004"].set(0)
+
+    model_RegNetX006.state(['!selected'])
+    variables["RegNetX006"].set(0)
+
+    model_RegNetY006.state(['!selected'])
+    variables["RegNetY006"].set(0)    
+
+    model_RegNetX008.state(['!selected'])
+    variables["RegNetX008"].set(0)
+
+    model_RegNetY008.state(['!selected'])
+    variables["RegNetY008"].set(0)
+
+    model_RegNetX016.state(['!selected'])
+    variables["RegNetX016"].set(0)
+
+    model_RegNetY016.state(['!selected'])
+    variables["RegNetY016"].set(0)
+    
+    model_RegNetX032.state(['!selected'])
+    variables["RegNetX032"].set(0)
+
+    model_RegNetY032.state(['!selected'])
+    variables["RegNetY032"].set(0)
+    
+    model_RegNetX040.state(['!selected'])
+    variables["RegNetX040"].set(0)
+
+    model_RegNetY040.state(['!selected'])
+    variables["RegNetY040"].set(0)  
+    
+    model_RegNetX064.state(['!selected'])
+    variables["RegNetX064"].set(0)
+
+    model_RegNetY064.state(['!selected'])
+    variables["RegNetY064"].set(0)  
+    
+    model_RegNetX080.state(['!selected'])
+    variables["RegNetX080"].set(0)
+
+    model_RegNetY080.state(['!selected'])
+    variables["RegNetY080"].set(0)  
+
+    model_RegNetX120.state(['!selected'])
+    variables["RegNetX120"].set(0)
+
+    model_RegNetY120.state(['!selected'])
+    variables["RegNetY120"].set(0)  
+
+    model_RegNetX160.state(['!selected'])
+    variables["RegNetX160"].set(0)
+
+    model_RegNetY160.state(['!selected'])
+    variables["RegNetY160"].set(0)  
+
+    model_RegNetX320.state(['!selected'])
+    variables["RegNetX320"].set(0)
+
+    model_RegNetY320.state(['!selected'])
+    variables["RegNetY320"].set(0)
+
+# Select all
+variables["selectall"] = tk.BooleanVar()
+ttk.Button(mc_info, text="Select All", command=selectall).grid(row=10, column=6, padx=5, pady=5, sticky=(tk.W + tk.E))
+variables["unselect"] = tk.BooleanVar()
+ttk.Button(mc_info, text="Unselect All", command=unselect).grid(row=10, column=7, padx=5, pady=5, sticky=(tk.W + tk.E))
+
 def sel():
     if (variables['strategie'].get()==1):
         optimizer2['state']='disabled'
@@ -880,218 +1316,7 @@ def reset():
     brightness.state(['!selected'])
     variables["brightness"].set(0)
     
-    model_Xception.state(['!selected'])
-    variables["Xception"].set(0)
-
-    model_VGG16.state(['!selected'])
-    variables["VGG16"].set(0)
-
-    model_VGG19.state(['!selected'])
-    variables["VGG19"].set(0)
-
-    model_ResNet50.state(['!selected'])
-    variables["ResNet50"].set(0)
-
-    model_ResNet50V2.state(['!selected'])
-    variables["ResNet50V2"].set(0)
-    
-    model_ResNetRS50.state(['!selected'])
-    variables["ResNetRS50"].set(0)
-    
-    model_ResNet101.state(['!selected'])
-    variables["ResNet101"].set(0)
-
-    model_ResNet101V2.state(['!selected'])
-    variables["ResNet101V2"].set(0)
-    
-    model_ResNetRS101.state(['!selected'])
-    variables["ResNetRS101"].set(0)
-    
-    model_ResNet152.state(['!selected'])
-    variables["ResNet152"].set(0)
-    
-    model_ResNet152V2.state(['!selected'])
-    variables["ResNet152V2"].set(0)
-    
-    model_ResNetRS152.state(['!selected'])
-    variables["ResNetRS152"].set(0)
-
-    model_ResNetRS200.state(['!selected'])
-    variables["ResNetRS200"].set(0)
-    
-    model_ResNetRS270.state(['!selected'])
-    variables["ResNetRS270"].set(0)
-    
-    model_ResNetRS350.state(['!selected'])
-    variables["ResNetRS350"].set(0)
-    
-    model_ResNetRS420.state(['!selected'])
-    variables["ResNetRS420"].set(0)
-    
-    model_InceptionV3.state(['!selected'])
-    variables["InceptionV3"].set(0)
-    
-    model_InceptionResNetV2.state(['!selected'])
-    variables["InceptionResNetV2"].set(0)
-    
-    model_MobileNet.state(['!selected'])
-    variables["MobileNet"].set(0)
-    
-    model_MobileNetV2.state(['!selected'])
-    variables["MobileNetV2"].set(0)
-    
-    model_MobileNetV3Small.state(['!selected'])
-    variables["MobileNetV3Small"].set(0)
-
-    model_MobileNetV3Large.state(['!selected'])
-    variables["MobileNetV3Large"].set(0)
-    
-    model_DenseNet121.state(['!selected'])
-    variables["DenseNet121"].set(0)
-
-    model_DenseNet169.state(['!selected'])
-    variables["DenseNet169"].set(0)
-
-    model_DenseNet201.state(['!selected'])
-    variables["DenseNet201"].set(0)
-
-    model_NASNetMobile.state(['!selected'])
-    variables["NASNetMobile"].set(0)
-
-    model_NASNetLarge.state(['!selected'])
-    variables["NASNetLarge"].set(0)
-    
-    model_EfficientNetB0.state(['!selected'])
-    variables["EfficientNetB0"].set(0)
-
-    model_EfficientNetB0V2.state(['!selected'])
-    variables["EfficientNetB0V2"].set(0)
-
-    model_EfficientNetB1.state(['!selected'])
-    variables["EfficientNetB1"].set(0)
-
-    model_EfficientNetB1V2.state(['!selected'])
-    variables["EfficientNetB1V2"].set(0)
-
-    model_EfficientNetB2.state(['!selected'])
-    variables["EfficientNetB2"].set(0)
-    
-    model_EfficientNetB2V2.state(['!selected'])
-    variables["EfficientNetB2V2"].set(0)
-
-    model_EfficientNetB3.state(['!selected'])
-    variables["EfficientNetB3"].set(0)
-
-    model_EfficientNetB3V2.state(['!selected']) 
-    variables["EfficientNetB3V2"].set(0)
-
-    model_EfficientNetB4.state(['!selected'])
-    variables["EfficientNetB4"].set(0)
-
-    model_EfficientNetB5.state(['!selected'])
-    variables["EfficientNetB5"].set(0)
-    
-    model_EfficientNetB6.state(['!selected'])
-    variables["EfficientNetB6"].set(0)
-
-    model_EfficientNetB7.state(['!selected'])
-    variables["EfficientNetB7"].set(0)
-
-    model_EfficientNetV2Small.state(['!selected'])
-    variables["EfficientNetV2Small"].set(0)
-
-    model_EfficientNetV2Medium.state(['!selected'])
-    variables["EfficientNetV2Medium"].set(0)
-
-    model_EfficientNetV2Large.state(['!selected'])
-    variables["EfficientNetV2Large"].set(0)
-    
-    model_ConvNeXtTiny.state(['!selected'])
-    variables["ConvNeXtTiny"].set(0)
-
-    model_ConvNeXtSmall.state(['!selected'])
-    variables["ConvNeXtSmall"].set(0)
-
-    model_ConvNeXtBase.state(['!selected'])
-    variables["ConvNeXtBase"].set(0)
-
-    model_ConvNeXtLarge.state(['!selected'])
-    variables["ConvNeXtLarge"].set(0)
-
-    model_ConvNeXtXLarge.state(['!selected'])
-    variables["ConvNeXtXLarge"].set(0)
-    
-    model_RegNetX002.state(['!selected'])
-    variables["RegNetX002"].set(0)
-    
-    model_RegNetY002.state(['!selected'])
-    variables["RegNetY002"].set(0)
-
-    model_RegNetX004.state(['!selected'])
-    variables["RegNetX004"].set(0)
-
-    model_RegNetY004.state(['!selected'])
-    variables["RegNetY004"].set(0)
-
-    model_RegNetX006.state(['!selected'])
-    variables["RegNetX006"].set(0)
-
-    model_RegNetY006.state(['!selected'])
-    variables["RegNetY006"].set(0)    
-
-    model_RegNetX008.state(['!selected'])
-    variables["RegNetX008"].set(0)
-
-    model_RegNetY008.state(['!selected'])
-    variables["RegNetY008"].set(0)
-
-    model_RegNetX016.state(['!selected'])
-    variables["RegNetX016"].set(0)
-
-    model_RegNetY016.state(['!selected'])
-    variables["RegNetY016"].set(0)
-    
-    model_RegNetX032.state(['!selected'])
-    variables["RegNetX032"].set(0)
-
-    model_RegNetY032.state(['!selected'])
-    variables["RegNetY032"].set(0)
-    
-    model_RegNetX040.state(['!selected'])
-    variables["RegNetX040"].set(0)
-
-    model_RegNetY040.state(['!selected'])
-    variables["RegNetY040"].set(0)  
-    
-    model_RegNetX064.state(['!selected'])
-    variables["RegNetX064"].set(0)
-
-    model_RegNetY064.state(['!selected'])
-    variables["RegNetY064"].set(0)  
-    
-    model_RegNetX080.state(['!selected'])
-    variables["RegNetX080"].set(0)
-
-    model_RegNetY080.state(['!selected'])
-    variables["RegNetY080"].set(0)  
-
-    model_RegNetX120.state(['!selected'])
-    variables["RegNetX120"].set(0)
-
-    model_RegNetY120.state(['!selected'])
-    variables["RegNetY120"].set(0)  
-
-    model_RegNetX160.state(['!selected'])
-    variables["RegNetX160"].set(0)
-
-    model_RegNetY160.state(['!selected'])
-    variables["RegNetY160"].set(0)  
-
-    model_RegNetX320.state(['!selected'])
-    variables["RegNetX320"].set(0)
-
-    model_RegNetY320.state(['!selected'])
-    variables["RegNetY320"].set(0)      
+    unselect()  
       
     optimizer1.current(2)
     optimizer2.current(2)

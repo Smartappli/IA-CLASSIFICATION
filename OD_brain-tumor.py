@@ -664,6 +664,18 @@ for i in range(1):
     
 ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 
+
+
+# Execution
+exec_info = ttk.LabelFrame(mc, text='Execution')
+exec_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+for i in range(5):
+    exec_info.columnconfigure(i, weight=1)
+
+pgb = tk.IntVar()
+pb = ttk.Progressbar(exec_info,  orient='horizontal', mode='determinate', variable=pgb).grid(row=0, column=1, columnspan=3, sticky=(tk.E + tk.W))
+
+
 def merge_dictionaries(dict1, dict2):
     #merged_dict = dict1.copy()
     #merged_dict.update(dict2)
@@ -1020,8 +1032,135 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
             with open(output_dir+'/model/'+model_name+'.tflite', 'wb') as f:
                 f.write(tflite_model)
 
+
 def run():
     print("Start")
+    
+    total = 0
+    cpt = 0
+
+    # Progressbar configuration
+    
+    if (variables["Xception"].get() == 1):
+        total = total + 1
+    
+    if (variables["VGG16"].get() == 1):
+        total = total + 1
+        
+    if (variables["VGG19"].get() == 1):
+        total = total + 1
+       
+    if (variables["ResNet50"].get() == 1):
+        total = total + 1 
+        
+    if (variables["ResNet50V2"].get() == 1):
+        total = total + 1
+     
+    if (variables["ResNet101"].get() == 1):
+        total = total + 1
+        
+    if (variables["ResNet101V2"].get() == 1):
+        total = total + 1
+    
+    if (variables["ResNet152"].get() == 1):
+        total = total + 1
+        
+    if (variables["ResNet152V2"].get() == 1):
+        total = total + 1
+       
+    if (variables["InceptionV3"].get() == 1):
+        total = total + 1
+        
+    if (variables["InceptionResNetV2"].get() == 1):
+        total = total + 1
+    
+    if (variables["MobileNet"].get() == 1):
+        total = total + 1       
+    
+    if (variables["MobileNetV2"].get() == 1):
+        total = total + 1        
+        
+    if (variables["MobileNetV3Small"].get() == 1):
+        total = total + 1        
+       
+    if (variables["MobileNetV3Large"].get() == 1):
+        total = total + 1       
+        
+    if (variables["DenseNet121"].get() == 1):
+        total = total + 1
+        
+    if (variables["DenseNet169"].get() == 1):
+        total = total + 1       
+        
+    if (variables["DenseNet201"].get() == 1):
+        total = total + 1      
+        
+    if (variables["NASNetMobile"].get() == 1):
+        total = total + 1        
+    
+    if (variables["NASNetLarge"].get() == 1):
+        total = total + 1 
+        
+    if (variables["EfficientNetB0"].get() == 1):
+        total = total + 1        
+    
+    if (variables["EfficientNetB0V2"].get() == 1):
+        total = total + 1        
+        
+    if (variables["EfficientNetB1"].get() == 1):
+        total = total + 1        
+        
+    if (variables["EfficientNetB1V2"].get() == 1):
+        total = total + 1        
+        
+    if (variables["EfficientNetB2"].get() == 1):
+        total = total + 1        
+        
+    if (variables["EfficientNetB2V2"].get() == 1):
+        total = total + 1   
+        
+    if (variables["EfficientNetB3"].get() == 1):
+        total = total + 1        
+        
+    if (variables["EfficientNetB3V2"].get() == 1):
+        total = total + 1  
+        
+    if (variables["EfficientNetB4"].get() == 1):
+        total = total + 1 
+        
+    if (variables["EfficientNetB5"].get() == 1):
+        total = total + 1 
+
+    if (variables["EfficientNetB6"].get() == 1):
+        total = total + 1 
+
+    if (variables["EfficientNetB7"].get() == 1):
+        total = total + 1 
+        
+    if (variables["EfficientNetV2Small"].get() == 1):  
+        total = total + 1 
+        
+    if (variables["EfficientNetV2Medium"].get() == 1):
+        total = total + 1 
+     
+    if (variables["EfficientNetV2Large"].get() == 1):
+        total = total + 1 
+    
+    if (variables["ConvNeXtTiny"].get() == 1):
+        total = total + 1        
+        
+    if (variables["ConvNeXtSmall"].get() == 1):
+        total = total + 1        
+        
+    if (variables["ConvNeXtBase"].get() == 1):
+        total = total + 1    
+        
+    if (variables["ConvNeXtLarge"].get() == 1):
+        total = total + 1        
+        
+    if (variables["ConvNeXtXLarge"].get() == 1):
+        total = total + 1  
+        
     
     ### Xception Model ##    
     if (variables["Xception"].get() == 1):
@@ -1032,6 +1171,10 @@ def run():
             
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+        
     
     ### VGG16 Model ###
     if (variables["VGG16"].get() == 1):
@@ -1042,6 +1185,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()   
+    
     
     ### VGG19 model ###
     if (variables["VGG19"].get() == 1):
@@ -1051,6 +1198,10 @@ def run():
                            weights='imagenet')  
       
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### ResNet50 ###
@@ -1061,8 +1212,26 @@ def run():
                               weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
+
+    ### ResNet50 V2 ###
+    if (variables["ResNet50V2"].get() == 1):
+        model_name = "ResNet50_V2"
+        base_model = ResNet50V2(input_shape=(img_height, img_width, 3),
+                                include_top=False,
+                                weights='imagenet')
     
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+            
     ### ResNet101 ###
     if (variables["ResNet101"].get() == 1):
         model_name = "ResNet101"
@@ -1071,7 +1240,25 @@ def run():
                                weights='imagenet')
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()   
+        
+  
+    ### ResNet101 V2 ###
+    if (variables["ResNet101V2"].get() == 1):
+        model_name = "ResNet101_V2"
+        base_model = ResNet101V2(input_shape=(img_height, img_width, 3),
+                                 include_top=False,
+                                 weights='imagenet')
     
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+        
     
     ### ResNet152 ###
     if (variables["ResNet152"].get() == 1):
@@ -1082,27 +1269,11 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
-    
-    ### ResNet50 V2 ###
-    if (variables["ResNet50V2"].get() == 1):
-        model_name = "ResNet50_V2"
-        base_model = ResNet50V2(input_shape=(img_height, img_width, 3),
-                                include_top=False,
-                                weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
         
-    ### ResNet101 V2 ###
-    if (variables["ResNet101V2"].get() == 1):
-        model_name = "ResNet101_V2"
-        base_model = ResNet101V2(input_shape=(img_height, img_width, 3),
-                                 include_top=False,
-                                 weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
+        
     ### ResNet152 V2 ###
     if (variables["ResNet152V2"].get() == 1):
         model_name = "ResNet152_V2"
@@ -1112,6 +1283,10 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()   
+
     
     ### Inception V3 ###
     if (variables["InceptionV3"].get() == 1):
@@ -1122,6 +1297,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()   
+
     
     ### InceptionResNet V2 ###
     if (variables["InceptionResNetV2"].get() == 1):
@@ -1131,6 +1310,10 @@ def run():
                                        weights='imagenet')
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### MobileNet ###
@@ -1142,6 +1325,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### MobileNet V2 ###
     if (variables["MobileNetV2"].get() == 1):
@@ -1151,6 +1338,10 @@ def run():
                                  weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### MobileNet V3 Small ###
@@ -1162,6 +1353,10 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### MobileNet V3 Large ###
     if (variables["MobileNetV3Large"].get() == 1):
@@ -1171,6 +1366,10 @@ def run():
                                       weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### DenseNet 121 ###
@@ -1182,6 +1381,10 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### DenseNet 169 ###
     if (variables["DenseNet169"].get() == 1):
@@ -1192,6 +1395,10 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()   
+        
         
     ### DenseNet 201 ###
     if (variables["DenseNet201"].get() == 1):
@@ -1201,6 +1408,10 @@ def run():
                                  weights='imagenet')
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### NASNetMobile ###
@@ -1212,6 +1423,10 @@ def run():
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### NASNetLarge ###
     if (variables["NASNetLarge"].get() == 1):
@@ -1221,6 +1436,10 @@ def run():
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### EfficientNetB0 ###
@@ -1232,74 +1451,9 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
-    ### EfficientNetB1 ###
-    if (variables["EfficientNetB1"].get() == 1):
-        model_name = "EfficientNet_B1"
-        base_model = EfficientNetB1(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB2 ###
-    if (variables["EfficientNetB2"].get() == 1):
-        model_name = "EfficientNet_B2"
-        base_model = EfficientNetB2(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB3 ###
-    if (variables["EfficientNetB3"].get() == 1):
-        model_name = "EfficientNet_B3"
-        base_model = EfficientNetB3(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB4 ###
-    if (variables["EfficientNetB4"].get() == 1):
-        model_name = "EfficientNet_B4"
-        base_model = EfficientNetB4(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB5 ###
-    if (variables["EfficientNetB5"].get() == 1):
-        model_name = "EfficientNet_B5"
-        base_model = EfficientNetB5(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB6 ###
-    if (variables["EfficientNetB6"].get() == 1):
-        model_name = "EfficientNet_B6"
-        base_model = EfficientNetB6(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-    
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
-    
-    
-    ### EfficientNetB7 ###
-    if (variables["EfficientNetB7"].get() == 1):
-        model_name = "EfficientNet_B7"
-        base_model = EfficientNetB7(input_shape=(img_height, img_width, 3),
-                                    include_top=False,
-                                    weights='imagenet')
-        
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### EfficientNetB0 V2 ###
@@ -1311,7 +1465,25 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+
+
+    ### EfficientNetB1 ###
+    if (variables["EfficientNetB1"].get() == 1):
+        model_name = "EfficientNet_B1"
+        base_model = EfficientNetB1(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
     
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+  
     ### EfficientNetB1 V2 ###
     if (variables["EfficientNetB1V2"].get() == 1):
         model_name = "EfficientNet_B1_V2"
@@ -1321,7 +1493,25 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
+    
+    ### EfficientNetB2 ###
+    if (variables["EfficientNetB2"].get() == 1):
+        model_name = "EfficientNet_B2"
+        base_model = EfficientNetB2(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+
     ### EfficientNetB2 V2 ###
     if (variables["EfficientNetB2V2"].get() == 1):
         model_name = "EfficientNet_B2_V2"
@@ -1331,7 +1521,25 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
+        
+    ### EfficientNetB3 ###
+    if (variables["EfficientNetB3"].get() == 1):
+        model_name = "EfficientNet_B3"
+        base_model = EfficientNetB3(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+  
     ### EfficientNetB3 V2 ###
     if (variables["EfficientNetB3V2"].get() == 1):
         model_name = "EfficientNet_B3_V2"
@@ -1341,7 +1549,67 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
+
+    ### EfficientNetB4 ###
+    if (variables["EfficientNetB4"].get() == 1):
+        model_name = "EfficientNet_B4"
+        base_model = EfficientNetB4(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+    
+    ### EfficientNetB5 ###
+    if (variables["EfficientNetB5"].get() == 1):
+        model_name = "EfficientNet_B5"
+        base_model = EfficientNetB5(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+      
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+    
+    ### EfficientNetB6 ###
+    if (variables["EfficientNetB6"].get() == 1):
+        model_name = "EfficientNet_B6"
+        base_model = EfficientNetB6(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+    
+    ### EfficientNetB7 ###
+    if (variables["EfficientNetB7"].get() == 1):
+        model_name = "EfficientNet_B7"
+        base_model = EfficientNetB7(input_shape=(img_height, img_width, 3),
+                                    include_top=False,
+                                    weights='imagenet')
+        
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+        
     ### EfficientNet2S ###
     if (variables["EfficientNetV2Small"].get() == 1): 
         model_name = "EfficientNet_V2_Small"
@@ -1350,6 +1618,10 @@ def run():
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### EfficientNet2M ###
@@ -1361,6 +1633,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### EfficientNet2L ###
     if (variables["EfficientNetV2Large"].get() == 1):
@@ -1370,6 +1646,10 @@ def run():
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### ConvNeXtTiny ###
@@ -1381,6 +1661,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### ConvNeXtSmall ###
     if (variables["ConvNeXtSmall"].get() == 1):
@@ -1391,6 +1675,10 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### ConvNeXtBase ###
     if (variables["ConvNeXtBase"].get() == 1):
@@ -1400,6 +1688,10 @@ def run():
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
     
     ### ConvNeXtLarge ###
@@ -1411,24 +1703,27 @@ def run():
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### ConvNeXtXLarge ###
-    if (variables["ConvNeXtLarge"].get() == 1):
+    if (variables["ConvNeXtXLarge"].get() == 1):
         model_name = "ConvNeXtXLarge"
         base_model = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
                                     include_top=False,
                                     weights='imagenet')
     
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+    
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
 
     print ("End")
 
-# Execution
-exec_info = ttk.LabelFrame(mc, text='Execution')
-exec_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
-for i in range(5):
-    exec_info.columnconfigure(i, weight=1)
-
+# Execution 
 ttk.Button(exec_info, text="Reset", command=reset).grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
 ttk.Button(exec_info, text="Run", command=run).grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 

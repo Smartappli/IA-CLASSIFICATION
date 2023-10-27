@@ -904,7 +904,7 @@ def reset():
     model_ResNet101V2.state(['!selected'])
     variables["ResNet101V2"].set(0)
     
-    model_ResNetRS101(['!selected'])
+    model_ResNetRS101.state(['!selected'])
     variables["ResNetRS101"].set(0)
     
     model_ResNet152.state(['!selected'])

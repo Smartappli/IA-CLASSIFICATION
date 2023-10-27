@@ -649,7 +649,7 @@ def sel():
 
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
-train_info.grid(sticky=(tk.W + tk.E))
+train_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(5):
     train_info.columnconfigure(i, weight=1)
     
@@ -824,7 +824,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0,)
 
 
 

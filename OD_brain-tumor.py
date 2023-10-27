@@ -1312,12 +1312,23 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         if os.path.exists(path) :
             print("Conversion in TFLite")
             # Convert the model.
-            converter = tf. lite.TFLiteConverter.from_saved_model(path)
+            converter = tf.lite.TFLiteConverter.from_saved_model(path)
             tflite_model = converter.convert()
             
             # Save the model.
             with open(output_dir+'/model/'+model_name+'.tflite', 'wb') as f:
                 f.write(tflite_model)
+      
+                
+            # Convert the model.              
+            converter2 = tf.lite.TFLiteConverter.from_saved_model(path)
+            converter2.target_spec.supported_types = [tf.float16]
+            tflite_model2 = converter2.convert()
+            
+            # Save the model.
+            with open(output_dir+'/model/'+model_name+'-float16.tflite', 'wb') as f:
+                f.write(tflite_model2)
+
 
 
 def run():

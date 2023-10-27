@@ -13,6 +13,9 @@ from tensorflow.keras import layers
 from tensorflow.keras.applications import Xception, VGG16, VGG19
 from tensorflow.keras.applications import ResNet50, ResNet101, ResNet152
 from tensorflow.keras.applications import ResNet50V2, ResNet101V2, ResNet152V2
+from tensorflow.keras.applications import RegNetX002, RegNetX004, RegNetX008, RegNetX016, RegNetX032, RegNetX040, RegNetX064, RegNetX080, RegNetX120, RegNetX160, RegNetX320
+from tensorflow.keras.applications import RegNetY002, RegNetY004, RegNetY008, RegNetY016, RegNetY032, RegNetY040, RegNetY064, RegNetY080, RegNetY120, RegNetY160, RegNetY320
+from tensorflow.keras.applications import ResNetRS50, ResNetRS101, ResNetRS152, ResNetRS200, ResNetRS270, ResNetRS350, ResNetRS420
 from tensorflow.keras.applications import InceptionV3, InceptionResNetV2
 from tensorflow.keras.applications import MobileNet, MobileNetV2, MobileNetV3Small, MobileNetV3Large
 from tensorflow.keras.applications import DenseNet121, DenseNet169, DenseNet201
@@ -254,192 +257,231 @@ model_ResNet50V2.grid(row=1, column=4, sticky=(tk.W + tk.E))
 
 
 
+# ResNetRS 50 
+variables["ResNetRS50"] = tk.BooleanVar()
+model_ResNetRS50 = ttk.Checkbutton(mc_info, text='ResNetRS50', variable=variables['ResNetRS50'], onvalue=1, offvalue=0)
+model_ResNetRS50.grid(row=2, column=0, sticky=(tk.W + tk.E))
+
 # ResNet 101
 variables['ResNet101'] = tk.BooleanVar()
 model_ResNet101 = ttk.Checkbutton(mc_info, text="ResNet101", variable=variables["ResNet101"], onvalue = 1, offvalue = 0)
-model_ResNet101.grid(row=2, column=0, sticky=(tk.W + tk.E))
+model_ResNet101.grid(row=2, column=1, sticky=(tk.W + tk.E))
 
 # ResNet 101 Version 2
 variables["ResNet101V2"] = tk.BooleanVar()
 model_ResNet101V2 = ttk.Checkbutton(mc_info, text="ResNet101V2", variable=variables["ResNet101V2"], onvalue = 1, offvalue = 0)
-model_ResNet101V2.grid(row=2, column=1, sticky=(tk.W + tk.E))
+model_ResNet101V2.grid(row=2, column=2, sticky=(tk.W + tk.E))
+
+# ResNetRS 101
+variables["ResNetRS101"] = tk.BooleanVar()
+model_ResNetRS101 = ttk.Checkbutton(mc_info, text='ResNetRS101', variable=variables['ResNetRS101'], onvalue=1, offvalue=0)
+model_ResNetRS101.grid(row=2, column=3, sticky=(tk.W + tk.E))
 
 # ResNet 152
 variables["ResNet152"] = tk.BooleanVar()
 model_ResNet152 = ttk.Checkbutton(mc_info, text="ResNet152", variable=variables["ResNet152"], onvalue = 1, offvalue = 0)
-model_ResNet152.grid(row=2, column=2, sticky=(tk.W + tk.E))
+model_ResNet152.grid(row=2, column=4, sticky=(tk.W + tk.E))
+
+
 
 # ResNet 152 Version 2
 variables["ResNet152V2"] = tk.BooleanVar()
 model_ResNet152V2 = ttk.Checkbutton(mc_info, text="ResNet152V2", variable=variables["ResNet152V2"], onvalue = 1, offvalue = 0)
-model_ResNet152V2.grid(row=2, column=3, sticky=(tk.W + tk.E))
+model_ResNet152V2.grid(row=3, column=0, sticky=(tk.W + tk.E))
+
+# ResNetRS 152
+variables["ResNetRS152"] = tk.BooleanVar()
+model_ResNetRS152 = ttk.Checkbutton(mc_info, text='ResNetRS152', variable=variables['ResNetRS152'], onvalue=1, offvalue=0)
+model_ResNetRS152.grid(row=3, column=1, sticky=(tk.W + tk.E))
+
+# ResNetRS 200
+variables["ResNetRS200"] = tk.BooleanVar()
+model_ResNetRS200 = ttk.Checkbutton(mc_info, text='ResNetRS200', variable=variables['ResNetRS200'], onvalue=1, offvalue=0)
+model_ResNetRS200.grid(row=3, column=2, sticky=(tk.W + tk.E))
+
+# ResNetRS 270
+variables["ResNetRS270"] = tk.BooleanVar()
+model_ResNetRS270 = ttk.Checkbutton(mc_info, text='ResNetRS270', variable=variables['ResNetRS270'], onvalue=1, offvalue=0)
+model_ResNetRS270.grid(row=3, column=3, sticky=(tk.W + tk.E))
+
+# ResNetRS 350
+variables["ResNetRS350"] = tk.BooleanVar()
+model_ResNetRS350 = ttk.Checkbutton(mc_info, text='ResNetRS350', variable=variables['ResNetRS350'], onvalue=1, offvalue=0)
+model_ResNetRS350.grid(row=3, column=4, sticky=(tk.W + tk.E))
+
+
+
+# ResNetRS 420
+variables["ResNetRS420"] = tk.BooleanVar()
+model_ResNetRS420 = ttk.Checkbutton(mc_info, text='ResNetRS420', variable=variables['ResNetRS420'], onvalue=1, offvalue=0)
+model_ResNetRS420.grid(row=4, column=0, sticky=(tk.W + tk.E))
 
 # Inception V3
 variables["InceptionV3"] = tk.BooleanVar()
 model_InceptionV3 = ttk.Checkbutton(mc_info, text="InceptionV3", variable=variables["InceptionV3"], onvalue = 1, offvalue = 0)
-model_InceptionV3.grid(row=2, column=4, sticky=(tk.W + tk.E))
-
-
+model_InceptionV3.grid(row=4, column=1, sticky=(tk.W + tk.E))
 
 # Incception ResNet Version 2
 variables["InceptionResNetV2"] = tk.BooleanVar()
 model_InceptionResNetV2 = ttk.Checkbutton(mc_info, text="InceptionResNetV2", variable=variables["InceptionResNetV2"], onvalue = 1, offvalue = 0)
-model_InceptionResNetV2.grid(row=3, column=0, sticky=(tk.W + tk.E))
+model_InceptionResNetV2.grid(row=4, column=2, sticky=(tk.W + tk.E))
 
 # MobileNet
 variables["MobileNet"] = tk.BooleanVar()
 model_MobileNet = ttk.Checkbutton(mc_info, text="MobileNet", variable=variables["MobileNet"], onvalue = 1, offvalue = 0)
-model_MobileNet.grid(row=3, column=1, sticky=(tk.W + tk.E))
+model_MobileNet.grid(row=4, column=3, sticky=(tk.W + tk.E))
 
 # MobileNet Version 2
 variables["MobileNetV2"] = tk.BooleanVar()
 model_MobileNetV2 = ttk.Checkbutton(mc_info, text="MobileNetV2", variable=variables["MobileNetV2"], onvalue = 1, offvalue = 0)
-model_MobileNetV2.grid(row=3, column=2, sticky=(tk.W + tk.E))
+model_MobileNetV2.grid(row=4, column=4, sticky=(tk.W + tk.E))
+
+
 
 # MobileNet Version 3 Small
 variables["MobileNetV3Small"] = tk.BooleanVar()
 model_MobileNetV3Small = ttk.Checkbutton(mc_info, text="MobileNetV3Small", variable=variables["MobileNetV3Small"], onvalue = 1, offvalue = 0)
-model_MobileNetV3Small.grid(row=3, column=3, sticky=(tk.W + tk.E))
+model_MobileNetV3Small.grid(row=5, column=0, sticky=(tk.W + tk.E))
 
 # MobileNet Version 3 Large
 variables["MobileNetV3Large"] = tk.BooleanVar()
 model_MobileNetV3Large = ttk.Checkbutton(mc_info, text="MobileNetV3Large", variable=variables["MobileNetV3Large"], onvalue = 1, offvalue = 0)
-model_MobileNetV3Large.grid(row=3, column=4, sticky=(tk.W + tk.E))
-
-
+model_MobileNetV3Large.grid(row=5, column=1, sticky=(tk.W + tk.E))
 
 # DenseNet 121
 variables["DenseNet121"] = tk.BooleanVar()
 model_DenseNet121 = ttk.Checkbutton(mc_info, text="DenseNet121", variable=variables["DenseNet121"], onvalue = 1, offvalue = 0)
-model_DenseNet121.grid(row=4, column=0, sticky=(tk.W + tk.E))
+model_DenseNet121.grid(row=5, column=2, sticky=(tk.W + tk.E))
 
 # DenseNet 169
 variables["DenseNet169"] = tk.BooleanVar()
 model_DenseNet169 = ttk.Checkbutton(mc_info, text="DenseNet169", variable=variables["DenseNet169"], onvalue = 1, offvalue = 0)
-model_DenseNet169.grid(row=4, column=1, sticky=(tk.W + tk.E))
+model_DenseNet169.grid(row=5, column=3, sticky=(tk.W + tk.E))
 
 # DenseNet 201
 variables["DenseNet201"] = tk.BooleanVar()
 model_DenseNet201 = ttk.Checkbutton(mc_info, text="DenseNet201", variable=variables["DenseNet201"], onvalue = 1, offvalue = 0)
-model_DenseNet201.grid(row=4, column=2, sticky=(tk.W + tk.E))
+model_DenseNet201.grid(row=5, column=4, sticky=(tk.W + tk.E))
+
+
 
 # NASNet Mobile
 variables["NASNetMobile"] = tk.BooleanVar()
 model_NASNetMobile = ttk.Checkbutton(mc_info, text="NASNetMobile", variable=variables["NASNetMobile"], onvalue = 1, offvalue = 0)
-model_NASNetMobile.grid(row=4, column=3, sticky=(tk.W + tk.E))
+model_NASNetMobile.grid(row=6, column=0, sticky=(tk.W + tk.E))
 
 # NASNet Large
 variables["NASNetLarge"] = tk.BooleanVar()
 model_NASNetLarge = ttk.Checkbutton(mc_info, text="NASNetLarge", variable=variables["NASNetLarge"], onvalue = 1, offvalue = 0)
-model_NASNetLarge.grid(row=4, column=4, sticky=(tk.W + tk.E))
-
-
+model_NASNetLarge.grid(row=6, column=1, sticky=(tk.W + tk.E))
 
 # EfficientNet B0
 variables["EfficientNetB0"] = tk.BooleanVar()
 model_EfficientNetB0 = ttk.Checkbutton(mc_info, text="EfficientNetB0", variable=variables["EfficientNetB0"], onvalue = 1, offvalue = 0)
-model_EfficientNetB0.grid(row=5, column=0, sticky=(tk.W + tk.E))
+model_EfficientNetB0.grid(row=6, column=2, sticky=(tk.W + tk.E))
 
 # EfficientNet B0 Version 2
 variables["EfficientNetB0V2"] = tk.BooleanVar()
 model_EfficientNetB0V2 = ttk.Checkbutton(mc_info, text="EfficientNetB0V2", variable=variables["EfficientNetB0V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB0V2.grid(row=5, column=1, sticky=(tk.W + tk.E))
+model_EfficientNetB0V2.grid(row=6, column=3, sticky=(tk.W + tk.E))
 
 # EfficientNet B1
 variables["EfficientNetB1"] = tk.BooleanVar()
 model_EfficientNetB1 = ttk.Checkbutton(mc_info, text="EfficientNetB1", variable=variables["EfficientNetB1"], onvalue = 1, offvalue = 0)
-model_EfficientNetB1.grid(row=5, column=2, sticky=(tk.W + tk.E))
+model_EfficientNetB1.grid(row=6, column=4, sticky=(tk.W + tk.E))
+
+
 
 # EfficientNet B1 Version 2
 variables["EfficientNetB1V2"] = tk.BooleanVar()
 model_EfficientNetB1V2 = ttk.Checkbutton(mc_info, text="EfficientNetB1V2", variable=variables["EfficientNetB1V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB1V2.grid(row=5, column=3, sticky=(tk.W + tk.E))
+model_EfficientNetB1V2.grid(row=7, column=0, sticky=(tk.W + tk.E))
 
 # EfficientNet B2
 variables["EfficientNetB2"] = tk.BooleanVar()
 model_EfficientNetB2 = ttk.Checkbutton(mc_info, text="EfficientNetB2", variable=variables["EfficientNetB2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB2.grid(row=5, column=4, sticky=(tk.W + tk.E))
-
-
+model_EfficientNetB2.grid(row=7, column=1, sticky=(tk.W + tk.E))
 
 # EfficientNet B2 Version 2
 variables["EfficientNetB2V2"] = tk.BooleanVar()
 model_EfficientNetB2V2 = ttk.Checkbutton(mc_info, text="EfficientNetB2V2", variable=variables["EfficientNetB2V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB2V2.grid(row=6, column=0, sticky=(tk.W + tk.E))
+model_EfficientNetB2V2.grid(row=7, column=2, sticky=(tk.W + tk.E))
 
 # EfficientNet B3
 variables["EfficientNetB3"] = tk.BooleanVar()
 model_EfficientNetB3 = ttk.Checkbutton(mc_info, text="EfficientNetB3", variable=variables["EfficientNetB3"], onvalue = 1, offvalue = 0)
-model_EfficientNetB3.grid(row=6, column=1, sticky=(tk.W + tk.E))
+model_EfficientNetB3.grid(row=7, column=3, sticky=(tk.W + tk.E))
 
 # EfficientNet B3 Version 2
 variables["EfficientNetB3V2"] = tk.BooleanVar()
 model_EfficientNetB3V2 = ttk.Checkbutton(mc_info, text="EfficientNetB3V2", variable=variables["EfficientNetB3V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB3V2.grid(row=6, column=2, sticky=(tk.W + tk.E))
+model_EfficientNetB3V2.grid(row=7, column=4, sticky=(tk.W + tk.E))
+
+
 
 # EfficientNet B4
 variables["EfficientNetB4"] = tk.BooleanVar()
 model_EfficientNetB4 = ttk.Checkbutton(mc_info, text="EfficientNetB4", variable=variables["EfficientNetB4"], onvalue = 1, offvalue = 0)
-model_EfficientNetB4.grid(row=6, column=3, sticky=(tk.W + tk.E))
+model_EfficientNetB4.grid(row=8, column=0, sticky=(tk.W + tk.E))
 
 # EfficientNet B5
 variables["EfficientNetB5"] = tk.BooleanVar()
 model_EfficientNetB5 = ttk.Checkbutton(mc_info, text="EfficientNetB5", variable=variables["EfficientNetB5"], onvalue = 1, offvalue = 0)
-model_EfficientNetB5.grid(row=6, column=4, sticky=(tk.W + tk.E))
-
-
+model_EfficientNetB5.grid(row=8, column=1, sticky=(tk.W + tk.E))
 
 # EfficientNet B6
 variables["EfficientNetB6"] = tk.BooleanVar()
 model_EfficientNetB6 = ttk.Checkbutton(mc_info, text="EfficientNetB6", variable=variables["EfficientNetB6"], onvalue = 1, offvalue = 0)
-model_EfficientNetB6.grid(row=7, column=0, sticky=(tk.W + tk.E))
+model_EfficientNetB6.grid(row=8, column=2, sticky=(tk.W + tk.E))
 
 # EfficientNet B7
 variables["EfficientNetB7"] = tk.BooleanVar()
 model_EfficientNetB7 = ttk.Checkbutton(mc_info, text="EfficientNetB7", variable=variables["EfficientNetB7"], onvalue = 1, offvalue = 0)
-model_EfficientNetB7.grid(row=7, column=1, sticky=(tk.W + tk.E))
+model_EfficientNetB7.grid(row=8, column=3, sticky=(tk.W + tk.E))
 
 # EfficientNet Version 2 Smalll
 variables["EfficientNetV2Small"] = tk.BooleanVar()
 model_EfficientNetV2Small = ttk.Checkbutton(mc_info, text="EfficientNetV2Small", variable=variables["EfficientNetV2Small"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Small.grid(row=7, column=2, sticky=(tk.W + tk.E))
+model_EfficientNetV2Small.grid(row=8, column=4, sticky=(tk.W + tk.E))
+
+
 
 # EfficientNet Version 2 Medium
 variables["EfficientNetV2Medium"] = tk.BooleanVar()
 model_EfficientNetV2Medium = ttk.Checkbutton(mc_info, text="EfficientNetV2Medium", variable=variables["EfficientNetV2Medium"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Medium.grid(row=7, column=3, sticky=(tk.W + tk.E))
+model_EfficientNetV2Medium.grid(row=9, column=0, sticky=(tk.W + tk.E))
 
 # EfficientNet Version 2 Large
 variables["EfficientNetV2Large"] = tk.BooleanVar()
 model_EfficientNetV2Large = ttk.Checkbutton(mc_info, text="EfficientNetV2Large", variable=variables["EfficientNetV2Large"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Large.grid(row=7, column=4, sticky=(tk.W + tk.E))
-
-
+model_EfficientNetV2Large.grid(row=9, column=1, sticky=(tk.W + tk.E))
 
 # ConvNetXt Tiny
 variables["ConvNeXtTiny"] = tk.BooleanVar()
 model_ConvNeXtTiny = ttk.Checkbutton(mc_info, text="ConvNeXtTiny", variable=variables["ConvNeXtTiny"], onvalue = 1, offvalue = 0)
-model_ConvNeXtTiny.grid(row=8, column=0, sticky=(tk.W + tk.E))
+model_ConvNeXtTiny.grid(row=9, column=2, sticky=(tk.W + tk.E))
 
 # ConvNetXt Small
 variables["ConvNeXtSmall"] = tk.BooleanVar()
 model_ConvNeXtSmall = ttk.Checkbutton(mc_info, text="ConvNeXtSmall", variable=variables["ConvNeXtSmall"], onvalue = 1, offvalue = 0)
-model_ConvNeXtSmall.grid(row=8, column=1, sticky=(tk.W + tk.E))
+model_ConvNeXtSmall.grid(row=9, column=3, sticky=(tk.W + tk.E))
 
 # ConvNetXt Base
 variables["ConvNeXtBase"] = tk.BooleanVar()
 model_ConvNeXtBase = ttk.Checkbutton(mc_info, text="ConvNeXtBase", variable=variables["ConvNeXtBase"], onvalue = 1, offvalue = 0)
-model_ConvNeXtBase.grid(row=8, column=2, sticky=(tk.W + tk.E))
+model_ConvNeXtBase.grid(row=9, column=4, sticky=(tk.W + tk.E))
+
+
 
 # ConvNetXt Large
 variables["ConvNeXtLarge"] = tk.BooleanVar()
 model_ConvNeXtLarge = ttk.Checkbutton(mc_info, text="ConvNeXtLarge", variable=variables["ConvNeXtLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtLarge.grid(row=8, column=3, sticky=(tk.W + tk.E))
+model_ConvNeXtLarge.grid(row=10, column=0, sticky=(tk.W + tk.E))
 
 # ConvNetXt XLarge
 variables["ConvNeXtXLarge"] = tk.BooleanVar()
 model_ConvNeXtXLarge = ttk.Checkbutton(mc_info, text="ConvNeXtXLarge", variable=variables["ConvNeXtXLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtXLarge.grid(row=8, column=4, sticky=(tk.W + tk.E))
+model_ConvNeXtXLarge.grid(row=10, column=1, sticky=(tk.W + tk.E))
 
 def sel():
     if (variables['strategie'].get()==1):
@@ -720,89 +762,142 @@ def reset():
     
     model_Xception.state(['!selected'])
     variables["Xception"].set(0)
+
     model_VGG16.state(['!selected'])
     variables["VGG16"].set(0)
+
     model_VGG19.state(['!selected'])
     variables["VGG19"].set(0)
+
     model_ResNet50.state(['!selected'])
     variables["ResNet50"].set(0)
+
     model_ResNet50V2.state(['!selected'])
     variables["ResNet50V2"].set(0)
     
+    model_ResNetRS50.state(['!selected'])
+    variables["ResNetRS50"].set(0)
+    
     model_ResNet101.state(['!selected'])
     variables["ResNet101"].set(0)
+
     model_ResNet101V2.state(['!selected'])
     variables["ResNet101V2"].set(0)
+    
+    model_ResNetRS101(['!selected'])
+    variables["ResNetRS101"].set(0)
+    
     model_ResNet152.state(['!selected'])
     variables["ResNet152"].set(0)
+    
     model_ResNet152V2.state(['!selected'])
     variables["ResNet152V2"].set(0)
+    
+    model_ResNetRS152.state(['!selected'])
+    variables["ResNetRS152"].set(0)
+
+    model_ResNetRS200.state(['!selected'])
+    variables["ResNetRS200"].set(0)
+    
+    model_ResNetRS270.state(['!selected'])
+    variables["ResNetRS270"].set(0)
+    
+    model_ResNetRS350.state(['!selected'])
+    variables["ResNetRS350"].set(0)
+    
+    model_ResNetRS420.state(['!selected'])
+    variables["ResNetRS420"].set(0)
+    
     model_InceptionV3.state(['!selected'])
     variables["InceptionV3"].set(0)
     
     model_InceptionResNetV2.state(['!selected'])
     variables["InceptionResNetV2"].set(0)
+    
     model_MobileNet.state(['!selected'])
     variables["MobileNet"].set(0)
+    
     model_MobileNetV2.state(['!selected'])
     variables["MobileNetV2"].set(0)
+    
     model_MobileNetV3Small.state(['!selected'])
     variables["MobileNetV3Small"].set(0)
+
     model_MobileNetV3Large.state(['!selected'])
     variables["MobileNetV3Large"].set(0)
     
     model_DenseNet121.state(['!selected'])
     variables["DenseNet121"].set(0)
+
     model_DenseNet169.state(['!selected'])
     variables["DenseNet169"].set(0)
+
     model_DenseNet201.state(['!selected'])
     variables["DenseNet201"].set(0)
+
     model_NASNetMobile.state(['!selected'])
     variables["NASNetMobile"].set(0)
+
     model_NASNetLarge.state(['!selected'])
     variables["NASNetLarge"].set(0)
     
     model_EfficientNetB0.state(['!selected'])
     variables["EfficientNetB0"].set(0)
+
     model_EfficientNetB0V2.state(['!selected'])
     variables["EfficientNetB0V2"].set(0)
+
     model_EfficientNetB1.state(['!selected'])
     variables["EfficientNetB1"].set(0)
+
     model_EfficientNetB1V2.state(['!selected'])
     variables["EfficientNetB1V2"].set(0)
+
     model_EfficientNetB2.state(['!selected'])
     variables["EfficientNetB2"].set(0)
     
     model_EfficientNetB2V2.state(['!selected'])
     variables["EfficientNetB2V2"].set(0)
+
     model_EfficientNetB3.state(['!selected'])
     variables["EfficientNetB3"].set(0)
+
     model_EfficientNetB3V2.state(['!selected']) 
     variables["EfficientNetB3V2"].set(0)
+
     model_EfficientNetB4.state(['!selected'])
     variables["EfficientNetB4"].set(0)
+
     model_EfficientNetB5.state(['!selected'])
     variables["EfficientNetB5"].set(0)
     
     model_EfficientNetB6.state(['!selected'])
     variables["EfficientNetB6"].set(0)
+
     model_EfficientNetB7.state(['!selected'])
     variables["EfficientNetB7"].set(0)
+
     model_EfficientNetV2Small.state(['!selected'])
     variables["EfficientNetV2Small"].set(0)
+
     model_EfficientNetV2Medium.state(['!selected'])
     variables["EfficientNetV2Medium"].set(0)
+
     model_EfficientNetV2Large.state(['!selected'])
     variables["EfficientNetV2Large"].set(0)
     
     model_ConvNeXtTiny.state(['!selected'])
     variables["ConvNeXtTiny"].set(0)
+
     model_ConvNeXtSmall.state(['!selected'])
     variables["ConvNeXtSmall"].set(0)
+
     model_ConvNeXtBase.state(['!selected'])
     variables["ConvNeXtBase"].set(0)
+
     model_ConvNeXtLarge.state(['!selected'])
     variables["ConvNeXtLarge"].set(0)
+
     model_ConvNeXtXLarge.state(['!selected'])
     variables["ConvNeXtXLarge"].set(0)
     
@@ -1055,19 +1150,40 @@ def run():
         
     if (variables["ResNet50V2"].get() == 1):
         total = total + 1
+        
+    if (variables["ResNetRS50"].get() == 1):
+        total = total + 1        
      
     if (variables["ResNet101"].get() == 1):
         total = total + 1
         
     if (variables["ResNet101V2"].get() == 1):
         total = total + 1
+        
+    if (variables["ResNetRS101"].get() == 1):
+        total = total + 1 
     
     if (variables["ResNet152"].get() == 1):
         total = total + 1
         
     if (variables["ResNet152V2"].get() == 1):
         total = total + 1
+        
+    if (variables["ResNetRS152"].get() == 1):
+        total = total + 1 
        
+    if (variables["ResNetRS200"].get() == 1):
+        total = total + 1 
+        
+    if (variables["ResNetRS270"].get() == 1):
+        total = total + 1 
+        
+    if (variables["ResNetRS350"].get() == 1):
+        total = total + 1 
+        
+    if (variables["ResNetRS420"].get() == 1):
+        total = total + 1 
+        
     if (variables["InceptionV3"].get() == 1):
         total = total + 1
         
@@ -1230,6 +1346,20 @@ def run():
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
         mc.update()
+        
+        
+    ### ResNetRS50 ###
+    if (variables["ResNetRS50"].get() == 1):
+        model_name = "ResNetRS50"
+        base_model = ResNetRS50(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
     
             
     ### ResNet101 ###
@@ -1260,6 +1390,20 @@ def run():
         mc.update()
         
     
+    ### ResNetRS101 ###
+    if (variables["ResNetRS101"].get() == 1):
+        model_name = "ResNetRS101"
+        base_model = ResNetRS101(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+        
+        
     ### ResNet152 ###
     if (variables["ResNet152"].get() == 1):
         model_name = "ResNet152"
@@ -1287,6 +1431,76 @@ def run():
         pgb.set(round((cpt/total)*100))
         mc.update()   
 
+ 
+    ### ResNetRS 152 ###
+    if (variables["ResNetRS152"].get() == 1):
+        model_name = "ResNetRS152"
+        base_model = ResNetRS152(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+
+
+    ### ResNetRS 200 ###
+    if (variables["ResNetRS200"].get() == 1):
+        model_name = "ResNetRS200"
+        base_model = ResNetRS200(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+  
+    
+    ### ResNetRS 270 ###
+    if (variables["ResNetRS270"].get() == 1):
+        model_name = "ResNetRS270"
+        base_model = ResNetRS270(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
+    
+    ### ResNetRS 350 ###
+    if (variables["ResNetRS350"].get() == 1):
+        model_name = "ResNetRS350"
+        base_model = ResNetRS350(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()    
+
+
+    ### ResNetRS 420 ###
+    if (variables["ResNetRS420"].get() == 1):
+        model_name = "ResNetRS420"
+        base_model = ResNetRS420(input_shape=(img_height, img_width, 3),
+                              include_top=False,
+                              weights='imagenet')
+    
+        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+
+        cpt = cpt + 1
+        pgb.set(round((cpt/total)*100))
+        mc.update()
+    
     
     ### Inception V3 ###
     if (variables["InceptionV3"].get() == 1):

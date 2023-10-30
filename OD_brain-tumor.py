@@ -38,7 +38,6 @@ import os.path
 from pathlib import Path
 import platform
 
-
 numgpu = len(tf.config.list_physical_devices('GPU'))
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
@@ -1110,8 +1109,10 @@ if (numgpu > 1) :
     
 variables['checkpoint'] = tk.IntVar()
 ttk.Label(train_info, text="Save & Restore").grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Checkbutton(train_info, text="Checkpoint", variable=variables["checkpoint"]).grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-
+chkpoint = ttk.Checkbutton(train_info, text="Checkpoint", variable=variables["checkpoint"])
+chkpoint.grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+chkpoint.state(['selected'])
+variables['checkpoint'].set(1)
 
 ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=5, padx=5, pady=5, sticky=(tk.W + tk.E))
 
@@ -1260,7 +1261,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0,)
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - Python: " + platform.python_version() + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0,)
 
 
 
@@ -1351,7 +1352,7 @@ def scheduler(epoch, lr):
     else:
        return lr * tf.math.exp(-0.1)    
     
-def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epoch1, optimizer2, loss2, epoch2, optimizer3, loss3, epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
+def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _epoch1, _optimizer2, _loss2, _epoch2, _optimizer3, _loss3, _epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
@@ -1383,7 +1384,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
             model = tf.keras.Model(inputs, outputs)
             
             # Compile the model
-            model.compile(optimizer=optimizer1,
+            model.compile(optimizer=_optimizer1,
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
         
@@ -1422,7 +1423,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=variables["epoch3"].get(), callbacks=callbacks2)            
         
     # CPU or single GPU   
     else:
@@ -1435,12 +1436,12 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
         model = tf.keras.Model(inputs, outputs)
         
         # Compile the model
-        model.compile(optimizer=optimizer1,
+        model.compile(optimizer=_optimizer1,
                       loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                       metrics=['accuracy'])
     
         # Train the model
-        hist = model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks) 
+        hist = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch1), callbacks=callbacks) 
 
         if (strategie == 2):
                 
@@ -1451,7 +1452,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
             
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=5, callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks2)    
                 
         if (strategie == 3):
 
@@ -1461,7 +1462,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           metrics=['accuracy'])
          
             # Train the model
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)                
                 
             # Fine-tune the base model
             base_model.trainable = True
@@ -1470,7 +1471,7 @@ def training(strategie, multigpu, base_model, model_name, optimizer1, loss1, epo
                           loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                           metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch3, callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks2)            
 
     
     #Output
@@ -1783,7 +1784,8 @@ def run():
     ### Xception Model ##    
     if (variables["Xception"].get() == 1):
         model_name = "Xception"  
-        base_model = Xception(input_shape=(img_height, img_width, 3),
+        
+        base_model = Xception(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
             
@@ -1797,7 +1799,8 @@ def run():
     ### VGG16 Model ###
     if (variables["VGG16"].get() == 1):
         model_name = "VGG16"
-        base_model = VGG16(input_shape=(img_height, img_width, 3),
+        
+        base_model = VGG16(input_shape=(img_height, img_width, int(variables["channel"].get())),
                            include_top=False,
                            weights='imagenet')
     
@@ -1811,10 +1814,11 @@ def run():
     ### VGG19 model ###
     if (variables["VGG19"].get() == 1):
         model_name = "VGG19"
-        base_model = VGG19(input_shape=(img_height, img_width, 3),
+        
+        base_model = VGG19(input_shape=(img_height, img_width, int(variables["channel"].get())),
                            include_top=False,
                            weights='imagenet')  
-      
+        
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
@@ -1825,7 +1829,8 @@ def run():
     ### ResNet50 ###
     if (variables["ResNet50"].get() == 1):
         model_name = "ResNet50"
-        base_model = ResNet50(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNet50(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1839,7 +1844,8 @@ def run():
     ### ResNet50 V2 ###
     if (variables["ResNet50V2"].get() == 1):
         model_name = "ResNet50_V2"
-        base_model = ResNet50V2(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNet50V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                 include_top=False,
                                 weights='imagenet')
     
@@ -1853,7 +1859,8 @@ def run():
     ### ResNetRS50 ###
     if (variables["ResNetRS50"].get() == 1):
         model_name = "ResNetRS50"
-        base_model = ResNetRS50(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNetRS50(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1867,9 +1874,11 @@ def run():
     ### ResNet101 ###
     if (variables["ResNet101"].get() == 1):
         model_name = "ResNet101"
-        base_model = ResNet101(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNet101(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
+        
         
         training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
      
@@ -1881,7 +1890,8 @@ def run():
     ### ResNet101 V2 ###
     if (variables["ResNet101V2"].get() == 1):
         model_name = "ResNet101_V2"
-        base_model = ResNet101V2(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNet101V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
@@ -1895,7 +1905,8 @@ def run():
     ### ResNetRS101 ###
     if (variables["ResNetRS101"].get() == 1):
         model_name = "ResNetRS101"
-        base_model = ResNetRS101(input_shape=(img_height, img_width, 3),
+        
+        base_model = ResNetRS101(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1909,7 +1920,7 @@ def run():
     ### ResNet152 ###
     if (variables["ResNet152"].get() == 1):
         model_name = "ResNet152"
-        base_model = ResNet152(input_shape=(img_height, img_width, 3),
+        base_model = ResNet152(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
         
@@ -1923,7 +1934,7 @@ def run():
     ### ResNet152 V2 ###
     if (variables["ResNet152V2"].get() == 1):
         model_name = "ResNet152_V2"
-        base_model = ResNet152V2(input_shape=(img_height, img_width, 3),
+        base_model = ResNet152V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
@@ -1937,7 +1948,7 @@ def run():
     ### ResNetRS 152 ###
     if (variables["ResNetRS152"].get() == 1):
         model_name = "ResNetRS152"
-        base_model = ResNetRS152(input_shape=(img_height, img_width, 3),
+        base_model = ResNetRS152(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1951,7 +1962,7 @@ def run():
     ### ResNetRS 200 ###
     if (variables["ResNetRS200"].get() == 1):
         model_name = "ResNetRS200"
-        base_model = ResNetRS200(input_shape=(img_height, img_width, 3),
+        base_model = ResNetRS200(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1965,7 +1976,7 @@ def run():
     ### ResNetRS 270 ###
     if (variables["ResNetRS270"].get() == 1):
         model_name = "ResNetRS270"
-        base_model = ResNetRS270(input_shape=(img_height, img_width, 3),
+        base_model = ResNetRS270(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1979,7 +1990,7 @@ def run():
     ### ResNetRS 350 ###
     if (variables["ResNetRS350"].get() == 1):
         model_name = "ResNetRS350"
-        base_model = ResNetRS350(input_shape=(img_height, img_width, 3),
+        base_model = ResNetRS350(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -1993,7 +2004,7 @@ def run():
     ### ResNetRS 420 ###
     if (variables["ResNetRS420"].get() == 1):
         model_name = "ResNetRS420"
-        base_model = ResNetRS420(input_shape=(img_height, img_width, 3),
+        base_model = ResNetRS420(input_shape=(img_height, img_width, int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
@@ -2007,7 +2018,7 @@ def run():
     ### Inception V3 ###
     if (variables["InceptionV3"].get() == 1):
         model_name = "Inception_V3"
-        base_model = InceptionV3(input_shape=(img_height, img_width, 3),
+        base_model = InceptionV3(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
@@ -2021,7 +2032,7 @@ def run():
     ### InceptionResNet V2 ###
     if (variables["InceptionResNetV2"].get() == 1):
         model_name = "InceptionResNet_V2"
-        base_model = InceptionResNetV2(input_shape=(img_height, img_width, 3),
+        base_model = InceptionResNetV2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                        include_top=False,
                                        weights='imagenet')
         
@@ -2035,7 +2046,7 @@ def run():
     ### MobileNet ###
     if (variables["MobileNet"].get() == 1):
         model_name = "MobileNet"
-        base_model = MobileNet(input_shape=(img_height, img_width, 3),
+        base_model = MobileNet(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
     
@@ -2049,7 +2060,7 @@ def run():
     ### MobileNet V2 ###
     if (variables["MobileNetV2"].get() == 1):
         model_name = "MobileNet_V2"
-        base_model = MobileNetV2(input_shape=(img_height, img_width, 3),
+        base_model = MobileNetV2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
@@ -2063,7 +2074,7 @@ def run():
     ### MobileNet V3 Small ###
     if (variables["MobileNetV3Small"].get() == 1):
         model_name = "MobileNet_V3_Small"
-        base_model = MobileNetV3Small(input_shape=(img_height, img_width, 3),
+        base_model = MobileNetV3Small(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                       include_top=False,
                                       weights='imagenet')
         
@@ -2077,7 +2088,8 @@ def run():
     ### MobileNet V3 Large ###
     if (variables["MobileNetV3Large"].get() == 1):
         model_name = "MobileNet_V3_Large"
-        base_model = MobileNetV3Large(input_shape=(img_height, img_width, 3),
+
+        base_model = MobileNetV3Large(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                       include_top=False,
                                       weights='imagenet')
     
@@ -2091,7 +2103,7 @@ def run():
     ### DenseNet 121 ###
     if (variables["DenseNet121"].get() == 1):
         model_name = "DenseNet121"
-        base_model = DenseNet121(input_shape=(img_height, img_width, 3),
+        base_model = DenseNet121(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
@@ -2105,7 +2117,7 @@ def run():
     ### DenseNet 169 ###
     if (variables["DenseNet169"].get() == 1):
         model_name = "DenseNet169"
-        base_model = DenseNet169(input_shape=(img_height, img_width, 3),
+        base_model = DenseNet169(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
@@ -2119,7 +2131,7 @@ def run():
     ### DenseNet 201 ###
     if (variables["DenseNet201"].get() == 1):
         model_name = "DenseNet201"
-        base_model = DenseNet201(input_shape=(img_height, img_width, 3),
+        base_model = DenseNet201(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
@@ -2133,7 +2145,7 @@ def run():
     ### NASNetMobile ###
     if (variables["NASNetMobile"].get() == 1):
         model_name = "NASNetMobile"
-        base_model = NASNetMobile(input_shape=(img_height, img_width, 3),
+        base_model = NASNetMobile(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                   include_top=False,
                                   weights='imagenet')
         
@@ -2147,7 +2159,7 @@ def run():
     ### NASNetLarge ###
     if (variables["NASNetLarge"].get() == 1):
         model_name = "NASNetLarge"
-        base_model = NASNetLarge(input_shape=(img_height, img_width, 3),
+        base_model = NASNetLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2161,7 +2173,7 @@ def run():
     ### EfficientNetB0 ###
     if (variables["EfficientNetB0"].get() == 1):
         model_name = "EfficientNet_B0"
-        base_model = EfficientNetB0(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB0(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2175,7 +2187,7 @@ def run():
     ### EfficientNetB0 V2 ###
     if (variables["EfficientNetB0V2"].get() == 1):
         model_name = "EfficientNet_B0_V2"
-        base_model = EfficientNetV2B0(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2B0(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2189,7 +2201,7 @@ def run():
     ### EfficientNetB1 ###
     if (variables["EfficientNetB1"].get() == 1):
         model_name = "EfficientNet_B1"
-        base_model = EfficientNetB1(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB1(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2203,7 +2215,7 @@ def run():
     ### EfficientNetB1 V2 ###
     if (variables["EfficientNetB1V2"].get() == 1):
         model_name = "EfficientNet_B1_V2"
-        base_model = EfficientNetV2B1(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2B1(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2217,7 +2229,7 @@ def run():
     ### EfficientNetB2 ###
     if (variables["EfficientNetB2"].get() == 1):
         model_name = "EfficientNet_B2"
-        base_model = EfficientNetB2(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2231,7 +2243,7 @@ def run():
     ### EfficientNetB2 V2 ###
     if (variables["EfficientNetB2V2"].get() == 1):
         model_name = "EfficientNet_B2_V2"
-        base_model = EfficientNetV2B2(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2B2(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2245,7 +2257,7 @@ def run():
     ### EfficientNetB3 ###
     if (variables["EfficientNetB3"].get() == 1):
         model_name = "EfficientNet_B3"
-        base_model = EfficientNetB3(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB3(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2259,7 +2271,7 @@ def run():
     ### EfficientNetB3 V2 ###
     if (variables["EfficientNetB3V2"].get() == 1):
         model_name = "EfficientNet_B3_V2"
-        base_model = EfficientNetV2B3(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2B3(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2273,7 +2285,7 @@ def run():
     ### EfficientNetB4 ###
     if (variables["EfficientNetB4"].get() == 1):
         model_name = "EfficientNet_B4"
-        base_model = EfficientNetB4(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB4(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2287,7 +2299,7 @@ def run():
     ### EfficientNetB5 ###
     if (variables["EfficientNetB5"].get() == 1):
         model_name = "EfficientNet_B5"
-        base_model = EfficientNetB5(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB5(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2301,7 +2313,7 @@ def run():
     ### EfficientNetB6 ###
     if (variables["EfficientNetB6"].get() == 1):
         model_name = "EfficientNet_B6"
-        base_model = EfficientNetB6(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB6(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2315,7 +2327,7 @@ def run():
     ### EfficientNetB7 ###
     if (variables["EfficientNetB7"].get() == 1):
         model_name = "EfficientNet_B7"
-        base_model = EfficientNetB7(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetB7(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
         
@@ -2329,7 +2341,7 @@ def run():
     ### EfficientNet2S ###
     if (variables["EfficientNetV2Small"].get() == 1): 
         model_name = "EfficientNet_V2_Small"
-        base_model = EfficientNetV2S(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2S(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2343,7 +2355,7 @@ def run():
     ### EfficientNet2M ###
     if (variables["EfficientNetV2Medium"].get() == 1):
         model_name = "EfficientNet_V2_Medium"
-        base_model = EfficientNetV2M(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2M(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2357,7 +2369,7 @@ def run():
     ### EfficientNet2L ###
     if (variables["EfficientNetV2Large"].get() == 1):
         model_name = "EfficientNet_V2_Large"
-        base_model = EfficientNetV2L(input_shape=(img_height, img_width, 3),
+        base_model = EfficientNetV2L(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2371,7 +2383,7 @@ def run():
     ### ConvNeXtTiny ###
     if (variables["ConvNeXtTiny"].get() == 1):
         model_name = "ConvNeXtTiny"
-        base_model = ConvNeXtTiny(input_shape=(img_height, img_width, 3),
+        base_model = ConvNeXtTiny(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2385,7 +2397,7 @@ def run():
     ### ConvNeXtSmall ###
     if (variables["ConvNeXtSmall"].get() == 1):
         model_name = "ConvNeXtSmall"
-        base_model = ConvNeXtSmall(input_shape=(img_height, img_width, 3),
+        base_model = ConvNeXtSmall(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2399,7 +2411,7 @@ def run():
     ### ConvNeXtBase ###
     if (variables["ConvNeXtBase"].get() == 1):
         model_name = "ConvNeXtBase"
-        base_model = ConvNeXtBase(input_shape=(img_height, img_width, 3),
+        base_model = ConvNeXtBase(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2413,7 +2425,7 @@ def run():
     ### ConvNeXtLarge ###
     if (variables["ConvNeXtLarge"].get() == 1):
         model_name = "ConvNeXtLarge"
-        base_model = ConvNeXtLarge(input_shape=(img_height, img_width, 3),
+        base_model = ConvNeXtLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2427,7 +2439,7 @@ def run():
     ### ConvNeXtXLarge ###
     if (variables["ConvNeXtXLarge"].get() == 1):
         model_name = "ConvNeXtXLarge"
-        base_model = ConvNeXtXLarge(input_shape=(img_height, img_width, 3),
+        base_model = ConvNeXtXLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2440,7 +2452,7 @@ def run():
     ### RegNetX002 ###
     if (variables["RegNetX002"].get() == 1):
         model_name = "RegNetX002"
-        base_model = RegNetX002(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX002(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2453,7 +2465,7 @@ def run():
     ### RegNetY002 ###
     if (variables["RegNetY002"].get() == 1):
         model_name = "RegNetY002"
-        base_model = RegNetY002(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY002(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2466,7 +2478,7 @@ def run():
     ### RegNetX004 ###
     if (variables["RegNetX004"].get() == 1):
         model_name = "RegNetX004"
-        base_model = RegNetX004(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX004(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2479,7 +2491,7 @@ def run():
     ### RegNetY004 ###
     if (variables["RegNetY004"].get() == 1):
         model_name = "RegNetY004"
-        base_model = RegNetY004(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY004(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2492,7 +2504,7 @@ def run():
     ### RegNetX006 ###
     if (variables["RegNetX006"].get() == 1):
         model_name = "RegNetX006"
-        base_model = RegNetX006(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX006(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2505,7 +2517,7 @@ def run():
     ### RegNetY006 ###
     if (variables["RegNetY006"].get() == 1):
         model_name = "RegNetY006"
-        base_model = RegNetY006(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY006(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2518,7 +2530,7 @@ def run():
     ### RegNetX008 ###
     if (variables["RegNetX008"].get() == 1):
         model_name = "RegNetX008"
-        base_model = RegNetX008(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX008(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2531,7 +2543,7 @@ def run():
     ### RegNetY008 ###
     if (variables["RegNetY008"].get() == 1):
         model_name = "RegNetY008"
-        base_model = RegNetY008(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY008(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2544,7 +2556,7 @@ def run():
     ### RegNetX016 ###
     if (variables["RegNetX016"].get() == 1):
         model_name = "RegNetX016"
-        base_model = RegNetX016(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX016(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2557,7 +2569,7 @@ def run():
     ### RegNetY016 ###
     if (variables["RegNetY016"].get() == 1):
         model_name = "RegNetY016"
-        base_model = RegNetY016(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY016(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2570,7 +2582,7 @@ def run():
     ### RegNetX032 ###
     if (variables["RegNetX032"].get() == 1):
         model_name = "RegNetX032"
-        base_model = RegNetX032(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX032(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2583,7 +2595,7 @@ def run():
     ### RegNetY032 ###
     if (variables["RegNetY032"].get() == 1):
         model_name = "RegNetY032"
-        base_model = RegNetY032(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY032(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2596,7 +2608,7 @@ def run():
     ### RegNetX040 ###
     if (variables["RegNetX040"].get() == 1):
         model_name = "RegNetX040"
-        base_model = RegNetX040(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX040(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2609,7 +2621,7 @@ def run():
     ### RegNetY040 ###
     if (variables["RegNetY040"].get() == 1):
         model_name = "RegNetY040"
-        base_model = RegNetY040(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY040(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2622,7 +2634,7 @@ def run():
     ### RegNetX064 ###
     if (variables["RegNetX064"].get() == 1):
         model_name = "RegNetX064"
-        base_model = RegNetX064(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX064(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2635,7 +2647,7 @@ def run():
     ### RegNetY064 ###
     if (variables["RegNetY064"].get() == 1):
         model_name = "RegNetY064"
-        base_model = RegNetY064(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY064(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2648,7 +2660,7 @@ def run():
     ### RegNetX080 ###
     if (variables["RegNetX080"].get() == 1):
         model_name = "RegNetX080"
-        base_model = RegNetX080(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX080(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2661,7 +2673,7 @@ def run():
     ### RegNetY080 ###
     if (variables["RegNetY080"].get() == 1):
         model_name = "RegNetY080"
-        base_model = RegNetY080(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY080(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2674,7 +2686,7 @@ def run():
     ### RegNetX120 ###
     if (variables["RegNetX120"].get() == 1):
         model_name = "RegNetX120"
-        base_model = RegNetX120(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX120(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2687,7 +2699,7 @@ def run():
     ### RegNetY120 ###
     if (variables["RegNetY120"].get() == 1):
         model_name = "RegNetY120"
-        base_model = RegNetY120(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY120(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2700,7 +2712,7 @@ def run():
     ### RegNetX160 ###
     if (variables["RegNetX160"].get() == 1):
         model_name = "RegNetX160"
-        base_model = RegNetX160(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX160(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2713,7 +2725,7 @@ def run():
     ### RegNetY160 ###
     if (variables["RegNetY160"].get() == 1):
         model_name = "RegNetY160"
-        base_model = RegNetY160(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY160(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2726,7 +2738,7 @@ def run():
     ### RegNetX320 ###
     if (variables["RegNetX320"].get() == 1):
         model_name = "RegNetX320"
-        base_model = RegNetX320(input_shape=(img_height, img_width, 3),
+        base_model = RegNetX320(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -2739,7 +2751,7 @@ def run():
     ### RegNetY080 ###
     if (variables["RegNetY320"].get() == 1):
         model_name = "RegNetY320"
-        base_model = RegNetY320(input_shape=(img_height, img_width, 3),
+        base_model = RegNetY320(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     

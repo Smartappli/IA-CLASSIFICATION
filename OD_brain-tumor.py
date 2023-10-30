@@ -51,10 +51,6 @@ else :
     data_dir = str(p) + '/Data'
     output_dir = str(p) + '/Output'
 
-batch_size = 32
-img_height = 224 #256
-img_width = 224 #256
-
 root = tk.Tk()
 root.title('AI Classifier')
 root.columnconfigure(0, weight=1)
@@ -62,8 +58,6 @@ root.columnconfigure(0, weight=1)
 mc = ttk.Frame(root)
 mc.grid(padx=10, pady=10, sticky=(tk.W + tk.E))
 mc.columnconfigure(0, weight=1)
-
-
 
 data_info = ttk.LabelFrame(mc, text='Data Parameters')
 data_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
@@ -84,10 +78,10 @@ variables["outputdata"].set(output_dir)
 
 variables["imgresizing"] = tk.StringVar()
 ttk.Label(data_info, text="Image Resizing (pixels)").grid(row=2, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
-listsize = ['128 x 128', '224 x 224', '256 x 256', '300 x 300', '400 x 400', '512 x 512']
+listsize = ['28 x 28', '32 x 32', '64 x 64', '128 x 128', '224 x 224', '256 x 256', '299 x 299', '300 x 300', '400 x 400', '512 x 512']
 imgresize = ttk.Combobox(data_info, values=listsize, textvariable=variables["imgresizing"], state='readonly')
 imgresize.grid(row=3, column=0, sticky=(tk.W + tk.E), padx=5, pady=5)
-imgresize.current(1)
+imgresize.current(4)
 
 variables["channel"] = tk.IntVar()
 ttk.Label(data_info, text="Number of channels").grid(row=2, column=1, sticky=(tk.W + tk.E), padx=5, pady=5)
@@ -1328,7 +1322,7 @@ def scheduler(epoch, lr):
     else:
        return lr * tf.math.exp(-0.1)    
     
-def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _epoch1, _optimizer2, _loss2, _epoch2, _optimizer3, _loss3, _epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
+def training(_img_height, _img_width, strategie, multigpu, base_model, model_name, _optimizer1, loss1, _epoch1, _optimizer2, _loss2, _epoch2, _optimizer3, _loss3, _epoch3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
         tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
@@ -1353,7 +1347,7 @@ def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _e
             base_model.trainable = False
             
             # Add a new classifier layers on top of the base model
-            inputs = tf.keras.Input(shape=(img_height, img_width, 3))
+            inputs = tf.keras.Input(shape=(_img_height, _img_width, int(variables["channel"].get())))
             x = base_model(inputs, training=False)
             x = layers.GlobalAveragePooling2D()(x)
             outputs = layers.Dense(variables["classes"].get())(x) 
@@ -1405,7 +1399,7 @@ def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _e
     else:
         base_model.trainable = False
         # Add a new classifier layers on top of the base model
-        inputs = tf.keras.Input(shape=(img_height, img_width, 3))
+        inputs = tf.keras.Input(shape=(_img_height, _img_width, int(variables["channel"].get())))
         x = base_model(inputs, training=False)
         x = layers.GlobalAveragePooling2D()(x)
         outputs = layers.Dense(variables["classes"].get())(x) 
@@ -1535,6 +1529,10 @@ def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _e
 
 def run():
     print("Start")
+    
+    size = variables["imgresizing"].get().split(' x ')
+    img_height = int(size[0])
+    img_width = int(size[1])
     
     # Load the data
     print("Data Processing...")
@@ -1789,7 +1787,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
             
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1804,7 +1802,7 @@ def run():
                            include_top=False,
                            weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1819,7 +1817,7 @@ def run():
                            include_top=False,
                            weights='imagenet')  
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1834,7 +1832,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1849,7 +1847,7 @@ def run():
                                 include_top=False,
                                 weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1864,7 +1862,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1880,7 +1878,7 @@ def run():
                                weights='imagenet')
         
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
      
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1895,7 +1893,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1910,7 +1908,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1924,7 +1922,7 @@ def run():
                                include_top=False,
                                weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1938,7 +1936,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1952,7 +1950,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1966,7 +1964,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1980,7 +1978,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -1994,7 +1992,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2008,7 +2006,7 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2022,7 +2020,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2036,7 +2034,7 @@ def run():
                                        include_top=False,
                                        weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2050,7 +2048,7 @@ def run():
                                include_top=False,
                                weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2064,7 +2062,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2078,7 +2076,7 @@ def run():
                                       include_top=False,
                                       weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2093,7 +2091,7 @@ def run():
                                       include_top=False,
                                       weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
 
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2107,7 +2105,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2121,7 +2119,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2135,7 +2133,7 @@ def run():
                                  include_top=False,
                                  weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2149,7 +2147,7 @@ def run():
                                   include_top=False,
                                   weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2163,7 +2161,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2177,7 +2175,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2191,7 +2189,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2205,7 +2203,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2219,7 +2217,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2233,7 +2231,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2247,7 +2245,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2261,7 +2259,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2275,7 +2273,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2289,7 +2287,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2303,7 +2301,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
       
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2317,7 +2315,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2331,7 +2329,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
         
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2345,7 +2343,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2359,7 +2357,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2373,7 +2371,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2387,7 +2385,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2401,7 +2399,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2415,7 +2413,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
         
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2429,7 +2427,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2443,7 +2441,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2456,7 +2454,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2469,7 +2467,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2482,7 +2480,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2495,7 +2493,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2508,7 +2506,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2521,7 +2519,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2534,7 +2532,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2547,7 +2545,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2560,7 +2558,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2573,7 +2571,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2586,7 +2584,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2599,7 +2597,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2612,7 +2610,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2625,7 +2623,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2638,7 +2636,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2651,7 +2649,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2664,7 +2662,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2677,7 +2675,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2690,7 +2688,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2703,7 +2701,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2716,7 +2714,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2729,7 +2727,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2742,7 +2740,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))
@@ -2755,7 +2753,7 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loos1'].get(), variables['epoch1'].get(), variables['optimizer2'].get(), variables['loos2'].get(), variables['epoch2'].get(), variables['optimizer3'].get(), variables['loos3'].get(), variables['epoch3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
     
         cpt = cpt + 1
         pgb.set(round((cpt/total)*100))

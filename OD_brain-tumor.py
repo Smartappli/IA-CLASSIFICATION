@@ -1302,8 +1302,8 @@ def reset():
     epoch3.current(49)
     
     lr1.current(1)
-    lr2.current(1)
-    lr3.current(1)
+    lr2.current(2)
+    lr3.current(3)
     
     savemodel.state(['selected'])
     variables["savemodel"].set(1)
@@ -1359,7 +1359,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           metrics=['accuracy'])
         
         # Train the model
-        hist = model.fit(ds_train, validation_data=ds_valid, epochs=epoch1, callbacks=callbacks)   
+        hist = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch1), callbacks=callbacks)   
         
         if (strategie == 2):
             with strategy.scope():
@@ -1371,7 +1371,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks2)    
                 
         if (strategie == 3):
             with strategy.scope():
@@ -1381,7 +1381,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               metrics=['accuracy'])
          
             # Train the model
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=epoch2, callbacks=callbacks)                
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)                
                 
             
             with strategy.scope():
@@ -1393,7 +1393,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                               metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=variables["epoch3"].get(), callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks2)            
         
     # CPU or single GPU   
     else:

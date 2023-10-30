@@ -55,30 +55,6 @@ batch_size = 32
 img_height = 224 #256
 img_width = 224 #256
 
-# Load the data
-print("Data Processing...")
-train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-  data_dir,
-  validation_split=0.2,
-  subset="training",
-  seed=123,
-  image_size=(img_height, img_width),
-  batch_size=batch_size)
-
-val_ds = tf.keras.preprocessing.image_dataset_from_directory(
-  data_dir,
-  validation_split=0.2,
-  subset="validation",
-  seed=123,
-  image_size=(img_height, img_width),
-  batch_size=batch_size)
-
-print("Dataset configuration")
-# Configure the dataset for performance
-AUTOTUNE = tf.data.AUTOTUNE
-train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
-
 root = tk.Tk()
 root.title('AI Classifier')
 root.columnconfigure(0, weight=1)
@@ -1508,7 +1484,7 @@ def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _e
         
     if (confmatrix == 1):
         x_val,y_val,y_pred=[],[],[]
-        for images, labels in val_ds:
+        for images, labels in ds_valid:
             y_val.extend(labels.numpy())
             x_val.extend(images.numpy())
         predictions=model.predict(np.array(x_val))
@@ -1559,6 +1535,30 @@ def training(strategie, multigpu, base_model, model_name, _optimizer1, loss1, _e
 
 def run():
     print("Start")
+    
+    # Load the data
+    print("Data Processing...")
+    train_ds = tf.keras.preprocessing.image_dataset_from_directory(
+      data_dir,
+      validation_split=float(variables["valsplit"].get()),
+      subset="training",
+      seed=123,
+      image_size=(img_height, img_width),
+      batch_size=int(variables["batchsize"].get()))
+
+    val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+      data_dir,
+      validation_split=float(variables["valsplit"].get()),
+      subset="validation",
+      seed=123,
+      image_size=(img_height, img_width),
+      batch_size=int(variables["batchsize"].get()))
+
+    print("Dataset configuration")
+    # Configure the dataset for performance
+    AUTOTUNE = tf.data.AUTOTUNE
+    train_ds = train_ds.cache().prefetch(buffer_size=AUTOTUNE)
+    val_ds = val_ds.cache().prefetch(buffer_size=AUTOTUNE)
      
     total = 0
     cpt = 0

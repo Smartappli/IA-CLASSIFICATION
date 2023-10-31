@@ -83,3 +83,11 @@
 - RegNetY160
 - RegNetX320
 - RegNetY320 
+
+## Todo
+
+- Data Processing improvement
+- Data augmentation
+- Kera Tuning
+- AI explainability
+

@@ -1021,6 +1021,20 @@ def sel():
         
         lr2["state"] = 'disabled'
         lr3["state"] = 'disabled'
+
+        lrdecay1['state']='readonly'
+        lrdecay1.state(['selected'])
+        lrdecay2['state']='disabled'
+        lrdecay2.state(['!selected'])
+        lrdecay3['state']='disabled'
+        lrdecay3.state(['!selected'])
+
+        earlystopping1['state']='readonly'
+        earlystopping1.state(['selected'])
+        earlystopping2['state']='disabled'
+        earlystopping2.state(['!selected'])
+        earlystopping3['state']='disabled'
+        earlystopping3.state(['!selected'])
         
     elif(variables['strategie'].get()==2):
         optimizer2['state']='readonly'
@@ -1034,6 +1048,20 @@ def sel():
         
         lr2["state"] = 'readonly'
         lr3["state"] = 'disabled'
+  
+        lrdecay1['state']='disabled'
+        lrdecay1.state(['!selected'])
+        lrdecay2['state']='readonly'
+        lrdecay2.state(['selected'])
+        lrdecay3['state']='disabled'
+        lrdecay3.state(['!selected'])      
+  
+        earlystopping1['state']='disabled'
+        earlystopping1.state(['!selected'])
+        earlystopping2['state']='readonly'
+        earlystopping2.state(['selected'])
+        earlystopping3['state']='disabled'
+        earlystopping3.state(['!selected'])
         
     else:
         optimizer1['state']='readonly'
@@ -1051,11 +1079,25 @@ def sel():
         lr1["state"] = 'readonly'
         lr2["state"] = 'readonly'
         lr3["state"] = 'readonly'
+ 
+        lrdecay1['state']='disabled'
+        lrdecay1.state(['!selected'])
+        lrdecay2['state']='disabled'
+        lrdecay2.state(['!selected'])
+        lrdecay3['state']='readonly'
+        lrdecay3.state(['selected'])        
+ 
+        earlystopping1['state']='disabled'
+        earlystopping1.state(['!selected'])
+        earlystopping2['state']='disabled'
+        earlystopping2.state(['!selected'])
+        earlystopping3['state']='readonly'
+        earlystopping3.state(['selected'])       
 
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
 train_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
-for i in range(5):
+for i in range(7):
     train_info.columnconfigure(i, weight=1)
     
 variables['strategie'] = tk.IntVar()    
@@ -1084,7 +1126,7 @@ chkpoint.grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 chkpoint.state(['selected'])
 variables['checkpoint'].set(1)
 
-ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=7, padx=5, pady=5, sticky=(tk.W + tk.E))
 
 listOptimizer = ('SGD',
                  'RMSProp',
@@ -1104,7 +1146,6 @@ ttk.Label(train_info, text="Step 3").grid(row=6, column=0, padx=5, pady=5, stick
 variables['optimizer1'] = tk.StringVar()
 variables['optimizer2'] = tk.StringVar()
 variables['optimizer3'] = tk.StringVar()
-
 
 ttk.Label(train_info, text="Optimizer").grid(row=3, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
 optimizer1 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer1'], state='readonly')
@@ -1182,14 +1223,58 @@ lr3 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr3'], sta
 lr3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 lr3.current(1)
 
+variables['lrdecay1'] = tk.BooleanVar()
+variables['lrdecay2'] = tk.BooleanVar()
+variables['lrdecay3'] = tk.BooleanVar()
+
+ttk.Label(train_info, text="Lr Decay").grid(row=3, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+lrdecay1 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay1"])
+lrdecay1.grid(row=4, column=5, padx=5, pady=5)
+lrdecay1.state(["selected"])
+variables["lrdecay1"].set(1)
+
+lrdecay2 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay2"])
+lrdecay2.grid(row=5, column=5, padx=5, pady=5)
+lrdecay2.state(['!selected'])
+lrdecay2['state']='disabled'
+variables["lrdecay2"].set(0)
+
+lrdecay3 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay3"])
+lrdecay3.grid(row=6, column=5, padx=5, pady=5)
+lrdecay3.state(['!selected'])
+lrdecay3['state']='disabled'
+variables["lrdecay3"].set(0)
+
+variables['earlystopping1'] = tk.BooleanVar()
+variables['earlystopping2'] = tk.BooleanVar()
+variables['earlystopping3'] = tk.BooleanVar()
+
+ttk.Label(train_info, text="Early Stopping").grid(row=3, column=6, padx=5, pady=5, sticky=(tk.W + tk.E))
+earlystopping1 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping1'])
+earlystopping1.grid(row=4, column=6, padx=5, pady=5)
+earlystopping1.state(["selected"])
+variables["earlystopping1"].set(1)
+
+earlystopping2 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping2'])
+earlystopping2.grid(row=5, column=6, padx=5, pady=5)
+earlystopping2.state(['!selected'])
+earlystopping2['state']='disabled'
+variables["earlystopping2"].set(0)
+
+earlystopping3 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping3'])
+earlystopping3.grid(row=6, column=6, padx=5, pady=5)
+earlystopping3.state(['!selected'])
+earlystopping3['state']='disabled'
+variables["earlystopping3"].set(0)
 
 # Output Section
 output_info = ttk.LabelFrame(mc, text='Output')
 output_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+
 for i in range(5):
     output_info.columnconfigure(i, weight=1)
     
-# Chechkbox Save mODEL
+# Chechkbox Save Model
 variables["savemodel"] = tk.IntVar()
 savemodel = ttk.Checkbutton(output_info, text="Save Model", variable=variables['savemodel'], onvalue = 1, offvalue = 0)
 savemodel.grid(row=0, column=0, sticky=(tk.W + tk.E))
@@ -1325,28 +1410,45 @@ def scheduler(epoch, lr):
 def training(_img_height, _img_width, strategie, multigpu, base_model, model_name, _optimizer1, _loss1, _epoch1, _lr1, _optimizer2, _loss2, _epoch2, _lr2, _optimizer3, _loss3, _epoch3, _lr3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
     checkpoint_filepath = output_dir+'/model/'+model_name+'/checkpoint'
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-        filepath=checkpoint_filepath,
-        verbose=1,
-        save_weights_only=True,
-        monitor='val_accuracy',
-        mode='max',
+        output_dir+'/model/'+model_name+".tf", 
+        verbose=1, 
         save_best_only=True)
     
-    callbacks = [
-        tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
-        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True
-                                         ),
-    ]
+    model_earlystopping_callback =  tf.keras.callbacks.EarlyStopping(
+        patience=5, 
+        restore_best_weights=True)
     
-    callbacks2 = [
-        tf.keras.callbacks.ModelCheckpoint(output_dir+'/model/'+model_name+".tf", verbose=1, save_best_only=True),
-        tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
-        tf.keras.callbacks.LearningRateScheduler(scheduler, verbose=1)
-    ]
+    model_learningscheduler_callback = tf.keras.callbacks.LearningRateScheduler(
+        scheduler, 
+        verbose=1)
     
+    callbacks = []
+       
     if (variables['checkpoint'].get() == 1):
         callbacks.append(model_checkpoint_callback)
-        callbacks2.append(model_checkpoint_callback)       
+        
+    if (strategie == 1):
+        if (variables["earlystopping1"].get() == 1):
+            callbacks.append(model_earlystopping_callback)
+            
+        if (variables["lrdecay1"].get() == 1):
+            callbacks.append(model_learningscheduler_callback)
+            
+            
+    if (strategie == 2):
+        if (variables["earlystopping2"].get() == 1):
+            callbacks.append(model_earlystopping_callback)
+            
+        if (variables["lrdecay2"].get() == 1):
+            callbacks.append(model_learningscheduler_callback)
+            
+            
+    if (strategie == 3):
+        if (variables["earlystopping3"].get() == 1):
+            callbacks.append(model_earlystopping_callback)
+            
+        if (variables["lrdecay3"].get() == 1):
+            callbacks.append(model_learningscheduler_callback)
     
     print (model_name)
     
@@ -1384,7 +1486,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=_loss2,
                               metrics=['accuracy'])
                 
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)    
                 
         if (strategie == 3):
             with strategy.scope():
@@ -1406,7 +1508,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=_loss3,
                               metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks)            
         
     # CPU or single GPU   
     else:
@@ -1435,7 +1537,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           loss=_loss2,
                           metrics=['accuracy'])
             
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks2)    
+            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)    
                 
         if (strategie == 3):
 
@@ -1454,7 +1556,7 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           loss=_loss3,
                           metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks2)            
+            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks)            
 
     
     #Output

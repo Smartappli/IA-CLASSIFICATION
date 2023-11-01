@@ -820,7 +820,7 @@ def sel():
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
 train_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
-for i in range(7):
+for i in range(8):
     train_info.columnconfigure(i, weight=1)
     
 variables['strategie'] = tk.IntVar()    
@@ -848,6 +848,13 @@ chkpoint = ttk.Checkbutton(train_info, text="Checkpoint", variable=variables["ch
 chkpoint.grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 chkpoint.state(['selected'])
 variables['checkpoint'].set(1)
+
+variables['kerastuning'] = tk.IntVar()
+ttk.Label(train_info, text="Improvement").grid(row=0, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+kerastuning = ttk.Checkbutton(train_info, text="Keras Tuning", variable=variables["kerastuning"])
+kerastuning.grid(row=1, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+kerastuning.state(['selected'])
+variables['kerastuning'].set(0)
 
 ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=7, padx=5, pady=5, sticky=(tk.W + tk.E))
 
@@ -938,13 +945,13 @@ variables['lr3'] = tk.DoubleVar()
 ttk.Label(train_info, text="Learning Rate").grid(row=3, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
 lr1 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr1'], state='readonly')
 lr1.grid(row=4, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-lr1.current(1)
+lr1.current(2)
 lr2 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr2'], state='disabled')
 lr2.grid(row=5, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-lr2.current(1)
+lr2.current(3)
 lr3 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr3'], state='disabled')
 lr3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-lr3.current(1)
+lr3.current(4)
 
 variables['lrdecay1'] = tk.BooleanVar()
 variables['lrdecay2'] = tk.BooleanVar()
@@ -989,6 +996,63 @@ earlystopping3.grid(row=6, column=6, padx=5, pady=5)
 earlystopping3.state(['!selected'])
 earlystopping3['state']='disabled'
 variables["earlystopping3"].set(0)
+
+
+# XAI / fINE Tuning
+xai_info = ttk.LabelFrame(mc, text='Explainability')
+xai_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+
+for i in range(8):
+    xai_info.columnconfigure(i, weight=1)
+ 
+# ActivationMaximization
+variables["activationmaximization"] = tk.IntVar()
+activationmaximization = ttk.Checkbutton(xai_info, text="Activation Maximization", variable=variables["activationmaximization"], onvalue = 1, offvalue = 0)
+activationmaximization.grid(row=0, column=0, sticky=(tk.W + tk.E))
+activationmaximization.state(['selected'])
+variables["activationmaximization"].set(0)
+
+variables["gradcam"] = tk.IntVar()
+gradcam = ttk.Checkbutton(xai_info, text="GradCAM", variable=variables["gradcam"], onvalue = 1, offvalue = 0)
+gradcam.grid(row=0, column=1, sticky=(tk.W + tk.E))
+gradcam.state(['selected'])
+variables["gradcam"].set(0)
+
+variables["gradcamplusplus"] = tk.IntVar()
+gradcamplus = ttk.Checkbutton(xai_info, text="GradCAM++", variable=variables["gradcamplusplus"], onvalue = 1, offvalue = 0)
+gradcamplus.grid(row=0, column=2, sticky=(tk.W + tk.E))
+gradcamplus.state(['selected'])
+variables["gradcamplusplus"].set(0)
+
+variables["scorecam"] = tk.IntVar()
+scorecam = ttk.Checkbutton(xai_info, text="ScoreCAM", variable=variables["scorecam"], onvalue = 1, offvalue = 0)
+scorecam.grid(row=0, column=3, sticky=(tk.W + tk.E))
+scorecam.state(['selected'])
+variables["scorecam"].set(0)
+
+variables["fasterscorecam"] = tk.IntVar()
+fasterscorecam = ttk.Checkbutton(xai_info, text="Faster-CAM", variable=variables["fasterscorecam"], onvalue = 1, offvalue = 0)
+fasterscorecam.grid(row=0, column=4, sticky=(tk.W + tk.E))
+fasterscorecam.state(['selected'])
+variables["fasterscorecam"].set(0)
+
+variables["layercam"] = tk.IntVar()
+layercam = ttk.Checkbutton(xai_info, text="LayerCAM", variable=variables["layercam"], onvalue = 1, offvalue = 0)
+layercam.grid(row=0, column=5, sticky=(tk.W + tk.E))
+layercam.state(['selected'])
+variables["layercam"].set(0)
+
+variables["vanillasaliency"] = tk.IntVar()
+vanillasaliency = ttk.Checkbutton(xai_info, text="Vanilla Saliency", variable=variables["vanillasaliency"], onvalue = 1, offvalue = 0)
+vanillasaliency.grid(row=0, column=6, sticky=(tk.W + tk.E))
+vanillasaliency.state(['selected'])
+variables["vanillasaliency"].set(0)
+
+variables["smoothgrad"] = tk.IntVar()
+smoothgrad = ttk.Checkbutton(xai_info, text="SmoothGrad", variable=variables["smoothgrad"], onvalue=1, offvalue=0)
+smoothgrad.grid(row=0, column=7, sticky=(tk.W + tk.E))
+smoothgrad.state(['selected'])
+variables["smoothgrad"].set(0)
 
 # Output Section
 output_info = ttk.LabelFrame(mc, text='Output')
@@ -1109,9 +1173,9 @@ def reset():
     epoch2.current(9)
     epoch3.current(49)
     
-    lr1.current(1)
-    lr2.current(2)
-    lr3.current(3)
+    lr1.current(2)
+    lr2.current(3)
+    lr3.current(4)
     
     savemodel.state(['selected'])
     variables["savemodel"].set(1)

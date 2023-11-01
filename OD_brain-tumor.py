@@ -150,6 +150,7 @@ def augment_sel():
 variables["augment"] = tk.IntVar()
 augment = ttk.Checkbutton(augment_info, text="Activate Data Augmentation", variable=variables["augment"], command=augment_sel)
 augment.grid(row=0, columnspan=8)
+augment['state']='disabled'
 
 ttk.Separator(augment_info, orient='horizontal').grid(row=1, columnspan=8, padx=5, pady=5, sticky=(tk.W + tk.E))
 
@@ -855,6 +856,7 @@ kerastuning = ttk.Checkbutton(train_info, text="Keras Tuning", variable=variable
 kerastuning.grid(row=1, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
 kerastuning.state(['selected'])
 variables['kerastuning'].set(0)
+kerastuning['state']='disabled'
 
 ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=7, padx=5, pady=5, sticky=(tk.W + tk.E))
 
@@ -1011,48 +1013,56 @@ activationmaximization = ttk.Checkbutton(xai_info, text="Activation Maximization
 activationmaximization.grid(row=0, column=0, sticky=(tk.W + tk.E))
 activationmaximization.state(['selected'])
 variables["activationmaximization"].set(0)
+activationmaximization['state']='disabled'
 
 variables["gradcam"] = tk.IntVar()
 gradcam = ttk.Checkbutton(xai_info, text="GradCAM", variable=variables["gradcam"], onvalue = 1, offvalue = 0)
 gradcam.grid(row=0, column=1, sticky=(tk.W + tk.E))
 gradcam.state(['selected'])
 variables["gradcam"].set(0)
+gradcam['state']='disabled'
 
 variables["gradcamplusplus"] = tk.IntVar()
 gradcamplus = ttk.Checkbutton(xai_info, text="GradCAM++", variable=variables["gradcamplusplus"], onvalue = 1, offvalue = 0)
 gradcamplus.grid(row=0, column=2, sticky=(tk.W + tk.E))
 gradcamplus.state(['selected'])
 variables["gradcamplusplus"].set(0)
+gradcamplus['state']='disabled'
 
 variables["scorecam"] = tk.IntVar()
 scorecam = ttk.Checkbutton(xai_info, text="ScoreCAM", variable=variables["scorecam"], onvalue = 1, offvalue = 0)
 scorecam.grid(row=0, column=3, sticky=(tk.W + tk.E))
 scorecam.state(['selected'])
 variables["scorecam"].set(0)
+scorecam['state']='disabled'
 
 variables["fasterscorecam"] = tk.IntVar()
 fasterscorecam = ttk.Checkbutton(xai_info, text="Faster-CAM", variable=variables["fasterscorecam"], onvalue = 1, offvalue = 0)
 fasterscorecam.grid(row=0, column=4, sticky=(tk.W + tk.E))
 fasterscorecam.state(['selected'])
 variables["fasterscorecam"].set(0)
+fasterscorecam['state']='disabled'
 
 variables["layercam"] = tk.IntVar()
 layercam = ttk.Checkbutton(xai_info, text="LayerCAM", variable=variables["layercam"], onvalue = 1, offvalue = 0)
 layercam.grid(row=0, column=5, sticky=(tk.W + tk.E))
 layercam.state(['selected'])
 variables["layercam"].set(0)
+layercam['state']='disabled'
 
 variables["vanillasaliency"] = tk.IntVar()
 vanillasaliency = ttk.Checkbutton(xai_info, text="Vanilla Saliency", variable=variables["vanillasaliency"], onvalue = 1, offvalue = 0)
 vanillasaliency.grid(row=0, column=6, sticky=(tk.W + tk.E))
 vanillasaliency.state(['selected'])
 variables["vanillasaliency"].set(0)
+vanillasaliency['state']='disabled'
 
 variables["smoothgrad"] = tk.IntVar()
 smoothgrad = ttk.Checkbutton(xai_info, text="SmoothGrad", variable=variables["smoothgrad"], onvalue=1, offvalue=0)
 smoothgrad.grid(row=0, column=7, sticky=(tk.W + tk.E))
 smoothgrad.state(['selected'])
 variables["smoothgrad"].set(0)
+smoothgrad['state']='disabled'
 
 # Output Section
 output_info = ttk.LabelFrame(mc, text='Output')

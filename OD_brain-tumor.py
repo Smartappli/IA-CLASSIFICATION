@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Thu Oct 19 18:06:12 2023
 
@@ -26,7 +25,7 @@ from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, Effi
 from tensorflow.keras.applications import ConvNeXtTiny, ConvNeXtSmall, ConvNeXtBase, ConvNeXtLarge, ConvNeXtXLarge
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D , Flatten
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten
 from sklearn.metrics import confusion_matrix, classification_report
 import sklearn as sk
 import seaborn as sns
@@ -1113,7 +1112,7 @@ info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - Python: " + platform.python_version() + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0,)
+ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - Python: " + platform.python_version() + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0)
 
 
 
@@ -1211,7 +1210,6 @@ def pb_progress(cpt, total):
         return cpt
     
 def training(_img_height, _img_width, strategie, multigpu, base_model, model_name, _optimizer1, _loss1, _epoch1, _lr1, _optimizer2, _loss2, _epoch2, _lr2, _optimizer3, _loss3, _epoch3, _lr3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
-    checkpoint_filepath = output_dir+'/model/'+model_name+'/checkpoint'
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         output_dir+'/model/'+model_name+".tf", 
         verbose=1, 
@@ -1254,6 +1252,16 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
             callbacks.append(model_learningscheduler_callback)
     
     print (model_name)
+    
+    if _loss1 == "SparseCategoricalCrossentropy":
+        _loss1 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        
+    if _loss2 == "SparseCategoricalCrossentropy":
+        _loss2 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+            
+    if _loss3 == "SparseCategoricalCrossentropy":
+         _loss3 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)   
+            
     
     # Multi GPU
     if (multigpu == 1): 

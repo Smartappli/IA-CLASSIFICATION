@@ -52,7 +52,7 @@ else :
     output_dir = str(p) + '/Output'
 
 root = tk.Tk()
-root.title('AI Classifier')
+root.title('Ai Toolbox - Deep Learning - Classifier')
 root.columnconfigure(0, weight=1)
 
 mc = ttk.Frame(root)

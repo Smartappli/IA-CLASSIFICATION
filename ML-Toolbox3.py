@@ -96,6 +96,7 @@ def unselectAllAD():
         models2[i].set(0)
 
 
+
 ad_info = ttk.LabelFrame(mc, text='Clustering')
 ad_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(4):

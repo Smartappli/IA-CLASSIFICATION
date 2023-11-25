@@ -25,71 +25,11 @@ def selectAllRegression():
     for i in models1.keys():
         models1[i].set(1)
 
-    regression_lr.state(['selected'])
-    regression_lasso.state(['selected'])
-    regression_ridge.state(['selected'])
-    regression_en.state(['selected'])
-    regression_lar.state(['selected'])
-    regression_llar.state(['selected'])
-    regression_omp.state(['selected'])
-    regression_br.state(['selected'])
-    regression_ard.state(['selected'])
-    regression_par.state(['selected'])
-    regression_ransac.state(['selected'])
-    regression_tr.state(['selected'])
-    regression_huber.state(['selected'])
-    regression_kr.state(['selected'])
-    regression_svm.state(['selected'])
-    regression_knn.state(['selected'])
-    regression_dt.state(['selected'])
-    regression_rf.state(['selected'])
-    regression_et.state(['selected'])
-    regression_ada.state(['selected'])
-    regression_gbr.state(['selected'])
-    regression_mlp.state(['selected'])
-    regression_xgboost.state(['selected'])
-    regression_lightgbm.state(['selected'])
-    regression_catboost.state(['selected'])
-    regression_dummy.state(['selected'])
-    regression_bagging.state(['selected'])
-    regression_stacking.state(['selected'])
-    regression_voting.state(['selected'])
     
 def unselectAllRegression():
     for i in models1.keys():
-        models1[i].set(0)
-
-    regression_lr.state(['!selected'])
-    regression_lasso.state(['!selected'])
-    regression_ridge.state(['!selected'])
-    regression_en.state(['!selected'])
-    regression_lar.state(['!selected'])
-    regression_llar.state(['!selected'])
-    regression_omp.state(['!selected'])
-    regression_br.state(['!selected'])
-    regression_ard.state(['!selected'])
-    regression_par.state(['!selected'])
-    regression_ransac.state(['!selected'])
-    regression_tr.state(['!selected'])
-    regression_huber.state(['!selected'])
-    regression_kr.state(['!selected'])
-    regression_svm.state(['!selected'])
-    regression_knn.state(['!selected'])
-    regression_dt.state(['!selected'])
-    regression_rf.state(['!selected'])
-    regression_et.state(['!selected'])
-    regression_ada.state(['!selected'])
-    regression_gbr.state(['!selected'])
-    regression_mlp.state(['!selected'])
-    regression_xgboost.state(['!selected'])
-    regression_lightgbm.state(['!selected'])
-    regression_catboost.state(['!selected'])
-    regression_dummy.state(['!selected'])
-    regression_bagging.state(['!selected'])
-    regression_stacking.state(['!selected'])
-    regression_voting.state(['!selected'])    
+        models1[i].set(0) 
     
-
 
 regression_info = ttk.LabelFrame(mc, text='Regression')
 regression_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
@@ -237,59 +177,12 @@ def selectAllClassification():
     for i in models2.keys():
         models2[i].set(1)
         
-    classification_lr.state(['selected'])
-    classification_knn.state(['selected'])
-    classification_nb.state(['selected'])
-    classification_dt.state(['selected'])
-    
-    classification_svm.state(['selected'])
-    classification_rbfsvm.state(['selected'])
-    classification_gpc.state(['selected'])
-    classification_mlp.state(['selected'])
-    
-    classification_ridge.state(['selected'])
-    classification_rf.state(['selected'])
-    classification_qda.state(['selected'])
-    classification_ada.state(['selected'])
-    
-    classification_gbc.state(['selected'])
-    classification_lda.state(['selected'])
-    classification_et.state(['selected'])
-    classification_xgboost.state(['selected'])
-    
-    classification_lightgbm.state(['selected'])
-    classification_catboost.state(['selected'])
-    classification_dummy.state(['selected'])
-    
         
 def unselectAllClassification():
     for i in models2.keys():
         models2[i].set(0)
                 
-    classification_lr.state(['!selected'])
-    classification_knn.state(['!selected'])
-    classification_nb.state(['!selected'])
-    classification_dt.state(['!selected']) 
-
-    classification_svm.state(['!selected'])
-    classification_rbfsvm.state(['!selected'])
-    classification_gpc.state(['!selected'])
-    classification_mlp.state(['!selected'])     
-    
-    classification_ridge.state(['!selected'])
-    classification_rf.state(['!selected'])
-    classification_qda.state(['!selected'])
-    classification_ada.state(['!selected'])
         
-    classification_gbc.state(['!selected'])
-    classification_lda.state(['!selected'])
-    classification_et.state(['!selected'])
-    classification_xgboost.state(['!selected'])
-    
-    classification_lightgbm.state(['!selected'])
-    classification_catboost.state(['!selected'])
-    classification_dummy.state(['!selected'])
-    
 classification_info = ttk.LabelFrame(mc, text='Classification')
 classification_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
 for i in range(4):

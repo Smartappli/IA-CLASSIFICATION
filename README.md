@@ -2,8 +2,8 @@
 
 ## Dependencies
 
- - pip install tensorflow==2.14
- - pip install keras==2.14
+ - pip install tensorflow==2.15
+ - pip install keras==2.15
  - pip install seaborn==0.12.2
  - pip install pandas==2.0.3
  - pip install numpy==1.24.3

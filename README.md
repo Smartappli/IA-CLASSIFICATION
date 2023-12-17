@@ -2,6 +2,7 @@
 
 ## Dependencies
 
+ - pip install tk==0.1.0
  - pip install tensorflow==2.14.1
  - pip install keras==2.14
  - pip install seaborn==0.12.2

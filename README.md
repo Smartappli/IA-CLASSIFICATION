@@ -11,6 +11,10 @@
  - pip install matplotlib==3.7.2
  - pip install scikit-learn==1.3.0
 
+## Installation
+
+pip install -r requirements.txt
+
 ## 71 Models implemented
 
 - Xception

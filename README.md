@@ -13,9 +13,9 @@
 
 ## Installation
 
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-python DP-Toolbox.py
+- python -m pip install --upgrade pip
+- pip install -r requirements.txt
+- python DP-Toolbox.py
 
 ## 71 Models implemented
 

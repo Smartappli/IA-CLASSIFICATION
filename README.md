@@ -1,4 +1,4 @@
-# IA-CLASSIFICATION
+# Deep Learning Classifier ( DP Toolbox )
 
 ## Dependencies
 

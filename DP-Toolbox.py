@@ -121,7 +121,7 @@ mc.columnconfigure(0, weight=1)
 data_info = ttk.LabelFrame(mc, text='Data Parameters')
 data_info.grid(padx=5, 
                pady=5, 
-               sticky=(tk.W + tk.E))
+               sticky=tk.W + tk.E)
 for i in range(4):
     data_info.columnconfigure(i, weight=1)
  
@@ -129,7 +129,7 @@ variables["datapath"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Data Path").grid(row=0, 
                                  column=0, 
-                                 sticky=(tk.W + tk.E), 
+                                 sticky=tk.W + tk.E, 
                                  padx=5, 
                                  pady=5)
 datapath = ttk.Entry(data_info, textvariable=variables["datapath"])
@@ -137,14 +137,14 @@ datapath.grid(row=1,
               columnspan=2, 
               padx=5, 
               pady=5, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 variables["datapath"].set(data_dir)
 
 variables["outputdata"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Output Path").grid(row=0, 
                                    column=3, 
-                                   sticky=(tk.W + tk.E), 
+                                   sticky=tk.W + tk.E, 
                                    padx=5, 
                                    pady=5)
 outputpath = ttk.Entry(data_info, textvariable=variables["outputdata"])
@@ -153,14 +153,14 @@ outputpath.grid(row=1,
                 column=3, 
                 padx=5, 
                 pady=5, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 variables["outputdata"].set(output_dir)
 
 variables["imgresizing"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Image Resizing (pixels)").grid(row=2, 
                                                column=0, 
-                                               sticky=(tk.W + tk.E), 
+                                               sticky=tk.W + tk.E, 
                                                padx=5, 
                                                pady=5)
 listsize = ['28 x 28', 
@@ -179,7 +179,7 @@ imgresize = ttk.Combobox(data_info,
                          state='readonly')
 imgresize.grid(row=3, 
                column=0, 
-               sticky=(tk.W + tk.E), 
+               sticky=tk.W + tk.E, 
                padx=5, 
                pady=5)
 imgresize.current(4)
@@ -188,7 +188,7 @@ variables["channel"] = tk.IntVar()
 ttk.Label(data_info, 
           text="Number of channels").grid(row=2, 
                                           column=1, 
-                                          sticky=(tk.W + tk.E), 
+                                          sticky=tk.W + tk.E, 
                                           padx=5, 
                                           pady=5)
 channel = ttk.Spinbox(data_info, 
@@ -199,7 +199,7 @@ channel = ttk.Spinbox(data_info,
                       state='readonly')
 channel.grid(row=3, 
              column=1, 
-             sticky=(tk.W + tk.E), 
+             sticky=tk.W + tk.E, 
              padx=5, 
              pady=5)
 channel.set(3)
@@ -208,7 +208,7 @@ variables["classes"] = tk.IntVar()
 ttk.Label(data_info, 
           text="Number of classes").grid(row=2, 
                                          column=2, 
-                                         sticky=(tk.W + tk.E), 
+                                         sticky=tk.W + tk.E, 
                                          padx=5, 
                                          pady=5)
 classes = ttk.Spinbox(data_info, 
@@ -219,7 +219,7 @@ classes = ttk.Spinbox(data_info,
                       state='readonly')
 classes.grid(row=3, 
              column=2, 
-             sticky=(tk.W + tk.E), 
+             sticky=tk.W + tk.E, 
              padx=5, 
              pady=5)
 classes.set(4)
@@ -228,7 +228,7 @@ variables["valsplit"] = tk.DoubleVar()
 ttk.Label(data_info, 
           text="Validation Split").grid(row=2, 
                                         column=3, 
-                                        sticky=(tk.W + tk.E), 
+                                        sticky=tk.W + tk.E, 
                                         padx=5, 
                                         pady=5)
 valsplit = ttk.Spinbox(data_info, 
@@ -239,7 +239,7 @@ valsplit = ttk.Spinbox(data_info,
                        state='readonly')
 valsplit.grid(row=3, 
               column=3, 
-              sticky=(tk.W + tk.E), 
+              sticky=tk.W + tk.E, 
               padx=5, 
               pady=5)
 valsplit.set(0.2)
@@ -248,7 +248,7 @@ variables["batchsize"] = tk.IntVar()
 ttk.Label(data_info, 
           text="Batch Size").grid(row=2, 
                                   column=4, 
-                                  sticky=(tk.W + tk.E), 
+                                  sticky=tk.W + tk.E, 
                                   padx=5, 
                                   pady=5)
 listbatch = [1,2,4,8,16,32,64,128,256,512]
@@ -258,7 +258,7 @@ batchsize = ttk.Combobox(data_info,
                          state='readonly')
 batchsize.grid(row=3, 
                column=4, 
-               sticky=(tk.W + tk.E), 
+               sticky=tk.W + tk.E, 
                padx=5, 
                pady=5)
 batchsize.current(5)
@@ -268,7 +268,7 @@ batchsize.current(5)
 augment_info = ttk.LabelFrame(mc, text='Data Augmentation')
 augment_info.grid(padx=5, 
                   pady=5, 
-                  sticky=(tk.W + tk.E))
+                  sticky=tk.W + tk.E)
 for i in range(8):
     augment_info.columnconfigure(i, weight=1)
    
@@ -315,7 +315,7 @@ ttk.Separator(augment_info, orient='horizontal').grid(row=1,
                                                       columnspan=8, 
                                                       padx=5, 
                                                       pady=5, 
-                                                      sticky=(tk.W + tk.E))
+                                                      sticky=tk.W + tk.E)
 
 variables["crop"] = tk.IntVar() 
 crop = ttk.Checkbutton(augment_info, 
@@ -325,7 +325,7 @@ crop = ttk.Checkbutton(augment_info,
                        offvalue=False)
 crop.grid(row=2, 
           column=0, 
-          sticky=(tk.W + tk.E), 
+          sticky=tk.W + tk.E, 
           padx=5, 
           pady=5)
 crop['state'] = 'disabled'
@@ -338,7 +338,7 @@ horizflip = ttk.Checkbutton(augment_info,
                             offvalue=False)
 horizflip.grid(row=2, 
                column=1,
-               sticky=(tk.W + tk.E), 
+               sticky=tk.W + tk.E, 
                padx=5, 
                pady=5)
 horizflip['state'] = 'disabled'
@@ -351,7 +351,7 @@ vertiflip = ttk.Checkbutton(augment_info,
                             offvalue=False)
 vertiflip.grid(row=2, 
                column=2, 
-               sticky=(tk.W + tk.E), 
+               sticky=tk.W + tk.E, 
                padx=5, 
                pady=5)
 vertiflip['state'] = 'disabled'
@@ -390,7 +390,7 @@ zoom = ttk.Checkbutton(augment_info,
                        offvalue=False)
 zoom.grid(row=2, 
           column=5, 
-          sticky=(tk.W + tk.E), 
+          sticky=tk.W + tk.E, 
           padx=5, 
           pady=5)
 zoom['state'] = 'disabled'
@@ -403,7 +403,7 @@ contrast = ttk.Checkbutton(augment_info,
                            offvalue=False)
 contrast.grid(row=2, 
               column=6, 
-              sticky=(tk.W + tk.E), 
+              sticky=tk.W + tk.E, 
               padx=5, 
               pady=5)
 contrast['state'] = 'disabled'
@@ -439,7 +439,7 @@ model_Xception = ttk.Checkbutton(mc_info,
                                  offvalue=False)
 model_Xception.grid(row=1, 
                     column=0, 
-                    sticky=(tk.W + tk.E))
+                    sticky=tk.W + tk.E)
 
 # VGG 16
 models['VGG16'] = tk.BooleanVar()
@@ -472,7 +472,7 @@ model_ResNet50 = ttk.Checkbutton(mc_info,
                                  offvalue=False)
 model_ResNet50.grid(row=1, 
                     column=3, 
-                    sticky=(tk.W + tk.E))
+                    sticky=tk.W + tk.E)
 
 # ResNet 50 Version 2
 models['ResNet50V2'] = tk.BooleanVar()
@@ -595,7 +595,7 @@ model_ResNetRS350 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS350.grid(row=2, 
                        column=6, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNetRS 420
 models["ResNetRS420"] = tk.BooleanVar()
@@ -674,7 +674,7 @@ model_MobileNetV3Large = ttk.Checkbutton(mc_info,
                                          offvalue=False)
 model_MobileNetV3Large.grid(row=3, 
                             column=5, 
-                            sticky=(tk.W + tk.E))
+                            sticky=tk.W + tk.E)
 
 # DenseNet 121
 models["DenseNet121"] = tk.BooleanVar()
@@ -685,7 +685,7 @@ model_DenseNet121 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_DenseNet121.grid(row=3, 
                        column=6, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # DenseNet 169
 models["DenseNet169"] = tk.BooleanVar()
@@ -696,7 +696,7 @@ model_DenseNet169 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_DenseNet169.grid(row=3, 
                        column=7, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 
 
@@ -709,7 +709,7 @@ model_DenseNet201 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_DenseNet201.grid(row=4, 
                        column=0, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # NASNet Mobile
 models["NASNetMobile"] = tk.BooleanVar()
@@ -720,242 +720,339 @@ model_NASNetMobile = ttk.Checkbutton(mc_info,
                                      offvalue=False)
 model_NASNetMobile.grid(row=4, 
                         column=1, 
-                        sticky=(tk.W + tk.E))
+                        sticky=tk.W + tk.E)
 
 # NASNet Large
 models["NASNetLarge"] = tk.BooleanVar()
-model_NASNetLarge = ttk.Checkbutton(mc_info, text="NASNetLarge", variable=models["NASNetLarge"], onvalue = 1, offvalue = 0)
-model_NASNetLarge.grid(row=4, column=2, sticky=(tk.W + tk.E))
+model_NASNetLarge = ttk.Checkbutton(mc_info, 
+                                    text="NASNetLarge", 
+                                    variable=models["NASNetLarge"], 
+                                    onvalue=True, 
+                                    offvalue=False)
+model_NASNetLarge.grid(row=4, 
+                       column=2, 
+                       sticky=tk.W + tk.E)
 
 # EfficientNet B0
 models["EfficientNetB0"] = tk.BooleanVar()
-model_EfficientNetB0 = ttk.Checkbutton(mc_info, text="EfficientNetB0", variable=models["EfficientNetB0"], onvalue = 1, offvalue = 0)
-model_EfficientNetB0.grid(row=4, column=3, sticky=(tk.W + tk.E))
+model_EfficientNetB0 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB0", 
+                                       variable=models["EfficientNetB0"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB0.grid(row=4, 
+                          column=3, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B0 Version 2
 models["EfficientNetB0V2"] = tk.BooleanVar()
-model_EfficientNetB0V2 = ttk.Checkbutton(mc_info, text="EfficientNetB0V2", variable=models["EfficientNetB0V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB0V2.grid(row=4, column=4, sticky=(tk.W + tk.E))
+model_EfficientNetB0V2 = ttk.Checkbutton(mc_info, 
+                                         text="EfficientNetB0V2", 
+                                         variable=models["EfficientNetB0V2"], 
+                                         onvalue=True, 
+                                         offvalue=False)
+model_EfficientNetB0V2.grid(row=4, 
+                            column=4, 
+                            sticky=tk.W + tk.E)
 
 # EfficientNet B1
 models["EfficientNetB1"] = tk.BooleanVar()
-model_EfficientNetB1 = ttk.Checkbutton(mc_info, text="EfficientNetB1", variable=models["EfficientNetB1"], onvalue = 1, offvalue = 0)
-model_EfficientNetB1.grid(row=4, column=5, sticky=(tk.W + tk.E))
+model_EfficientNetB1 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB1", 
+                                       variable=models["EfficientNetB1"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB1.grid(row=4, 
+                          column=5, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B1 Version 2
 models["EfficientNetB1V2"] = tk.BooleanVar()
-model_EfficientNetB1V2 = ttk.Checkbutton(mc_info, text="EfficientNetB1V2", variable=models["EfficientNetB1V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB1V2.grid(row=4, column=6, sticky=(tk.W + tk.E))
+model_EfficientNetB1V2 = ttk.Checkbutton(mc_info, 
+                                         text="EfficientNetB1V2", 
+                                         variable=models["EfficientNetB1V2"], 
+                                         onvalue=True, 
+                                         offvalue=False)
+model_EfficientNetB1V2.grid(row=4, 
+                            column=6, 
+                            sticky=tk.W + tk.E)
 
 # EfficientNet B2
 models["EfficientNetB2"] = tk.BooleanVar()
-model_EfficientNetB2 = ttk.Checkbutton(mc_info, text="EfficientNetB2", variable=models["EfficientNetB2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB2.grid(row=4, column=7, sticky=(tk.W + tk.E))
+model_EfficientNetB2 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB2", 
+                                       variable=models["EfficientNetB2"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB2.grid(row=4, 
+                          column=7, 
+                          sticky=tk.W + tk.E)
 
 
 
 # EfficientNet B2 Version 2
 models["EfficientNetB2V2"] = tk.BooleanVar()
-model_EfficientNetB2V2 = ttk.Checkbutton(mc_info, text="EfficientNetB2V2", variable=models["EfficientNetB2V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB2V2.grid(row=5, column=0, sticky=(tk.W + tk.E))
+model_EfficientNetB2V2 = ttk.Checkbutton(mc_info, 
+                                         text="EfficientNetB2V2", 
+                                         variable=models["EfficientNetB2V2"], 
+                                         onvalue=True, 
+                                         offvalue=False)
+model_EfficientNetB2V2.grid(row=5, 
+                            column=0, 
+                            sticky=tk.W + tk.E)
 
 # EfficientNet B3
 models["EfficientNetB3"] = tk.BooleanVar()
-model_EfficientNetB3 = ttk.Checkbutton(mc_info, text="EfficientNetB3", variable=models["EfficientNetB3"], onvalue = 1, offvalue = 0)
-model_EfficientNetB3.grid(row=5, column=1, sticky=(tk.W + tk.E))
+model_EfficientNetB3 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB3", 
+                                       variable=models["EfficientNetB3"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB3.grid(row=5, 
+                          column=1, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B3 Version 2
 models["EfficientNetB3V2"] = tk.BooleanVar()
-model_EfficientNetB3V2 = ttk.Checkbutton(mc_info, text="EfficientNetB3V2", variable=models["EfficientNetB3V2"], onvalue = 1, offvalue = 0)
-model_EfficientNetB3V2.grid(row=5, column=2, sticky=(tk.W + tk.E))
+model_EfficientNetB3V2 = ttk.Checkbutton(mc_info, 
+                                         text="EfficientNetB3V2", 
+                                         variable=models["EfficientNetB3V2"], 
+                                         onvalue=True, 
+                                         offvalue=False)
+model_EfficientNetB3V2.grid(row=5, 
+                            column=2, 
+                            sticky=tk.W + tk.E)
 
 # EfficientNet B4
 models["EfficientNetB4"] = tk.BooleanVar()
-model_EfficientNetB4 = ttk.Checkbutton(mc_info, text="EfficientNetB4", variable=models["EfficientNetB4"], onvalue = 1, offvalue = 0)
-model_EfficientNetB4.grid(row=5, column=3, sticky=(tk.W + tk.E))
+model_EfficientNetB4 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB4", 
+                                       variable=models["EfficientNetB4"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB4.grid(row=5, 
+                          column=3, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B5
 models["EfficientNetB5"] = tk.BooleanVar()
-model_EfficientNetB5 = ttk.Checkbutton(mc_info, text="EfficientNetB5", variable=models["EfficientNetB5"], onvalue = 1, offvalue = 0)
-model_EfficientNetB5.grid(row=5, column=4, sticky=(tk.W + tk.E))
+model_EfficientNetB5 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB5", 
+                                       variable=models["EfficientNetB5"], 
+                                       onvalue = 1, 
+                                       offvalue = 0)
+model_EfficientNetB5.grid(row=5, 
+                          column=4, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B6
 models["EfficientNetB6"] = tk.BooleanVar()
-model_EfficientNetB6 = ttk.Checkbutton(mc_info, text="EfficientNetB6", variable=models["EfficientNetB6"], onvalue = 1, offvalue = 0)
-model_EfficientNetB6.grid(row=5, column=5, sticky=(tk.W + tk.E))
+model_EfficientNetB6 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB6", 
+                                       variable=models["EfficientNetB6"], 
+                                       onvalue=True,
+                                       offvalue=False)
+model_EfficientNetB6.grid(row=5, 
+                          column=5, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet B7
 models["EfficientNetB7"] = tk.BooleanVar()
-model_EfficientNetB7 = ttk.Checkbutton(mc_info, text="EfficientNetB7", variable=models["EfficientNetB7"], onvalue = 1, offvalue = 0)
-model_EfficientNetB7.grid(row=5, column=6, sticky=(tk.W + tk.E))
+model_EfficientNetB7 = ttk.Checkbutton(mc_info, 
+                                       text="EfficientNetB7", 
+                                       variable=models["EfficientNetB7"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_EfficientNetB7.grid(row=5, 
+                          column=6, 
+                          sticky=tk.W + tk.E)
 
 # EfficientNet Version 2 Smalll
 models["EfficientNetV2Small"] = tk.BooleanVar()
-model_EfficientNetV2Small = ttk.Checkbutton(mc_info, text="EfficientNetV2Small", variable=models["EfficientNetV2Small"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Small.grid(row=5, column=7, sticky=(tk.W + tk.E))
+model_EfficientNetV2Small = ttk.Checkbutton(mc_info, 
+                                            text="EfficientNetV2Small", 
+                                            variable=models["EfficientNetV2Small"], 
+                                            onvalue=True, 
+                                            offvalue=False)
+model_EfficientNetV2Small.grid(row=5, 
+                               column=7, 
+                               sticky=tk.W + tk.E)
 
 
 
 # EfficientNet Version 2 Medium
 models["EfficientNetV2Medium"] = tk.BooleanVar()
-model_EfficientNetV2Medium = ttk.Checkbutton(mc_info, text="EfficientNetV2Medium", variable=models["EfficientNetV2Medium"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Medium.grid(row=6, column=0, sticky=(tk.W + tk.E))
+model_EfficientNetV2Medium = ttk.Checkbutton(mc_info, 
+                                             text="EfficientNetV2Medium", 
+                                             variable=models["EfficientNetV2Medium"], 
+                                             onvalue=True, 
+                                             offvalue=False)
+model_EfficientNetV2Medium.grid(row=6, 
+                                column=0, 
+                                sticky=tk.W + tk.E)
 
 # EfficientNet Version 2 Large
 models["EfficientNetV2Large"] = tk.BooleanVar()
-model_EfficientNetV2Large = ttk.Checkbutton(mc_info, text="EfficientNetV2Large", variable=models["EfficientNetV2Large"], onvalue = 1, offvalue = 0)
-model_EfficientNetV2Large.grid(row=6, column=1, sticky=(tk.W + tk.E))
+model_EfficientNetV2Large = ttk.Checkbutton(mc_info, 
+                                            text="EfficientNetV2Large", 
+                                            variable=models["EfficientNetV2Large"], 
+                                            onvalue=True, 
+                                            offvalue=False)
+model_EfficientNetV2Large.grid(row=6, 
+                               column=1, 
+                               sticky=tk.W + tk.E)
 
 # ConvNetXt Tiny
 models["ConvNeXtTiny"] = tk.BooleanVar()
 model_ConvNeXtTiny = ttk.Checkbutton(mc_info, text="ConvNeXtTiny", variable=models["ConvNeXtTiny"], onvalue = 1, offvalue = 0)
-model_ConvNeXtTiny.grid(row=6, column=2, sticky=(tk.W + tk.E))
+model_ConvNeXtTiny.grid(row=6, 
+                        column=2, sticky=tk.W + tk.E)
 
 # ConvNetXt Small
 models["ConvNeXtSmall"] = tk.BooleanVar()
 model_ConvNeXtSmall = ttk.Checkbutton(mc_info, text="ConvNeXtSmall", variable=models["ConvNeXtSmall"], onvalue = 1, offvalue = 0)
-model_ConvNeXtSmall.grid(row=6, column=3, sticky=(tk.W + tk.E))
+model_ConvNeXtSmall.grid(row=6, column=3, sticky=tk.W + tk.E)
 
 # ConvNetXt Base
 models["ConvNeXtBase"] = tk.BooleanVar()
 model_ConvNeXtBase = ttk.Checkbutton(mc_info, text="ConvNeXtBase", variable=models["ConvNeXtBase"], onvalue = 1, offvalue = 0)
-model_ConvNeXtBase.grid(row=6, column=4, sticky=(tk.W + tk.E))
+model_ConvNeXtBase.grid(row=6, column=4, sticky=tk.W + tk.E)
 
 # ConvNetXt Large
 models["ConvNeXtLarge"] = tk.BooleanVar()
 model_ConvNeXtLarge = ttk.Checkbutton(mc_info, text="ConvNeXtLarge", variable=models["ConvNeXtLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtLarge.grid(row=6, column=5, sticky=(tk.W + tk.E))
+model_ConvNeXtLarge.grid(row=6, column=5, sticky=tk.W + tk.E)
 
 # ConvNetXt XLarge
 models["ConvNeXtXLarge"] = tk.BooleanVar()
 model_ConvNeXtXLarge = ttk.Checkbutton(mc_info, text="ConvNeXtXLarge", variable=models["ConvNeXtXLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtXLarge.grid(row=6, column=6, sticky=(tk.W + tk.E))
+model_ConvNeXtXLarge.grid(row=6, column=6, sticky=tk.W + tk.E)
 
 # RegNetX002
 models["RegNetX002"] = tk.BooleanVar()
 model_RegNetX002 = ttk.Checkbutton(mc_info, text="RegNetX002", variable=models["RegNetX002"], onvalue = 1, offvalue = 0)
-model_RegNetX002.grid(row=6, column=7, sticky=(tk.W + tk.E))
+model_RegNetX002.grid(row=6, column=7, sticky=tk.W + tk.E)
 
 
 
 # RegNetY002
 models["RegNetY002"] = tk.BooleanVar()
 model_RegNetY002 = ttk.Checkbutton(mc_info, text="RegNetY002", variable=models["RegNetY002"], onvalue = 1, offvalue = 0)
-model_RegNetY002.grid(row=7, column=0, sticky=(tk.W + tk.E))
+model_RegNetY002.grid(row=7, column=0, sticky=tk.W + tk.E)
 
 # RegNetX004
 models["RegNetX004"] = tk.BooleanVar()
 model_RegNetX004 = ttk.Checkbutton(mc_info, text="RegNetX004", variable=models["RegNetX004"], onvalue = 1, offvalue = 0)
-model_RegNetX004.grid(row=7, column=1, sticky=(tk.W + tk.E))
+model_RegNetX004.grid(row=7, column=1, sticky=tk.W + tk.E)
 
 # RegNetY004
 models["RegNetY004"] = tk.BooleanVar()
 model_RegNetY004 = ttk.Checkbutton(mc_info, text="RegNetY004", variable=models["RegNetY004"], onvalue = 1, offvalue = 0)
-model_RegNetY004.grid(row=7, column=2, sticky=(tk.W + tk.E))
+model_RegNetY004.grid(row=7, column=2, sticky=tk.W + tk.E)
 
 # RegNetX006
 models["RegNetX006"] = tk.BooleanVar()
 model_RegNetX006 = ttk.Checkbutton(mc_info, text="RegNetX006", variable=models["RegNetX006"], onvalue = 1, offvalue = 0)
-model_RegNetX006.grid(row=7, column=3, sticky=(tk.W + tk.E))
+model_RegNetX006.grid(row=7, column=3, sticky=tk.W + tk.E)
 
 # RegNetY006
 models["RegNetY006"] = tk.BooleanVar()
 model_RegNetY006 = ttk.Checkbutton(mc_info, text="RegNetY006", variable=models["RegNetY006"], onvalue = 1, offvalue = 0)
-model_RegNetY006.grid(row=7, column=4, sticky=(tk.W + tk.E))
+model_RegNetY006.grid(row=7, column=4, sticky=tk.W + tk.E)
 
 # RegNetX008
 models["RegNetX008"] = tk.BooleanVar()
 model_RegNetX008 = ttk.Checkbutton(mc_info, text="RegNetX008", variable=models["RegNetX008"], onvalue = 1, offvalue = 0)
-model_RegNetX008.grid(row=7, column=5, sticky=(tk.W + tk.E))
+model_RegNetX008.grid(row=7, column=5, sticky=tk.W + tk.E)
 
 # RegNetY008
 models["RegNetY008"] = tk.BooleanVar()
 model_RegNetY008 = ttk.Checkbutton(mc_info, text="RegNetY008", variable=models["RegNetY008"], onvalue = 1, offvalue = 0)
-model_RegNetY008.grid(row=7, column=6, sticky=(tk.W + tk.E))
+model_RegNetY008.grid(row=7, column=6, sticky=tk.W + tk.E)
 
 # RegNetX016
 models["RegNetX016"] = tk.BooleanVar()
 model_RegNetX016 = ttk.Checkbutton(mc_info, text="RegNetX016", variable=models["RegNetX016"], onvalue = 1, offvalue = 0)
-model_RegNetX016.grid(row=7, column=7, sticky=(tk.W + tk.E))
+model_RegNetX016.grid(row=7, column=7, sticky=tk.W + tk.E)
 
 
 
 # RegNetY016
 models["RegNetY016"] = tk.BooleanVar()
 model_RegNetY016 = ttk.Checkbutton(mc_info, text="RegNetY016", variable=models["RegNetY016"], onvalue = 1, offvalue = 0)
-model_RegNetY016.grid(row=8, column=0, sticky=(tk.W + tk.E))
+model_RegNetY016.grid(row=8, column=0, sticky=tk.W + tk.E)
 
 # RegNetX032
 models["RegNetX032"] = tk.BooleanVar()
 model_RegNetX032 = ttk.Checkbutton(mc_info, text="RegNetX032", variable=models["RegNetX032"], onvalue = 1, offvalue = 0)
-model_RegNetX032.grid(row=8, column=1, sticky=(tk.W + tk.E))
+model_RegNetX032.grid(row=8, column=1, sticky=tk.W + tk.E)
 
 # RegNetY032
 models["RegNetY032"] = tk.BooleanVar()
 model_RegNetY032 = ttk.Checkbutton(mc_info, text="RegNetY032", variable=models["RegNetY032"], onvalue = 1, offvalue = 0)
-model_RegNetY032.grid(row=8, column=2, sticky=(tk.W + tk.E))
+model_RegNetY032.grid(row=8, column=2, sticky=tk.W + tk.E)
 
 # RegNetX040
 models["RegNetX040"] = tk.BooleanVar()
 model_RegNetX040 = ttk.Checkbutton(mc_info, text="RegNetX040", variable=models["RegNetX040"], onvalue = 1, offvalue = 0)
-model_RegNetX040.grid(row=8, column=3, sticky=(tk.W + tk.E))
+model_RegNetX040.grid(row=8, column=3, sticky=tk.W + tk.E)
 
 # RegNetY040
 models["RegNetY040"] = tk.BooleanVar()
 model_RegNetY040 = ttk.Checkbutton(mc_info, text="RegNetY040", variable=models["RegNetY040"], onvalue = 1, offvalue = 0)
-model_RegNetY040.grid(row=8, column=4, sticky=(tk.W + tk.E))
+model_RegNetY040.grid(row=8, column=4, sticky=tk.W + tk.E)
 
 # RegNetX064
 models["RegNetX064"] = tk.BooleanVar()
 model_RegNetX064 = ttk.Checkbutton(mc_info, text="RegNetX064", variable=models["RegNetX064"], onvalue = 1, offvalue = 0)
-model_RegNetX064.grid(row=8, column=5, sticky=(tk.W + tk.E))
+model_RegNetX064.grid(row=8, column=5, sticky=tk.W + tk.E)
 
 # RegNetY064
 models["RegNetY064"] = tk.BooleanVar()
 model_RegNetY064 = ttk.Checkbutton(mc_info, text="RegNetY064", variable=models["RegNetY064"], onvalue = 1, offvalue = 0)
-model_RegNetY064.grid(row=8, column=6, sticky=(tk.W + tk.E))
+model_RegNetY064.grid(row=8, column=6, sticky=tk.W + tk.E)
 
 # RegNetX080
 models["RegNetX080"] = tk.BooleanVar()
 model_RegNetX080 = ttk.Checkbutton(mc_info, text="RegNetX080", variable=models["RegNetX080"], onvalue = 1, offvalue = 0)
-model_RegNetX080.grid(row=8, column=7, sticky=(tk.W + tk.E))
+model_RegNetX080.grid(row=8, column=7, sticky=tk.W + tk.E)
 
 
 
 # RegNetY080
 models["RegNetY080"] = tk.BooleanVar()
 model_RegNetY080 = ttk.Checkbutton(mc_info, text="RegNetY080", variable=models["RegNetY080"], onvalue = 1, offvalue = 0)
-model_RegNetY080.grid(row=9, column=0, sticky=(tk.W + tk.E))
+model_RegNetY080.grid(row=9, column=0, sticky=tk.W + tk.E)
 
 # RegNetX120
 models["RegNetX120"] = tk.BooleanVar()
 model_RegNetX120 = ttk.Checkbutton(mc_info, text="RegNetX120", variable=models["RegNetX120"], onvalue = 1, offvalue = 0)
-model_RegNetX120.grid(row=9, column=1, sticky=(tk.W + tk.E))
+model_RegNetX120.grid(row=9, column=1, sticky=tk.W + tk.E)
 
 # RegNetY120
 models["RegNetY120"] = tk.BooleanVar()
 model_RegNetY120 = ttk.Checkbutton(mc_info, text="RegNetY120", variable=models["RegNetY120"], onvalue = 1, offvalue = 0)
-model_RegNetY120.grid(row=9, column=2, sticky=(tk.W + tk.E))
+model_RegNetY120.grid(row=9, column=2, sticky=tk.W + tk.E)
 
 # RegNetX160
 models["RegNetX160"] = tk.BooleanVar()
 model_RegNetX160 = ttk.Checkbutton(mc_info, text="RegNetX160", variable=models["RegNetX160"], onvalue = 1, offvalue = 0)
-model_RegNetX160.grid(row=9, column=3, sticky=(tk.W + tk.E))
+model_RegNetX160.grid(row=9, column=3, sticky=tk.W + tk.E)
 
 # RegNetY160
 models["RegNetY160"] = tk.BooleanVar()
 model_RegNetY160 = ttk.Checkbutton(mc_info, text="RegNetY160", variable=models["RegNetY160"], onvalue = 1, offvalue = 0)
-model_RegNetY160.grid(row=9, column=4, sticky=(tk.W + tk.E))
+model_RegNetY160.grid(row=9, column=4, sticky=tk.W + tk.E)
 
 # RegNetX320
 models["RegNetX320"] = tk.BooleanVar()
 model_RegNetX320 = ttk.Checkbutton(mc_info, text="RegNetX320", variable=models["RegNetX320"], onvalue = 1, offvalue = 0)
-model_RegNetX320.grid(row=9, column=5, sticky=(tk.W + tk.E))
+model_RegNetX320.grid(row=9, column=5, sticky=tk.W + tk.E)
 
 # RegNetY320
 models["RegNetY320"] = tk.BooleanVar()
 model_RegNetY320 = ttk.Checkbutton(mc_info, text="RegNetY320", variable=models["RegNetY320"], onvalue = 1, offvalue = 0)
-model_RegNetY320.grid(row=9, column=6, sticky=(tk.W + tk.E))
+model_RegNetY320.grid(row=9, column=6, sticky=tk.W + tk.E)
 
 
 
@@ -968,8 +1065,8 @@ def unselect():
         models[i].set(0)
     
 # Select all
-ttk.Button(mc_info, text="Select All", command=selectall).grid(row=10, column=6, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Button(mc_info, text="Unselect All", command=unselect).grid(row=10, column=7, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Button(mc_info, text="Select All", command=selectall).grid(row=10, column=6, padx=5, pady=5, sticky=tk.W + tk.E)
+ttk.Button(mc_info, text="Unselect All", command=unselect).grid(row=10, column=7, padx=5, pady=5, sticky=tk.W + tk.E)
 
 def sel():
     if (variables['strategie'].get()==1):
@@ -1059,7 +1156,7 @@ def sel():
 
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
-train_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+train_info.grid(padx=5, pady=5, sticky=tk.W + tk.E)
 for i in range(8):
     train_info.columnconfigure(i, weight=1)
     
@@ -1068,7 +1165,7 @@ ttk.Label(train_info, text="Training step(s)").grid(row=0,
                                                     column=0, 
                                                     padx=5, 
                                                     pady=5, 
-                                                    sticky=(tk.W + tk.E))
+                                                    sticky=tk.W + tk.E)
 ttk.Radiobutton(train_info, 
                 text='1 Step', 
                 value='1', 
@@ -1077,7 +1174,7 @@ ttk.Radiobutton(train_info,
                                   column=0, 
                                   padx=5, 
                                   pady=5, 
-                                  sticky=(tk.W + tk.E))
+                                  sticky=tk.W + tk.E)
 ttk.Radiobutton(train_info, 
                 text='2 Steps', 
                 value='2', 
@@ -1086,7 +1183,7 @@ ttk.Radiobutton(train_info,
                                   column=1, 
                                   padx=5, 
                                   pady=5, 
-                                  sticky=(tk.W + tk.E))
+                                  sticky=tk.W + tk.E)
 ttk.Radiobutton(train_info, 
                 text='3 Steps', 
                 value='3', 
@@ -1095,7 +1192,7 @@ ttk.Radiobutton(train_info,
                                    column=2, 
                                    padx=5, 
                                    pady=5, 
-                                   sticky=(tk.W + tk.E))
+                                   sticky=tk.W + tk.E)
 variables['strategie'].set(1)
 
 variables["multigpu"] = tk.IntVar()
@@ -1104,7 +1201,7 @@ ttk.Label(train_info,
                                        column=3, 
                                        padx=5, 
                                        pady=5, 
-                                       sticky=(tk.W + tk.E))
+                                       sticky=tk.W + tk.E)
 multi_gpu = ttk.Checkbutton(train_info, 
                             text="Multi GPU", 
                             variable=variables["multigpu"],
@@ -1114,7 +1211,7 @@ multi_gpu.grid(row=1,
                column=3, 
                padx=5, 
                pady=5, 
-               sticky=(tk.W + tk.E))
+               sticky=tk.W + tk.E)
 multi_gpu.state(['disabled'])
 variables["multigpu"].set(0)
 
@@ -1129,7 +1226,7 @@ ttk.Label(train_info,
                                       column=4, 
                                       padx=5, 
                                       pady=5, 
-                                      sticky=(tk.W + tk.E))
+                                      sticky=tk.W + tk.E)
 chkpoint = ttk.Checkbutton(train_info, 
                            text="Checkpoint", 
                            variable=variables["checkpoint"])
@@ -1137,7 +1234,7 @@ chkpoint.grid(row=1,
               column=4, 
               padx=5, 
               pady=5, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 chkpoint.state(['selected'])
 variables['checkpoint'].set(1)
 
@@ -1147,7 +1244,7 @@ ttk.Label(train_info,
                                    column=5, 
                                    padx=5, 
                                    pady=5, 
-                                   sticky=(tk.W + tk.E))
+                                   sticky=tk.W + tk.E)
 kerastuning = ttk.Checkbutton(train_info, 
                               text="Keras Tuning", 
                               variable=variables["kerastuning"])
@@ -1155,7 +1252,7 @@ kerastuning.grid(row=1,
                  column=5, 
                  padx=5, 
                  pady=5, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 kerastuning.state(['selected'])
 variables['kerastuning'].set(0)
 kerastuning['state']='disabled'
@@ -1165,7 +1262,7 @@ ttk.Separator(train_info,
                                         columnspan=7, 
                                         padx=5, 
                                         pady=5, 
-                                        sticky=(tk.W + tk.E))
+                                        sticky=tk.W + tk.E)
 
 listOptimizer = ('SGD',
                  'RMSProp',
@@ -1182,17 +1279,17 @@ ttk.Label(train_info, text="Step 1").grid(row=4,
                                           column=0, 
                                           padx=5, 
                                           pady=5, 
-                                          sticky=(tk.W + tk.E))
+                                          sticky=tk.W + tk.E)
 ttk.Label(train_info, text="Step 2").grid(row=5, 
                                           column=0, 
                                           padx=5, 
                                           pady=5, 
-                                          sticky=(tk.W + tk.E))
+                                          sticky=tk.W + tk.E)
 ttk.Label(train_info, text="Step 3").grid(row=6, 
                                           column=0, 
                                           padx=5, 
                                           pady=5, 
-                                          sticky=(tk.W + tk.E))
+                                          sticky=tk.W + tk.E)
 
 variables['optimizer1'] = tk.StringVar()
 variables['optimizer2'] = tk.StringVar()
@@ -1202,7 +1299,7 @@ ttk.Label(train_info, text="Optimizer").grid(row=3,
                                              column=1, 
                                              padx=5, 
                                              pady=5, 
-                                             sticky=(tk.W + tk.E))
+                                             sticky=tk.W + tk.E)
 optimizer1 = ttk.Combobox(train_info, 
                           values=listOptimizer, 
                           textvariable=variables['optimizer1'], 
@@ -1211,7 +1308,7 @@ optimizer1.grid(row=4,
                 column=1, 
                 padx=5, 
                 pady=5, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 optimizer1.current(2)
 optimizer2 = ttk.Combobox(train_info, 
                           values=listOptimizer, 
@@ -1221,7 +1318,7 @@ optimizer2.grid(row=5,
                 column=1, 
                 padx=5, 
                 pady=5, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 optimizer2.current(2)
 optimizer3 = ttk.Combobox(train_info, 
                           values=listOptimizer, 
@@ -1231,7 +1328,7 @@ optimizer3.grid(row=6,
                 column=1, 
                 padx=5, 
                 pady=5, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 optimizer3.current(2)
 
 listLoss = ('BinaryCrossentropy', 
@@ -1258,7 +1355,7 @@ ttk.Label(train_info, text="Loss").grid(row=3,
                                         column=2, 
                                         padx=5, 
                                         pady=5, 
-                                        sticky=(tk.W + tk.E))
+                                        sticky=tk.W + tk.E)
 loss1 = ttk.Combobox(train_info, 
                      values=listLoss, 
                      textvariable=variables['loss1'], 
@@ -1267,7 +1364,7 @@ loss1.grid(row=4,
            column=2, 
            padx=5, 
            pady=5, 
-           sticky=(tk.W + tk.E))
+           sticky=tk.W + tk.E)
 loss1.current(2)
 loss2 = ttk.Combobox(train_info, 
                      values=listLoss, 
@@ -1277,7 +1374,7 @@ loss2.grid(row=5,
            column=2, 
            padx=5, 
            pady=5, 
-           sticky=(tk.W + tk.E))
+           sticky=tk.W + tk.E)
 loss2.current(2)
 loss3 = ttk.Combobox(train_info, 
                      values=listLoss, 
@@ -1287,7 +1384,7 @@ loss3.grid(row=6,
            column=2, 
            padx=5, 
            pady=5, 
-           sticky=(tk.W + tk.E))
+           sticky=tk.W + tk.E)
 loss3.current(2)
 
 listEpoch = list(range(1,501))
@@ -1300,7 +1397,7 @@ ttk.Label(train_info, text="Epoh").grid(row=3,
                                         column=3, 
                                         padx=5, 
                                         pady=5, 
-                                        sticky=(tk.W + tk.E))
+                                        sticky=tk.W + tk.E)
 epoch1 = ttk.Combobox(train_info, 
                       values=listEpoch, 
                       textvariable=variables['epoch1'], 
@@ -1309,7 +1406,7 @@ epoch1.grid(row=4,
             column=3, 
             padx=5, 
             pady=5, 
-            sticky=(tk.W + tk.E))
+            sticky=tk.W + tk.E)
 epoch1.current(9)
 epoch2 = ttk.Combobox(train_info, 
                       values=listEpoch, 
@@ -1319,7 +1416,7 @@ epoch2.grid(row=5,
             column=3, 
             padx=5, 
             pady=5, 
-            sticky=(tk.W + tk.E))
+            sticky=tk.W + tk.E)
 epoch2.current(9)
 epoch3 = ttk.Combobox(train_info, 
                       values=listEpoch, 
@@ -1329,7 +1426,7 @@ epoch3.grid(row=6,
             column=3, 
             padx=5, 
             pady=5, 
-            sticky=(tk.W + tk.E))
+            sticky=tk.W + tk.E)
 epoch3.current(49)
 
 listlr = [0.1,0.01,0.001,0.0001,0.00001]
@@ -1342,7 +1439,7 @@ ttk.Label(train_info, text="Learning Rate").grid(row=3,
                                                  column=4, 
                                                  padx=5, 
                                                  pady=5, 
-                                                 sticky=(tk.W + tk.E))
+                                                 sticky=tk.W + tk.E)
 lr1 = ttk.Combobox(train_info, 
                    values=listlr, 
                    textvariable=variables['lr1'], 
@@ -1351,7 +1448,7 @@ lr1.grid(row=4,
          column=4, 
          padx=5, 
          pady=5, 
-         sticky=(tk.W + tk.E))
+         sticky=tk.W + tk.E)
 lr1.current(2)
 lr2 = ttk.Combobox(train_info, 
                    values=listlr, 
@@ -1361,7 +1458,7 @@ lr2.grid(row=5,
          column=4, 
          padx=5, 
          pady=5, 
-         sticky=(tk.W + tk.E))
+         sticky=tk.W + tk.E)
 lr2.current(3)
 lr3 = ttk.Combobox(train_info, 
                    values=listlr, 
@@ -1371,7 +1468,7 @@ lr3.grid(row=6,
          column=4, 
          padx=5, 
          pady=5, 
-         sticky=(tk.W + tk.E))
+         sticky=tk.W + tk.E)
 lr3.current(4)
 
 variables['lrdecay1'] = tk.BooleanVar()
@@ -1383,7 +1480,7 @@ ttk.Label(train_info,
                                 column=5, 
                                 padx=5, 
                                 pady=5, 
-                                sticky=(tk.W + tk.E))
+                                sticky=tk.W + tk.E)
 lrdecay1 = ttk.Checkbutton(train_info, 
                            text="", 
                            variable=variables["lrdecay1"])
@@ -1425,7 +1522,7 @@ ttk.Label(train_info,
                                       column=6, 
                                       padx=5, 
                                       pady=5, 
-                                      sticky=(tk.W + tk.E))
+                                      sticky=tk.W + tk.E)
 earlystopping1 = ttk.Checkbutton(train_info, 
                                  text="", 
                                  variable=variables['earlystopping1'])
@@ -1463,7 +1560,7 @@ variables["earlystopping3"].set(0)
 xai_info = ttk.LabelFrame(mc, text='Explainability')
 xai_info.grid(padx=5, 
               pady=5, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 
 for i in range(8):
     xai_info.columnconfigure(i, weight=1)
@@ -1477,7 +1574,7 @@ activationmaximization = ttk.Checkbutton(xai_info,
                                          offvalue = 0)
 activationmaximization.grid(row=0, 
                             column=0, 
-                            sticky=(tk.W + tk.E))
+                            sticky=tk.W + tk.E)
 activationmaximization.state(['selected'])
 variables["activationmaximization"].set(0)
 activationmaximization['state']='disabled'
@@ -1490,7 +1587,7 @@ gradcam = ttk.Checkbutton(xai_info,
                           offvalue = 0)
 gradcam.grid(row=0, 
              column=1, 
-             sticky=(tk.W + tk.E))
+             sticky=tk.W + tk.E)
 gradcam.state(['selected'])
 variables["gradcam"].set(0)
 gradcam['state']='disabled'
@@ -1503,7 +1600,7 @@ gradcamplus = ttk.Checkbutton(xai_info,
                               offvalue = 0)
 gradcamplus.grid(row=0, 
                  column=2, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 gradcamplus.state(['selected'])
 variables["gradcamplusplus"].set(0)
 gradcamplus['state']='disabled'
@@ -1516,7 +1613,7 @@ scorecam = ttk.Checkbutton(xai_info,
                            offvalue = 0)
 scorecam.grid(row=0, 
               column=3, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 scorecam.state(['selected'])
 variables["scorecam"].set(0)
 scorecam['state']='disabled'
@@ -1529,7 +1626,7 @@ fasterscorecam = ttk.Checkbutton(xai_info,
                                  offvalue = 0)
 fasterscorecam.grid(row=0, 
                     column=4, 
-                    sticky=(tk.W + tk.E))
+                    sticky=tk.W + tk.E)
 fasterscorecam.state(['selected'])
 variables["fasterscorecam"].set(0)
 fasterscorecam['state']='disabled'
@@ -1542,7 +1639,7 @@ layercam = ttk.Checkbutton(xai_info,
                            offvalue = 0)
 layercam.grid(row=0, 
               column=5, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 layercam.state(['selected'])
 variables["layercam"].set(0)
 layercam['state']='disabled'
@@ -1555,7 +1652,7 @@ vanillasaliency = ttk.Checkbutton(xai_info,
                                   offvalue = 0)
 vanillasaliency.grid(row=0, 
                      column=6, 
-                     sticky=(tk.W + tk.E))
+                     sticky=tk.W + tk.E)
 vanillasaliency.state(['selected'])
 variables["vanillasaliency"].set(0)
 vanillasaliency['state']='disabled'
@@ -1568,7 +1665,7 @@ smoothgrad = ttk.Checkbutton(xai_info,
                              offvalue=0)
 smoothgrad.grid(row=0, 
                 column=7, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 smoothgrad.state(['selected'])
 variables["smoothgrad"].set(0)
 smoothgrad['state']='disabled'
@@ -1577,7 +1674,7 @@ smoothgrad['state']='disabled'
 output_info = ttk.LabelFrame(mc, text='Output')
 output_info.grid(padx=5, 
                  pady=5, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 
 for i in range(5):
     output_info.columnconfigure(i, weight=1)
@@ -1591,7 +1688,7 @@ savemodel = ttk.Checkbutton(output_info,
                             offvalue = 0)
 savemodel.grid(row=0, 
                column=0, 
-               sticky=(tk.W + tk.E))
+               sticky=tk.W + tk.E)
 savemodel.state(['selected'])
 variables["savemodel"].set(1)
 
@@ -1604,7 +1701,7 @@ traingraph = ttk.Checkbutton(output_info,
                              offvalue = 0)
 traingraph.grid(row=0, 
                 column=1, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 traingraph.state(['selected'])
 variables["traingraph"].set(1)
 
@@ -1617,7 +1714,7 @@ confmatrix = ttk.Checkbutton(output_info,
                              offvalue = 0)
 confmatrix.grid(row=0, 
                 column=2, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 confmatrix.state(['selected'])
 variables["confmatrix"].set(1)
 
@@ -1630,7 +1727,7 @@ classreport = ttk.Checkbutton(output_info,
                               offvalue = 0)
 classreport.grid(row=0, 
                  column=3, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 classreport.state(['selected'])
 variables["classreport"].set(1)
 
@@ -1643,7 +1740,7 @@ tflite = ttk.Checkbutton(output_info,
                          offvalue = 0)
 tflite.grid(row=0, 
             column=4, 
-            sticky=(tk.W + tk.E))
+            sticky=tk.W + tk.E)
 tflite.state(['!selected'])
 
 
@@ -1652,7 +1749,7 @@ tflite.state(['!selected'])
 info_info = ttk.LabelFrame(mc, text='Info')
 info_info.grid(padx=5, 
                pady=5, 
-               sticky=(tk.W + tk.E))
+               sticky=tk.W + tk.E)
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
@@ -1680,7 +1777,7 @@ ttk.Label(info_info,
 
 # Execution
 exec_info = ttk.LabelFrame(mc, text='Execution')
-exec_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+exec_info.grid(padx=5, pady=5, sticky=tk.W + tk.E)
 for i in range(5):
     exec_info.columnconfigure(i, weight=1)
 
@@ -4771,12 +4868,12 @@ ttk.Button(exec_info, text="Reset", command=reset).grid(row=0,
                                                         column=0, 
                                                         padx=5, 
                                                         pady=5, 
-                                                        sticky=(tk.W + tk.E))
+                                                        sticky=tk.W + tk.E)
 ttk.Button(exec_info, text="Run", command=run).grid(row=0, 
                                                     column=4, 
                                                     padx=5, 
                                                     pady=5, 
-                                                    sticky=(tk.W + tk.E))
+                                                    sticky=tk.W + tk.E)
 
 
 # Show the window 

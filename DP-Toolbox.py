@@ -2046,12 +2046,14 @@ def reset():
     variables["tflite"].set(0)   
     
 def scheduler(epoch, lr):
+    """Method to update the learning rate"""
     if epoch < 5:
         return lr
     else:
         return lr * tf.math.exp(-0.1)   
    
 def pb_progress(cpt, total):
+    """Method to update the progressbar"""
     cpt = cpt + 1
     pgb.set(round((cpt/total)*100))
     mc.update()
@@ -2082,6 +2084,8 @@ def training(_img_height,
              confmatrix, 
              classreport, 
              tflite):
+    """Method to train model"""
+    
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         output_dir+'/model/'+model_name+".tf", 
         verbose=1, 
@@ -2357,6 +2361,7 @@ def training(_img_height,
 
 
 def run():
+    """Method to run the training"""
     print("Start")
     
     size = variables["imgresizing"].get().split(' x ')

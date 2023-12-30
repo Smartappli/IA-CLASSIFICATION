@@ -1279,7 +1279,7 @@ def sel():
         earlystopping3['state']='disabled'
         earlystopping3.state(['!selected'])
         
-    elif(variables['strategie'].get()==2):
+    elif variables['strategie'].get()==2:
         optimizer2['state']='readonly'
         optimizer3['state']='disabled'
         
@@ -1971,7 +1971,7 @@ pb = ttk.Progressbar(exec_info,
                      variable=pgb).grid(row=0, 
                                         column=1, 
                                         columnspan=3, 
-                                        sticky=(tk.E + tk.W))
+                                        sticky=tk.E + tk.W)
 
 
 def merge_dictionaries(dict1, dict2):
@@ -2049,13 +2049,13 @@ def scheduler(epoch, lr):
     if epoch < 5:
         return lr
     else:
-       return lr * tf.math.exp(-0.1)   
+        return lr * tf.math.exp(-0.1)   
    
 def pb_progress(cpt, total):
-        cpt = cpt + 1
-        pgb.set(round((cpt/total)*100))
-        mc.update()
-        return cpt
+    cpt = cpt + 1
+    pgb.set(round((cpt/total)*100))
+    mc.update()
+    return cpt
     
 def training(_img_height, 
              _img_width, 
@@ -2132,7 +2132,7 @@ def training(_img_height,
         _loss2 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
             
     if _loss3 == "SparseCategoricalCrossentropy":
-         _loss3 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)   
+        _loss3 = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)   
             
     
     # Multi GPU
@@ -2264,7 +2264,10 @@ def training(_img_height,
                           loss=_loss3,
                           metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks)            
+            hist3 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch3), 
+                              callbacks=callbacks)            
 
     
     #Output
@@ -2279,7 +2282,10 @@ def training(_img_height,
         elif strategie == 2:
             hist_ = pd.DataFrame(merge_dictionaries(hist.history, hist2.history))
         else:
-            hist_ = pd.DataFrame(merge_dictionaries(merge_dictionaries(hist.history, hist2.history), hist3.history))
+            hist_ = pd.DataFrame(merge_dictionaries(
+                merge_dictionaries(hist.history,
+                                   hist2.history), 
+                                   hist3.history))
             
         hist_
 
@@ -2389,12 +2395,12 @@ def run():
 
     # Progressbar configuration
     for i in models.keys():
-        if (models[i].get() == 1):
+        if models[i].get() == 1:
             total = total + 1
 
  
     ### Xception Model ##    
-    if (models["Xception"].get() == 1):
+    if models["Xception"].get() == 1:
         model_name = "Xception"  
         
         base_model = Xception(input_shape=(img_height, 
@@ -2433,7 +2439,7 @@ def run():
         
     
     ### VGG16 Model ###
-    if (models["VGG16"].get() == 1):
+    if models["VGG16"].get() == 1:
         model_name = "VGG16"
         
         base_model = VGG16(input_shape=(img_height, 
@@ -2472,7 +2478,7 @@ def run():
     
     
     ### VGG19 model ###
-    if (models["VGG19"].get() == 1):
+    if models["VGG19"].get() == 1:
         model_name = "VGG19"
         
         base_model = VGG19(input_shape=(img_height, 
@@ -2511,7 +2517,7 @@ def run():
     
     
     ### ResNet50 ###
-    if (models["ResNet50"].get() == 1):
+    if models["ResNet50"].get() == 1:
         model_name = "ResNet50"
         
         base_model = ResNet50(input_shape=(img_height, img_width, int(variables["channel"].get())),
@@ -2548,7 +2554,7 @@ def run():
     
 
     ### ResNet50 V2 ###
-    if (models["ResNet50V2"].get() == 1):
+    if models["ResNet50V2"].get() == 1:
         model_name = "ResNet50_V2"
         
         base_model = ResNet50V2(input_shape=(img_height, 
@@ -2587,7 +2593,7 @@ def run():
         
         
     ### ResNetRS50 ###
-    if (models["ResNetRS50"].get() == 1):
+    if models["ResNetRS50"].get() == 1:
         model_name = "ResNetRS50"
         
         base_model = ResNetRS50(input_shape=(img_height, 
@@ -2626,7 +2632,7 @@ def run():
     
             
     ### ResNet101 ###
-    if (models["ResNet101"].get() == 1):
+    if models["ResNet101"].get() == 1:
         model_name = "ResNet101"
         
         base_model = ResNet101(input_shape=(img_height, 
@@ -2665,7 +2671,7 @@ def run():
         
   
     ### ResNet101 V2 ###
-    if (models["ResNet101V2"].get() == 1):
+    if models["ResNet101V2"].get() == 1:
         model_name = "ResNet101_V2"
         
         base_model = ResNet101V2(input_shape=(img_height, 
@@ -2704,7 +2710,7 @@ def run():
         
     
     ### ResNetRS101 ###
-    if (models["ResNetRS101"].get() == 1):
+    if models["ResNetRS101"].get() == 1:
         model_name = "ResNetRS101"
         
         base_model = ResNetRS101(input_shape=(img_height, 
@@ -2743,7 +2749,7 @@ def run():
         
         
     ### ResNet152 ###
-    if (models["ResNet152"].get() == 1):
+    if models["ResNet152"].get() == 1:
         model_name = "ResNet152"
         base_model = ResNet152(input_shape=(img_height, 
                                             img_width, 
@@ -2781,7 +2787,7 @@ def run():
         
         
     ### ResNet152 V2 ###
-    if (models["ResNet152V2"].get() == 1):
+    if models["ResNet152V2"].get() == 1:
         model_name = "ResNet152_V2"
         base_model = ResNet152V2(input_shape=(img_height, 
                                               img_width, 
@@ -2819,7 +2825,7 @@ def run():
 
  
     ### ResNetRS 152 ###
-    if (models["ResNetRS152"].get() == 1):
+    if models["ResNetRS152"].get() == 1:
         model_name = "ResNetRS152"
         base_model = ResNetRS152(input_shape=(img_height, 
                                               img_width, 
@@ -2857,7 +2863,7 @@ def run():
 
 
     ### ResNetRS 200 ###
-    if (models["ResNetRS200"].get() == 1):
+    if models["ResNetRS200"].get() == 1:
         model_name = "ResNetRS200"
         base_model = ResNetRS200(input_shape=(img_height, 
                                               img_width, 
@@ -2895,7 +2901,7 @@ def run():
   
     
     ### ResNetRS 270 ###
-    if (models["ResNetRS270"].get() == 1):
+    if models["ResNetRS270"].get() == 1:
         model_name = "ResNetRS270"
         base_model = ResNetRS270(input_shape=(img_height, 
                                               img_width, 
@@ -2933,7 +2939,7 @@ def run():
     
     
     ### ResNetRS 350 ###
-    if (models["ResNetRS350"].get() == 1):
+    if models["ResNetRS350"].get() == 1:
         model_name = "ResNetRS350"
         base_model = ResNetRS350(input_shape=(img_height, 
                                               img_width, 
@@ -2971,7 +2977,7 @@ def run():
 
 
     ### ResNetRS 420 ###
-    if (models["ResNetRS420"].get() == 1):
+    if models["ResNetRS420"].get() == 1:
         model_name = "ResNetRS420"
         base_model = ResNetRS420(input_shape=(img_height, 
                                               img_width, 
@@ -3009,7 +3015,7 @@ def run():
     
     
     ### Inception V3 ###
-    if (models["InceptionV3"].get() == 1):
+    if models["InceptionV3"].get() == 1:
         model_name = "Inception_V3"
         base_model = InceptionV3(input_shape=(img_height, 
                                               img_width, 
@@ -3047,7 +3053,7 @@ def run():
 
     
     ### InceptionResNet V2 ###
-    if (models["InceptionResNetV2"].get() == 1):
+    if models["InceptionResNetV2"].get() == 1:
         model_name = "InceptionResNet_V2"
         base_model = InceptionResNetV2(input_shape=(img_height, 
                                                     img_width, 
@@ -3085,7 +3091,7 @@ def run():
     
     
     ### MobileNet ###
-    if (models["MobileNet"].get() == 1):
+    if models["MobileNet"].get() == 1:
         model_name = "MobileNet"
         base_model = MobileNet(input_shape=(img_height, 
                                             img_width, 
@@ -3123,7 +3129,7 @@ def run():
     
     
     ### MobileNet V2 ###
-    if (models["MobileNetV2"].get() == 1):
+    if models["MobileNetV2"].get() == 1:
         model_name = "MobileNet_V2"
         base_model = MobileNetV2(input_shape=(img_height, 
                                               img_width, 
@@ -3161,7 +3167,7 @@ def run():
     
     
     ### MobileNet V3 Small ###
-    if (models["MobileNetV3Small"].get() == 1):
+    if models["MobileNetV3Small"].get() == 1:
         model_name = "MobileNet_V3_Small"
         base_model = MobileNetV3Small(input_shape=(img_height, 
                                                    img_width, 
@@ -3199,7 +3205,7 @@ def run():
     
     
     ### MobileNet V3 Large ###
-    if (models["MobileNetV3Large"].get() == 1):
+    if models["MobileNetV3Large"].get() == 1:
         model_name = "MobileNet_V3_Large"
 
         base_model = MobileNetV3Large(input_shape=(img_height, 
@@ -3238,7 +3244,7 @@ def run():
     
     
     ### DenseNet 121 ###
-    if (models["DenseNet121"].get() == 1):
+    if models["DenseNet121"].get() == 1:
         model_name = "DenseNet121"
         base_model = DenseNet121(input_shape=(img_height, 
                                               img_width, 
@@ -3276,7 +3282,7 @@ def run():
     
     
     ### DenseNet 169 ###
-    if (models["DenseNet169"].get() == 1):
+    if models["DenseNet169"].get() == 1:
         model_name = "DenseNet169"
         base_model = DenseNet169(input_shape=(img_height, 
                                               img_width, 
@@ -3314,7 +3320,7 @@ def run():
         
         
     ### DenseNet 201 ###
-    if (models["DenseNet201"].get() == 1):
+    if models["DenseNet201"].get() == 1:
         model_name = "DenseNet201"
         base_model = DenseNet201(input_shape=(img_height, 
                                               img_width, 
@@ -3352,7 +3358,7 @@ def run():
     
     
     ### NASNetMobile ###
-    if (models["NASNetMobile"].get() == 1):
+    if models["NASNetMobile"].get() == 1:
         model_name = "NASNetMobile"
         base_model = NASNetMobile(input_shape=(img_height, 
                                                img_width, 
@@ -3390,7 +3396,7 @@ def run():
     
     
     ### NASNetLarge ###
-    if (models["NASNetLarge"].get() == 1):
+    if models["NASNetLarge"].get() == 1:
         model_name = "NASNetLarge"
         base_model = NASNetLarge(input_shape=(img_height, 
                                               img_width, 
@@ -3428,7 +3434,7 @@ def run():
     
     
     ### EfficientNetB0 ###
-    if (models["EfficientNetB0"].get() == 1):
+    if models["EfficientNetB0"].get() == 1:
         model_name = "EfficientNet_B0"
         base_model = EfficientNetB0(input_shape=(img_height, 
                                                  img_width, 
@@ -3466,7 +3472,7 @@ def run():
     
     
     ### EfficientNetB0 V2 ###
-    if (models["EfficientNetB0V2"].get() == 1):
+    if models["EfficientNetB0V2"].get() == 1:
         model_name = "EfficientNet_B0_V2"
         base_model = EfficientNetV2B0(input_shape=(img_height, 
                                                    img_width, 
@@ -3504,7 +3510,7 @@ def run():
 
 
     ### EfficientNetB1 ###
-    if (models["EfficientNetB1"].get() == 1):
+    if models["EfficientNetB1"].get() == 1:
         model_name = "EfficientNet_B1"
         base_model = EfficientNetB1(input_shape=(img_height, 
                                                  img_width, 
@@ -3542,7 +3548,7 @@ def run():
     
   
     ### EfficientNetB1 V2 ###
-    if (models["EfficientNetB1V2"].get() == 1):
+    if models["EfficientNetB1V2"].get() == 1:
         model_name = "EfficientNet_B1_V2"
         base_model = EfficientNetV2B1(input_shape=(img_height, 
                                                    img_width, 
@@ -3580,7 +3586,7 @@ def run():
     
     
     ### EfficientNetB2 ###
-    if (models["EfficientNetB2"].get() == 1):
+    if models["EfficientNetB2"].get() == 1:
         model_name = "EfficientNet_B2"
         base_model = EfficientNetB2(input_shape=(img_height, 
                                                  img_width, 
@@ -3618,7 +3624,7 @@ def run():
     
 
     ### EfficientNetB2 V2 ###
-    if (models["EfficientNetB2V2"].get() == 1):
+    if models["EfficientNetB2V2"].get() == 1:
         model_name = "EfficientNet_B2_V2"
         base_model = EfficientNetV2B2(input_shape=(img_height, 
                                                    img_width, 
@@ -3656,7 +3662,7 @@ def run():
     
         
     ### EfficientNetB3 ###
-    if (models["EfficientNetB3"].get() == 1):
+    if models["EfficientNetB3"].get() == 1:
         model_name = "EfficientNet_B3"
         base_model = EfficientNetB3(input_shape=(img_height, 
                                                  img_width, 
@@ -3694,7 +3700,7 @@ def run():
     
   
     ### EfficientNetB3 V2 ###
-    if (models["EfficientNetB3V2"].get() == 1):
+    if models["EfficientNetB3V2"].get() == 1:
         model_name = "EfficientNet_B3_V2"
         base_model = EfficientNetV2B3(input_shape=(img_height, 
                                                    img_width, 
@@ -3732,7 +3738,7 @@ def run():
     
 
     ### EfficientNetB4 ###
-    if (models["EfficientNetB4"].get() == 1):
+    if models["EfficientNetB4"].get() == 1:
         model_name = "EfficientNet_B4"
         base_model = EfficientNetB4(input_shape=(img_height, 
                                                  img_width, 
@@ -3770,7 +3776,7 @@ def run():
     
     
     ### EfficientNetB5 ###
-    if (models["EfficientNetB5"].get() == 1):
+    if models["EfficientNetB5"].get() == 1:
         model_name = "EfficientNet_B5"
         base_model = EfficientNetB5(input_shape=(img_height, 
                                                  img_width, 
@@ -3808,7 +3814,7 @@ def run():
     
     
     ### EfficientNetB6 ###
-    if (models["EfficientNetB6"].get() == 1):
+    if models["EfficientNetB6"].get() == 1:
         model_name = "EfficientNet_B6"
         base_model = EfficientNetB6(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
@@ -3820,7 +3826,7 @@ def run():
     
     
     ### EfficientNetB7 ###
-    if (models["EfficientNetB7"].get() == 1):
+    if models["EfficientNetB7"].get() == 1:
         model_name = "EfficientNet_B7"
         base_model = EfficientNetB7(input_shape=(img_height, 
                                                  img_width, 
@@ -3858,7 +3864,7 @@ def run():
     
         
     ### EfficientNet2S ###
-    if (models["EfficientNetV2Small"].get() == 1): 
+    if models["EfficientNetV2Small"].get() == 1: 
         model_name = "EfficientNet_V2_Small"
         base_model = EfficientNetV2S(input_shape=(img_height, 
                                                   img_width, 
@@ -3896,7 +3902,7 @@ def run():
     
     
     ### EfficientNet2M ###
-    if (models["EfficientNetV2Medium"].get() == 1):
+    if models["EfficientNetV2Medium"].get() == 1:
         model_name = "EfficientNet_V2_Medium"
         base_model = EfficientNetV2M(input_shape=(img_height, 
                                                   img_width, 
@@ -3934,7 +3940,7 @@ def run():
     
     
     ### EfficientNet2L ###
-    if (models["EfficientNetV2Large"].get() == 1):
+    if models["EfficientNetV2Large"].get() == 1:
         model_name = "EfficientNet_V2_Large"
         base_model = EfficientNetV2L(input_shape=(img_height, 
                                                   img_width, 
@@ -3972,7 +3978,7 @@ def run():
     
     
     ### ConvNeXtTiny ###
-    if (models["ConvNeXtTiny"].get() == 1):
+    if models["ConvNeXtTiny"].get() == 1:
         model_name = "ConvNeXtTiny"
         base_model = ConvNeXtTiny(input_shape=(img_height, 
                                                img_width, 
@@ -4010,7 +4016,7 @@ def run():
     
     
     ### ConvNeXtSmall ###
-    if (models["ConvNeXtSmall"].get() == 1):
+    if models["ConvNeXtSmall"].get() == 1:
         model_name = "ConvNeXtSmall"
         base_model = ConvNeXtSmall(input_shape=(img_height,
                                                 img_width, 
@@ -4048,7 +4054,7 @@ def run():
     
     
     ### ConvNeXtBase ###
-    if (models["ConvNeXtBase"].get() == 1):
+    if models["ConvNeXtBase"].get() == 1:
         model_name = "ConvNeXtBase"
         base_model = ConvNeXtBase(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
@@ -4084,7 +4090,7 @@ def run():
     
     
     ### ConvNeXtLarge ###
-    if (models["ConvNeXtLarge"].get() == 1):
+    if models["ConvNeXtLarge"].get() == 1:
         model_name = "ConvNeXtLarge"
         base_model = ConvNeXtLarge(input_shape=(img_height, 
                                                 img_width, 
@@ -4122,7 +4128,7 @@ def run():
     
     
     ### ConvNeXtXLarge ###
-    if (models["ConvNeXtXLarge"].get() == 1):
+    if models["ConvNeXtXLarge"].get() == 1:
         model_name = "ConvNeXtXLarge"
         base_model = ConvNeXtXLarge(input_shape=(img_height, 
                                                  img_width, 
@@ -4159,7 +4165,7 @@ def run():
         cpt = pb_progress(cpt, total)
         
     ### RegNetX002 ###
-    if (models["RegNetX002"].get() == 1):
+    if models["RegNetX002"].get() == 1:
         model_name = "RegNetX002"
         base_model = RegNetX002(input_shape=(img_height, 
                                              img_width, 
@@ -4196,7 +4202,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY002 ###
-    if (models["RegNetY002"].get() == 1):
+    if models["RegNetY002"].get() == 1:
         model_name = "RegNetY002"
         base_model = RegNetY002(input_shape=(img_height, 
                                              img_width, 
@@ -4233,7 +4239,7 @@ def run():
         cpt = pb_progress(cpt, total) 
         
     ### RegNetX004 ###
-    if (models["RegNetX004"].get() == 1):
+    if models["RegNetX004"].get() == 1:
         model_name = "RegNetX004"
         base_model = RegNetX004(input_shape=(img_height, 
                                              img_width, 
@@ -4270,7 +4276,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY004 ###
-    if (models["RegNetY004"].get() == 1):
+    if models["RegNetY004"].get() == 1:
         model_name = "RegNetY004"
         base_model = RegNetY004(input_shape=(img_height, 
                                              img_width, 
@@ -4307,7 +4313,7 @@ def run():
         cpt = pb_progress(cpt, total)
         
     ### RegNetX006 ###
-    if (models["RegNetX006"].get() == 1):
+    if models["RegNetX006"].get() == 1:
         model_name = "RegNetX006"
         base_model = RegNetX006(input_shape=(img_height, 
                                              img_width, 
@@ -4344,7 +4350,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY006 ###
-    if (models["RegNetY006"].get() == 1):
+    if models["RegNetY006"].get() == 1:
         model_name = "RegNetY006"
         base_model = RegNetY006(input_shape=(img_height, 
                                              img_width, 
@@ -4381,7 +4387,7 @@ def run():
         cpt = pb_progress(cpt, total)         
 
     ### RegNetX008 ###
-    if (models["RegNetX008"].get() == 1):
+    if models["RegNetX008"].get() == 1:
         model_name = "RegNetX008"
         base_model = RegNetX008(input_shape=(img_height, 
                                              img_width, 
@@ -4418,7 +4424,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY008 ###
-    if (models["RegNetY008"].get() == 1):
+    if models["RegNetY008"].get() == 1:
         model_name = "RegNetY008"
         base_model = RegNetY008(input_shape=(img_height, 
                                              img_width, 
@@ -4455,7 +4461,7 @@ def run():
         cpt = pb_progress(cpt, total) 
         
     ### RegNetX016 ###
-    if (models["RegNetX016"].get() == 1):
+    if models["RegNetX016"].get() == 1:
         model_name = "RegNetX016"
         base_model = RegNetX016(input_shape=(img_height, 
                                              img_width, 
@@ -4492,7 +4498,7 @@ def run():
         cpt = pb_progress(cpt, total)
     
     ### RegNetY016 ###
-    if (models["RegNetY016"].get() == 1):
+    if models["RegNetY016"].get() == 1:
         model_name = "RegNetY016"
         base_model = RegNetY016(input_shape=(img_height, 
                                              img_width, 
@@ -4529,7 +4535,7 @@ def run():
         cpt = pb_progress(cpt, total)
 
     ### RegNetX032 ###
-    if (models["RegNetX032"].get() == 1):
+    if models["RegNetX032"].get() == 1:
         model_name = "RegNetX032"
         base_model = RegNetX032(input_shape=(img_height, img_width, int(variables["channel"].get())),
                                     include_top=False,
@@ -4786,7 +4792,7 @@ def run():
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY080 ###
-    if (models["RegNetY080"].get() == 1):
+    if models["RegNetY080"].get() == 1:
         model_name = "RegNetY080"
         base_model = RegNetY080(input_shape=(img_height, 
                                              img_width, 
@@ -4823,7 +4829,7 @@ def run():
         cpt = pb_progress(cpt, total)  
         
     ### RegNetX120 ###
-    if (models["RegNetX120"].get() == 1):
+    if models["RegNetX120"].get() == 1:
         model_name = "RegNetX120"
         base_model = RegNetX120(input_shape=(img_height, 
                                              img_width, 
@@ -4860,7 +4866,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY120 ###
-    if (models["RegNetY120"].get() == 1):
+    if models["RegNetY120"].get() == 1:
         model_name = "RegNetY120"
         base_model = RegNetY120(input_shape=(img_height, 
                                              img_width, 
@@ -4897,7 +4903,7 @@ def run():
         cpt = pb_progress(cpt, total)
         
     ### RegNetX160 ###
-    if (models["RegNetX160"].get() == 1):
+    if models["RegNetX160"].get() == 1:
         model_name = "RegNetX160"
         base_model = RegNetX160(input_shape=(img_height, 
                                              img_width, 
@@ -4934,7 +4940,7 @@ def run():
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY160 ###
-    if (models["RegNetY160"].get() == 1):
+    if models["RegNetY160"].get() == 1:
         model_name = "RegNetY160"
         base_model = RegNetY160(input_shape=(img_height, 
                                              img_width, 
@@ -4971,7 +4977,7 @@ def run():
         cpt = pb_progress(cpt, total)
  
     ### RegNetX320 ###
-    if (models["RegNetX320"].get() == 1):
+    if models["RegNetX320"].get() == 1:
         model_name = "RegNetX320"
         base_model = RegNetX320(input_shape=(img_height, 
                                              img_width, 
@@ -5008,7 +5014,7 @@ def run():
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY080 ###
-    if (models["RegNetY320"].get() == 1):
+    if models["RegNetY320"].get() == 1:
         model_name = "RegNetY320"
         base_model = RegNetY320(input_shape=(img_height, 
                                              img_width, 

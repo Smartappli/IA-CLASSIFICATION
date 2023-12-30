@@ -1229,10 +1229,12 @@ model_RegNetY320.grid(row=9,
 
 
 def selectall():
+    """Method to select all models"""
     for i4 in models:
         models[i4].set(1)
         
 def unselect():
+    """Method to unselect all models"""
     for i5 in models:
         models[i5].set(0)
     
@@ -1253,6 +1255,7 @@ ttk.Button(mc_info,
                                   sticky=tk.W + tk.E)
 
 def sel():
+    """Method to select the number of step of training"""
     if variables['strategie'].get()==1:
         optimizer2['state']='disabled'
         optimizer3['state']='disabled'

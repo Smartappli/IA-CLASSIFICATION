@@ -3,29 +3,89 @@ Created on Thu Oct 19 18:06:12 2023
 
 @author: UMONS - 532807
 """
-
+import os.path
+from pathlib import Path
+import platform
 import tkinter as tk
 from tkinter import ttk
 import tensorflow as tf
 import keras  as k
+# import keras_tuner as kt
 from tensorflow.keras import layers
-from tensorflow.keras.applications import Xception, VGG16, VGG19
-from tensorflow.keras.applications import ResNet50, ResNet101, ResNet152
-from tensorflow.keras.applications import ResNet50V2, ResNet101V2, ResNet152V2
-from tensorflow.keras.applications import RegNetX002, RegNetX004, RegNetX006, RegNetX008, RegNetX016, RegNetX032, RegNetX040, RegNetX064, RegNetX080, RegNetX120, RegNetX160, RegNetX320
-from tensorflow.keras.applications import RegNetY002, RegNetY004, RegNetY006, RegNetY008, RegNetY016, RegNetY032, RegNetY040, RegNetY064, RegNetY080, RegNetY120, RegNetY160, RegNetY320
-from tensorflow.keras.applications import ResNetRS50, ResNetRS101, ResNetRS152, ResNetRS200, ResNetRS270, ResNetRS350, ResNetRS420
-from tensorflow.keras.applications import InceptionV3, InceptionResNetV2
-from tensorflow.keras.applications import MobileNet, MobileNetV2, MobileNetV3Small, MobileNetV3Large
-from tensorflow.keras.applications import DenseNet121, DenseNet169, DenseNet201
-from tensorflow.keras.applications import NASNetMobile, NASNetLarge
-from tensorflow.keras.applications import EfficientNetB0, EfficientNetB1, EfficientNetB2, EfficientNetB3, EfficientNetB4, EfficientNetB5, EfficientNetB6, EfficientNetB7
-from tensorflow.keras.applications import EfficientNetV2B0, EfficientNetV2B1, EfficientNetV2B2, EfficientNetV2B3
-from tensorflow.keras.applications import EfficientNetV2S, EfficientNetV2M, EfficientNetV2L
-from tensorflow.keras.applications import ConvNeXtTiny, ConvNeXtSmall, ConvNeXtBase, ConvNeXtLarge, ConvNeXtXLarge
+from tensorflow.keras.applications import Xception
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.applications import VGG19
+from tensorflow.keras.applications import ResNet50
+from tensorflow.keras.applications import ResNet101
+from tensorflow.keras.applications import ResNet152
+from tensorflow.keras.applications import ResNet50V2
+from tensorflow.keras.applications import ResNet101V2
+from tensorflow.keras.applications import ResNet152V2
+from tensorflow.keras.applications import RegNetX002
+from tensorflow.keras.applications import RegNetX004
+from tensorflow.keras.applications import RegNetX006
+from tensorflow.keras.applications import RegNetX008
+from tensorflow.keras.applications import RegNetX016
+from tensorflow.keras.applications import RegNetX032
+from tensorflow.keras.applications import RegNetX040
+from tensorflow.keras.applications import RegNetX064
+from tensorflow.keras.applications import RegNetX080
+from tensorflow.keras.applications import RegNetX120
+from tensorflow.keras.applications import RegNetX160
+from tensorflow.keras.applications import RegNetX320
+from tensorflow.keras.applications import RegNetY002
+from tensorflow.keras.applications import RegNetY004
+from tensorflow.keras.applications import RegNetY006
+from tensorflow.keras.applications import RegNetY008
+from tensorflow.keras.applications import RegNetY016
+from tensorflow.keras.applications import RegNetY032
+from tensorflow.keras.applications import RegNetY040
+from tensorflow.keras.applications import RegNetY064
+from tensorflow.keras.applications import RegNetY080
+from tensorflow.keras.applications import RegNetY120
+from tensofrlow.keras.applications import RegNetY160
+from tensorflow.keras.applications import RegNetY320
+from tensorflow.keras.applications import ResNetRS50
+from tensorflow.keras.applications import ResNetRS101
+from tensorflow.keras.applications import ResNetRS152
+from tensorflow.keras.applications import ResNetRS200
+from tensorflow.keras.applications import ResNetRS270
+from tensorflow.keras.applications import ResNetRS350
+from tensorflow.keras.applications import ResNetRS420
+from tensorflow.keras.applications import InceptionV3
+from tensorflow.keras.applications import InceptionResNetV2
+from tensorflow.keras.applications import MobileNet
+from tensorflow.keras.applications import MobileNetV2
+from tensorflow.keras.applications import MobileNetV3Small
+from tensorflow.keras.applications import MobileNetV3Large
+from tensorflow.keras.applications import DenseNet121
+from tensorflow.keras.applications import DenseNet169
+from tensorflow.keras.applications import DenseNet201
+from tensorflow.keras.applications import NASNetMobile
+from tensorflow.keras.applications import NASNetLarge
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.applications import EfficientNetB1
+from tensorflow.keras.applications import EfficientNetB2
+from tensorflow.keras.applications import EfficientNetB3
+from tensorflow.keras.applications import EfficientNetB4
+from tensorflow.keras.applications import EfficientNetB5
+from tensorflow.keras.applications import EfficientNetB6
+from tensorflow.keras.applications import EfficientNetB7
+from tensorflow.keras.applications import EfficientNetV2B0
+from tensorflow.keras.applications import EfficientNetV2B1
+from tensorflow.keras.applications import EfficientNetV2B2
+from tensorflow.keras.applications import EfficientNetV2B3
+from tensorflow.keras.applications import EfficientNetV2S
+from tensorflow.keras.applications import EfficientNetV2M
+from tensorflow.keras.applications import EfficientNetV2L
+from tensorflow.keras.applications import ConvNeXtTiny
+from tensorflow.keras.applications import ConvNeXtSmall
+from tensorflow.keras.applications import ConvNeXtBase
+from tensorflow.keras.applications import ConvNeXtLarge
+from tensorflow.keras.applications import ConvNeXtXLarge
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten
 from sklearn.metrics import confusion_matrix, classification_report
 import sklearn as sk
 import seaborn as sns
@@ -33,15 +93,12 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import os.path
-from pathlib import Path
-import platform
 
 numgpu = len(tf.config.list_physical_devices('GPU'))
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-variables = dict()
-models = dict()
+variables = {}
+models = {}
  
 p = Path()
 if (platform.system() == "Windows"):
@@ -678,16 +735,57 @@ for i in range(8):
     train_info.columnconfigure(i, weight=1)
     
 variables['strategie'] = tk.IntVar()    
-ttk.Label(train_info, text="Training step(s)").grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Radiobutton(train_info, text='1 Step', value='1', variable=variables['strategie'], command=sel).grid(row=1, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Radiobutton(train_info, text='2 Steps', value='2', variable=variables['strategie'], command=sel).grid(row=1, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Radiobutton(train_info, text='3 Steps', value='3', variable=variables['strategie'], command=sel) .grid(row=1, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Training step(s)").grid(row=0, 
+                                                    column=0, 
+                                                    padx=5, 
+                                                    pady=5, 
+                                                    sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, 
+                text='1 Step', 
+                value='1', 
+                variable=variables['strategie'], 
+                command=sel).grid(row=1, 
+                                  column=0, 
+                                  padx=5, 
+                                  pady=5, 
+                                  sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, 
+                text='2 Steps', 
+                value='2', 
+                variable=variables['strategie'], 
+                command=sel).grid(row=1, 
+                                  column=1, 
+                                  padx=5, 
+                                  pady=5, 
+                                  sticky=(tk.W + tk.E))
+ttk.Radiobutton(train_info, 
+                text='3 Steps', 
+                value='3', 
+                variable=variables['strategie'], 
+                command=sel) .grid(row=1, 
+                                   column=2, 
+                                   padx=5, 
+                                   pady=5, 
+                                   sticky=(tk.W + tk.E))
 variables['strategie'].set(1)
 
 variables["multigpu"] = tk.IntVar()
-ttk.Label(train_info, text="Parallelization").grid(row=0, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
-multi_gpu = ttk.Checkbutton(train_info, text="Multi GPU", variable=variables["multigpu"], onvalue = 1, offvalue = 0)
-multi_gpu.grid(row=1, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, 
+          text="Parallelization").grid(row=0, 
+                                       column=3, 
+                                       padx=5, 
+                                       pady=5, 
+                                       sticky=(tk.W + tk.E))
+multi_gpu = ttk.Checkbutton(train_info, 
+                            text="Multi GPU", 
+                            variable=variables["multigpu"],
+                            onvalue = 1, 
+                            offvalue = 0)
+multi_gpu.grid(row=1, 
+               column=3, 
+               padx=5, 
+               pady=5, 
+               sticky=(tk.W + tk.E))
 multi_gpu.state(['disabled'])
 variables["multigpu"].set(0)
 
@@ -697,21 +795,48 @@ if (numgpu > 1) :
     variables["multigpu"].set(1)
     
 variables['checkpoint'] = tk.IntVar()
-ttk.Label(train_info, text="Save & Restore").grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-chkpoint = ttk.Checkbutton(train_info, text="Checkpoint", variable=variables["checkpoint"])
-chkpoint.grid(row=1, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, 
+          text="Save & Restore").grid(row=0, 
+                                      column=4, 
+                                      padx=5, 
+                                      pady=5, 
+                                      sticky=(tk.W + tk.E))
+chkpoint = ttk.Checkbutton(train_info, 
+                           text="Checkpoint", 
+                           variable=variables["checkpoint"])
+chkpoint.grid(row=1, 
+              column=4, 
+              padx=5, 
+              pady=5, 
+              sticky=(tk.W + tk.E))
 chkpoint.state(['selected'])
 variables['checkpoint'].set(1)
 
 variables['kerastuning'] = tk.IntVar()
-ttk.Label(train_info, text="Improvement").grid(row=0, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
-kerastuning = ttk.Checkbutton(train_info, text="Keras Tuning", variable=variables["kerastuning"])
-kerastuning.grid(row=1, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, 
+          text="Improvement").grid(row=0, 
+                                   column=5, 
+                                   padx=5, 
+                                   pady=5, 
+                                   sticky=(tk.W + tk.E))
+kerastuning = ttk.Checkbutton(train_info, 
+                              text="Keras Tuning", 
+                              variable=variables["kerastuning"])
+kerastuning.grid(row=1, 
+                 column=5, 
+                 padx=5, 
+                 pady=5, 
+                 sticky=(tk.W + tk.E))
 kerastuning.state(['selected'])
 variables['kerastuning'].set(0)
 kerastuning['state']='disabled'
 
-ttk.Separator(train_info, orient='horizontal').grid(row=2, columnspan=7, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Separator(train_info, 
+              orient='horizontal').grid(row=2, 
+                                        columnspan=7, 
+                                        padx=5, 
+                                        pady=5, 
+                                        sticky=(tk.W + tk.E))
 
 listOptimizer = ('SGD',
                  'RMSProp',
@@ -724,23 +849,60 @@ listOptimizer = ('SGD',
                  'Nadam',
                  'Ftrl')
 
-ttk.Label(train_info, text="Step 1").grid(row=4, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Label(train_info, text="Step 2").grid(row=5, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Label(train_info, text="Step 3").grid(row=6, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 1").grid(row=4, 
+                                          column=0, 
+                                          padx=5, 
+                                          pady=5, 
+                                          sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 2").grid(row=5, 
+                                          column=0, 
+                                          padx=5, 
+                                          pady=5, 
+                                          sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Step 3").grid(row=6, 
+                                          column=0, 
+                                          padx=5, 
+                                          pady=5, 
+                                          sticky=(tk.W + tk.E))
 
 variables['optimizer1'] = tk.StringVar()
 variables['optimizer2'] = tk.StringVar()
 variables['optimizer3'] = tk.StringVar()
 
-ttk.Label(train_info, text="Optimizer").grid(row=3, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
-optimizer1 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer1'], state='readonly')
-optimizer1.grid(row=4, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Optimizer").grid(row=3, 
+                                             column=1, 
+                                             padx=5, 
+                                             pady=5, 
+                                             sticky=(tk.W + tk.E))
+optimizer1 = ttk.Combobox(train_info, 
+                          values=listOptimizer, 
+                          textvariable=variables['optimizer1'], 
+                          state='readonly')
+optimizer1.grid(row=4, 
+                column=1, 
+                padx=5, 
+                pady=5, 
+                sticky=(tk.W + tk.E))
 optimizer1.current(2)
-optimizer2 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer2'], state='disabled')
-optimizer2.grid(row=5, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer2 = ttk.Combobox(train_info, 
+                          values=listOptimizer, 
+                          textvariable=variables['optimizer2'], 
+                          state='disabled')
+optimizer2.grid(row=5,
+                column=1, 
+                padx=5, 
+                pady=5, 
+                sticky=(tk.W + tk.E))
 optimizer2.current(2)
-optimizer3 = ttk.Combobox(train_info, values=listOptimizer, textvariable=variables['optimizer3'], state='disabled')
-optimizer3.grid(row=6, column=1, padx=5, pady=5, sticky=(tk.W + tk.E))
+optimizer3 = ttk.Combobox(train_info, 
+                          values=listOptimizer, 
+                          textvariable=variables['optimizer3'], 
+                          state='disabled')
+optimizer3.grid(row=6, 
+                column=1, 
+                padx=5, 
+                pady=5, 
+                sticky=(tk.W + tk.E))
 optimizer3.current(2)
 
 listLoss = ('BinaryCrossentropy', 
@@ -763,15 +925,40 @@ variables['loss1'] = tk.StringVar()
 variables['loss2'] = tk.StringVar()
 variables['loss3'] = tk.StringVar()
 
-ttk.Label(train_info, text="Loss").grid(row=3, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
-loss1 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loss1'], state='reaonly')
-loss1.grid(row=4, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Loss").grid(row=3, 
+                                        column=2, 
+                                        padx=5, 
+                                        pady=5, 
+                                        sticky=(tk.W + tk.E))
+loss1 = ttk.Combobox(train_info, 
+                     values=listLoss, 
+                     textvariable=variables['loss1'], 
+                     state='reaonly')
+loss1.grid(row=4, 
+           column=2, 
+           padx=5, 
+           pady=5, 
+           sticky=(tk.W + tk.E))
 loss1.current(2)
-loss2 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loss2'], state='disabled')
-loss2.grid(row=5, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss2 = ttk.Combobox(train_info, 
+                     values=listLoss, 
+                     textvariable=variables['loss2'], 
+                     state='disabled')
+loss2.grid(row=5, 
+           column=2, 
+           padx=5, 
+           pady=5, 
+           sticky=(tk.W + tk.E))
 loss2.current(2)
-loss3 = ttk.Combobox(train_info, values=listLoss, textvariable=variables['loss3'], state='disabled')
-loss3.grid(row=6, column=2, padx=5, pady=5, sticky=(tk.W + tk.E))
+loss3 = ttk.Combobox(train_info, 
+                     values=listLoss, 
+                     textvariable=variables['loss3'], 
+                     state='disabled')
+loss3.grid(row=6, 
+           column=2, 
+           padx=5, 
+           pady=5, 
+           sticky=(tk.W + tk.E))
 loss3.current(2)
 
 listEpoch = list(range(1,501))
@@ -780,15 +967,40 @@ variables['epoch1'] = tk.StringVar()
 variables['epoch2'] = tk.StringVar()
 variables['epoch3'] = tk.StringVar()
 
-ttk.Label(train_info, text="Epoh").grid(row=3, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
-epoch1 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch1'], state='readonly')
-epoch1.grid(row=4, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Epoh").grid(row=3, 
+                                        column=3, 
+                                        padx=5, 
+                                        pady=5, 
+                                        sticky=(tk.W + tk.E))
+epoch1 = ttk.Combobox(train_info, 
+                      values=listEpoch, 
+                      textvariable=variables['epoch1'], 
+                      state='readonly')
+epoch1.grid(row=4, 
+            column=3, 
+            padx=5, 
+            pady=5, 
+            sticky=(tk.W + tk.E))
 epoch1.current(9)
-epoch2 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch2'], state='disabled')
-epoch2.grid(row=5, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch2 = ttk.Combobox(train_info, 
+                      values=listEpoch, 
+                      textvariable=variables['epoch2'], 
+                      state='disabled')
+epoch2.grid(row=5, 
+            column=3, 
+            padx=5, 
+            pady=5, 
+            sticky=(tk.W + tk.E))
 epoch2.current(9)
-epoch3 = ttk.Combobox(train_info, values=listEpoch, textvariable=variables['epoch3'], state='disabled')
-epoch3.grid(row=6, column=3, padx=5, pady=5, sticky=(tk.W + tk.E))
+epoch3 = ttk.Combobox(train_info, 
+                      values=listEpoch, 
+                      textvariable=variables['epoch3'], 
+                      state='disabled')
+epoch3.grid(row=6, 
+            column=3, 
+            padx=5, 
+            pady=5, 
+            sticky=(tk.W + tk.E))
 epoch3.current(49)
 
 listlr = [0.1,0.01,0.001,0.0001,0.00001]
@@ -797,35 +1009,80 @@ variables['lr1'] = tk.DoubleVar()
 variables['lr2'] = tk.DoubleVar()
 variables['lr3'] = tk.DoubleVar()
 
-ttk.Label(train_info, text="Learning Rate").grid(row=3, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
-lr1 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr1'], state='readonly')
-lr1.grid(row=4, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Label(train_info, text="Learning Rate").grid(row=3, 
+                                                 column=4, 
+                                                 padx=5, 
+                                                 pady=5, 
+                                                 sticky=(tk.W + tk.E))
+lr1 = ttk.Combobox(train_info, 
+                   values=listlr, 
+                   textvariable=variables['lr1'], 
+                   state='readonly')
+lr1.grid(row=4, 
+         column=4, 
+         padx=5, 
+         pady=5, 
+         sticky=(tk.W + tk.E))
 lr1.current(2)
-lr2 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr2'], state='disabled')
-lr2.grid(row=5, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr2 = ttk.Combobox(train_info, 
+                   values=listlr, 
+                   textvariable=variables['lr2'], 
+                   state='disabled')
+lr2.grid(row=5, 
+         column=4, 
+         padx=5, 
+         pady=5, 
+         sticky=(tk.W + tk.E))
 lr2.current(3)
-lr3 = ttk.Combobox(train_info, values=listlr, textvariable=variables['lr3'], state='disabled')
-lr3.grid(row=6, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+lr3 = ttk.Combobox(train_info, 
+                   values=listlr, 
+                   textvariable=variables['lr3'], 
+                   state='disabled')
+lr3.grid(row=6, 
+         column=4, 
+         padx=5, 
+         pady=5, 
+         sticky=(tk.W + tk.E))
 lr3.current(4)
 
 variables['lrdecay1'] = tk.BooleanVar()
 variables['lrdecay2'] = tk.BooleanVar()
 variables['lrdecay3'] = tk.BooleanVar()
 
-ttk.Label(train_info, text="Lr Decay").grid(row=3, column=5, padx=5, pady=5, sticky=(tk.W + tk.E))
-lrdecay1 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay1"])
-lrdecay1.grid(row=4, column=5, padx=5, pady=5)
+ttk.Label(train_info, 
+          text="Lr Decay").grid(row=3, 
+                                column=5, 
+                                padx=5, 
+                                pady=5, 
+                                sticky=(tk.W + tk.E))
+lrdecay1 = ttk.Checkbutton(train_info, 
+                           text="", 
+                           variable=variables["lrdecay1"])
+lrdecay1.grid(row=4, 
+              column=5, 
+              padx=5, 
+              pady=5)
 lrdecay1.state(["selected"])
 variables["lrdecay1"].set(1)
 
-lrdecay2 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay2"])
-lrdecay2.grid(row=5, column=5, padx=5, pady=5)
+lrdecay2 = ttk.Checkbutton(train_info, 
+                           text="", 
+                           variable=variables["lrdecay2"])
+lrdecay2.grid(row=5, 
+              column=5, 
+              padx=5, 
+              pady=5)
 lrdecay2.state(['!selected'])
 lrdecay2['state']='disabled'
 variables["lrdecay2"].set(0)
 
-lrdecay3 = ttk.Checkbutton(train_info, text="", variable=variables["lrdecay3"])
-lrdecay3.grid(row=6, column=5, padx=5, pady=5)
+lrdecay3 = ttk.Checkbutton(train_info, 
+                           text="", 
+                           variable=variables["lrdecay3"])
+lrdecay3.grid(row=6,
+              column=5, 
+              padx=5, 
+              pady=5)
 lrdecay3.state(['!selected'])
 lrdecay3['state']='disabled'
 variables["lrdecay3"].set(0)
@@ -834,20 +1091,40 @@ variables['earlystopping1'] = tk.BooleanVar()
 variables['earlystopping2'] = tk.BooleanVar()
 variables['earlystopping3'] = tk.BooleanVar()
 
-ttk.Label(train_info, text="Early Stopping").grid(row=3, column=6, padx=5, pady=5, sticky=(tk.W + tk.E))
-earlystopping1 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping1'])
-earlystopping1.grid(row=4, column=6, padx=5, pady=5)
+ttk.Label(train_info, 
+          text="Early Stopping").grid(row=3, 
+                                      column=6, 
+                                      padx=5, 
+                                      pady=5, 
+                                      sticky=(tk.W + tk.E))
+earlystopping1 = ttk.Checkbutton(train_info, 
+                                 text="", 
+                                 variable=variables['earlystopping1'])
+earlystopping1.grid(row=4, 
+                    column=6, 
+                    padx=5, 
+                    pady=5)
 earlystopping1.state(["selected"])
 variables["earlystopping1"].set(1)
 
-earlystopping2 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping2'])
-earlystopping2.grid(row=5, column=6, padx=5, pady=5)
+earlystopping2 = ttk.Checkbutton(train_info, 
+                                 text="", 
+                                 variable=variables['earlystopping2'])
+earlystopping2.grid(row=5, 
+                    column=6, 
+                    padx=5, 
+                    pady=5)
 earlystopping2.state(['!selected'])
 earlystopping2['state']='disabled'
 variables["earlystopping2"].set(0)
 
-earlystopping3 = ttk.Checkbutton(train_info, text="", variable=variables['earlystopping3'])
-earlystopping3.grid(row=6, column=6, padx=5, pady=5)
+earlystopping3 = ttk.Checkbutton(train_info, 
+                                 text="", 
+                                 variable=variables['earlystopping3'])
+earlystopping3.grid(row=6, 
+                    column=6, 
+                    padx=5, 
+                    pady=5)
 earlystopping3.state(['!selected'])
 earlystopping3['state']='disabled'
 variables["earlystopping3"].set(0)
@@ -855,118 +1132,220 @@ variables["earlystopping3"].set(0)
 
 # XAI / fINE Tuning
 xai_info = ttk.LabelFrame(mc, text='Explainability')
-xai_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+xai_info.grid(padx=5, 
+              pady=5, 
+              sticky=(tk.W + tk.E))
 
 for i in range(8):
     xai_info.columnconfigure(i, weight=1)
  
 # ActivationMaximization
 variables["activationmaximization"] = tk.IntVar()
-activationmaximization = ttk.Checkbutton(xai_info, text="Activation Maximization", variable=variables["activationmaximization"], onvalue = 1, offvalue = 0)
-activationmaximization.grid(row=0, column=0, sticky=(tk.W + tk.E))
+activationmaximization = ttk.Checkbutton(xai_info, 
+                                         text="Activation Maximization", 
+                                         variable=variables["activationmaximization"], 
+                                         onvalue = 1, 
+                                         offvalue = 0)
+activationmaximization.grid(row=0, 
+                            column=0, 
+                            sticky=(tk.W + tk.E))
 activationmaximization.state(['selected'])
 variables["activationmaximization"].set(0)
 activationmaximization['state']='disabled'
 
 variables["gradcam"] = tk.IntVar()
-gradcam = ttk.Checkbutton(xai_info, text="GradCAM", variable=variables["gradcam"], onvalue = 1, offvalue = 0)
-gradcam.grid(row=0, column=1, sticky=(tk.W + tk.E))
+gradcam = ttk.Checkbutton(xai_info, 
+                          text="GradCAM", 
+                          variable=variables["gradcam"], 
+                          onvalue = 1, 
+                          offvalue = 0)
+gradcam.grid(row=0, 
+             column=1, 
+             sticky=(tk.W + tk.E))
 gradcam.state(['selected'])
 variables["gradcam"].set(0)
 gradcam['state']='disabled'
 
 variables["gradcamplusplus"] = tk.IntVar()
-gradcamplus = ttk.Checkbutton(xai_info, text="GradCAM++", variable=variables["gradcamplusplus"], onvalue = 1, offvalue = 0)
-gradcamplus.grid(row=0, column=2, sticky=(tk.W + tk.E))
+gradcamplus = ttk.Checkbutton(xai_info, 
+                              text="GradCAM++", 
+                              variable=variables["gradcamplusplus"], 
+                              onvalue = 1, 
+                              offvalue = 0)
+gradcamplus.grid(row=0, 
+                 column=2, 
+                 sticky=(tk.W + tk.E))
 gradcamplus.state(['selected'])
 variables["gradcamplusplus"].set(0)
 gradcamplus['state']='disabled'
 
 variables["scorecam"] = tk.IntVar()
-scorecam = ttk.Checkbutton(xai_info, text="ScoreCAM", variable=variables["scorecam"], onvalue = 1, offvalue = 0)
-scorecam.grid(row=0, column=3, sticky=(tk.W + tk.E))
+scorecam = ttk.Checkbutton(xai_info, 
+                           text="ScoreCAM", 
+                           variable=variables["scorecam"], 
+                           onvalue = 1, 
+                           offvalue = 0)
+scorecam.grid(row=0, 
+              column=3, 
+              sticky=(tk.W + tk.E))
 scorecam.state(['selected'])
 variables["scorecam"].set(0)
 scorecam['state']='disabled'
 
 variables["fasterscorecam"] = tk.IntVar()
-fasterscorecam = ttk.Checkbutton(xai_info, text="Faster-CAM", variable=variables["fasterscorecam"], onvalue = 1, offvalue = 0)
-fasterscorecam.grid(row=0, column=4, sticky=(tk.W + tk.E))
+fasterscorecam = ttk.Checkbutton(xai_info, 
+                                 text="Faster-CAM", 
+                                 variable=variables["fasterscorecam"], 
+                                 onvalue = 1, 
+                                 offvalue = 0)
+fasterscorecam.grid(row=0, 
+                    column=4, 
+                    sticky=(tk.W + tk.E))
 fasterscorecam.state(['selected'])
 variables["fasterscorecam"].set(0)
 fasterscorecam['state']='disabled'
 
 variables["layercam"] = tk.IntVar()
-layercam = ttk.Checkbutton(xai_info, text="LayerCAM", variable=variables["layercam"], onvalue = 1, offvalue = 0)
-layercam.grid(row=0, column=5, sticky=(tk.W + tk.E))
+layercam = ttk.Checkbutton(xai_info, 
+                           text="LayerCAM", 
+                           variable=variables["layercam"], 
+                           onvalue = 1, 
+                           offvalue = 0)
+layercam.grid(row=0, 
+              column=5, 
+              sticky=(tk.W + tk.E))
 layercam.state(['selected'])
 variables["layercam"].set(0)
 layercam['state']='disabled'
 
 variables["vanillasaliency"] = tk.IntVar()
-vanillasaliency = ttk.Checkbutton(xai_info, text="Vanilla Saliency", variable=variables["vanillasaliency"], onvalue = 1, offvalue = 0)
-vanillasaliency.grid(row=0, column=6, sticky=(tk.W + tk.E))
+vanillasaliency = ttk.Checkbutton(xai_info, 
+                                  text="Vanilla Saliency", 
+                                  variable=variables["vanillasaliency"], 
+                                  onvalue = 1, 
+                                  offvalue = 0)
+vanillasaliency.grid(row=0, 
+                     column=6, 
+                     sticky=(tk.W + tk.E))
 vanillasaliency.state(['selected'])
 variables["vanillasaliency"].set(0)
 vanillasaliency['state']='disabled'
 
 variables["smoothgrad"] = tk.IntVar()
-smoothgrad = ttk.Checkbutton(xai_info, text="SmoothGrad", variable=variables["smoothgrad"], onvalue=1, offvalue=0)
-smoothgrad.grid(row=0, column=7, sticky=(tk.W + tk.E))
+smoothgrad = ttk.Checkbutton(xai_info, 
+                             text="SmoothGrad", 
+                             variable=variables["smoothgrad"], 
+                             onvalue=1, 
+                             offvalue=0)
+smoothgrad.grid(row=0, 
+                column=7, 
+                sticky=(tk.W + tk.E))
 smoothgrad.state(['selected'])
 variables["smoothgrad"].set(0)
 smoothgrad['state']='disabled'
 
 # Output Section
 output_info = ttk.LabelFrame(mc, text='Output')
-output_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+output_info.grid(padx=5, 
+                 pady=5, 
+                 sticky=(tk.W + tk.E))
 
 for i in range(5):
     output_info.columnconfigure(i, weight=1)
     
 # Chechkbox Save Model
 variables["savemodel"] = tk.IntVar()
-savemodel = ttk.Checkbutton(output_info, text="Save Model", variable=variables['savemodel'], onvalue = 1, offvalue = 0)
-savemodel.grid(row=0, column=0, sticky=(tk.W + tk.E))
+savemodel = ttk.Checkbutton(output_info, 
+                            text="Save Model", 
+                            variable=variables['savemodel'], 
+                            onvalue = 1, 
+                            offvalue = 0)
+savemodel.grid(row=0, 
+               column=0, 
+               sticky=(tk.W + tk.E))
 savemodel.state(['selected'])
 variables["savemodel"].set(1)
 
 # Checkbox Training / Validation Graphs
 variables["traingraph"] = tk.IntVar()
-traingraph = ttk.Checkbutton(output_info, text="Training / Validation Graphs", variable=variables["traingraph"], onvalue = 1, offvalue = 0)
-traingraph.grid(row=0, column=1, sticky=(tk.W + tk.E))
+traingraph = ttk.Checkbutton(output_info, 
+                             text="Training / Validation Graphs", 
+                             variable=variables["traingraph"], 
+                             onvalue = 1, 
+                             offvalue = 0)
+traingraph.grid(row=0, 
+                column=1, 
+                sticky=(tk.W + tk.E))
 traingraph.state(['selected'])
 variables["traingraph"].set(1)
 
 # Confusion Matrix
 variables["confmatrix"] = tk.IntVar()   
-confmatrix = ttk.Checkbutton(output_info, text="Confusion Matrix", variable=variables["confmatrix"], onvalue = 1, offvalue = 0)
-confmatrix.grid(row=0, column=2, sticky=(tk.W + tk.E))
+confmatrix = ttk.Checkbutton(output_info, 
+                             text="Confusion Matrix", 
+                             variable=variables["confmatrix"], 
+                             onvalue = 1, 
+                             offvalue = 0)
+confmatrix.grid(row=0, 
+                column=2, 
+                sticky=(tk.W + tk.E))
 confmatrix.state(['selected'])
 variables["confmatrix"].set(1)
 
 # Classification Report
 variables["classreport"] = tk.IntVar()
-classreport = ttk.Checkbutton(output_info, text="Classification Report", variable=variables["classreport"], onvalue = 1, offvalue = 0)
-classreport.grid(row=0, column=3, sticky=(tk.W + tk.E))
+classreport = ttk.Checkbutton(output_info, 
+                              text="Classification Report", 
+                              variable=variables["classreport"], 
+                              onvalue = 1, 
+                              offvalue = 0)
+classreport.grid(row=0, 
+                 column=3, 
+                 sticky=(tk.W + tk.E))
 classreport.state(['selected'])
 variables["classreport"].set(1)
 
 # Conversion of the model in TFLite
 variables["tflite"] = tk.IntVar()
-tflite = ttk.Checkbutton(output_info, text="TFLite Conversion", variable=variables["tflite"], onvalue = 1, offvalue = 0)
-tflite.grid(row=0, column=4, sticky=(tk.W + tk.E))
+tflite = ttk.Checkbutton(output_info, 
+                         text="TFLite Conversion", 
+                         variable=variables["tflite"], 
+                         onvalue = 1, 
+                         offvalue = 0)
+tflite.grid(row=0, 
+            column=4, 
+            sticky=(tk.W + tk.E))
 tflite.state(['!selected'])
 
 
 
 # Info Section
 info_info = ttk.LabelFrame(mc, text='Info')
-info_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+info_info.grid(padx=5, 
+               pady=5, 
+               sticky=(tk.W + tk.E))
 for i in range(1):
     info_info.columnconfigure(i, weight=1)
     
-ttk.Label(info_info, text="GPUs Available: " + str(numgpu) + " - Python: " + platform.python_version() + " - TensorFlow: " + tf.__version__ + " - Keras: "  + k.__version__ + " - Numpy: " + np.version.version + " - Pandas: " + pd.__version__ + " - Sklearn: " + sk.__version__ + " - Seaborn: " + sns.__version__ + "  - Matplotlib: " + mpl.__version__).grid(row=0, column=0)
+ttk.Label(info_info, 
+          text="GPUs Available: " 
+          + str(numgpu) 
+          + " - Python: " 
+          + platform.python_version() 
+          + " - TensorFlow: " 
+          + tf.__version__ 
+          + " - Keras: " 
+          + k.__version__ 
+          + " - Numpy: " 
+          + np.version.version 
+          + " - Pandas: " 
+          + pd.__version__ 
+          + " - Sklearn: " 
+          + sk.__version__ 
+          + " - Seaborn: " 
+          + sns.__version__ 
+          + "  - Matplotlib: " 
+          + mpl.__version__).grid(row=0, column=0)
 
 
 
@@ -977,7 +1356,13 @@ for i in range(5):
     exec_info.columnconfigure(i, weight=1)
 
 pgb = tk.IntVar()
-pb = ttk.Progressbar(exec_info,  orient='horizontal', mode='determinate', variable=pgb).grid(row=0, column=1, columnspan=3, sticky=(tk.E + tk.W))
+pb = ttk.Progressbar(exec_info, 
+                     orient='horizontal',
+                     mode='determinate', 
+                     variable=pgb).grid(row=0, 
+                                        column=1, 
+                                        columnspan=3, 
+                                        sticky=(tk.E + tk.W))
 
 
 def merge_dictionaries(dict1, dict2):
@@ -1063,7 +1448,31 @@ def pb_progress(cpt, total):
         mc.update()
         return cpt
     
-def training(_img_height, _img_width, strategie, multigpu, base_model, model_name, _optimizer1, _loss1, _epoch1, _lr1, _optimizer2, _loss2, _epoch2, _lr2, _optimizer3, _loss3, _epoch3, _lr3, ds_train, ds_valid, savemodel, traingraph, confmatrix, classreport, tflite):
+def training(_img_height, 
+             _img_width, 
+             strategie, 
+             multigpu, 
+             base_model, 
+             model_name, 
+             _optimizer1, 
+             _loss1, 
+             _epoch1, 
+             _lr1, 
+             _optimizer2, 
+             _loss2, 
+             _epoch2, 
+             _lr2, 
+             _optimizer3, 
+             _loss3, 
+             _epoch3, 
+             _lr3, 
+             ds_train, 
+             ds_valid, 
+             savemodel, 
+             traingraph, 
+             confmatrix, 
+             classreport, 
+             tflite):
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         output_dir+'/model/'+model_name+".tf", 
         verbose=1, 
@@ -1127,7 +1536,9 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
             base_model.trainable = False
             
             # Add a new classifier layers on top of the base model
-            inputs = tf.keras.Input(shape=(_img_height, _img_width, int(variables["channel"].get())))
+            inputs = tf.keras.Input(shape=(_img_height, 
+                                           _img_width, 
+                                           int(variables["channel"].get())))
             x = base_model(inputs, training=False)
             x = layers.GlobalAveragePooling2D()(x)
             outputs = layers.Dense(variables["classes"].get())(x) 
@@ -1139,7 +1550,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           metrics=['accuracy'])
         
         # Train the model
-        hist = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch1), callbacks=callbacks)   
+        hist = model.fit(ds_train, 
+                         validation_data=ds_valid, 
+                         epochs=int(_epoch1), 
+                         callbacks=callbacks)   
         
         if (strategie == 2):
             with strategy.scope():
@@ -1151,7 +1565,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=_loss2,
                               metrics=['accuracy'])
                 
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)    
+            hist2 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch2), 
+                              callbacks=callbacks)    
                 
         if (strategie == 3):
             with strategy.scope():
@@ -1161,7 +1578,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               metrics=['accuracy'])
          
             # Train the model
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)                
+            hist2 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch2), 
+                              callbacks=callbacks)                
                 
             
             with strategy.scope():
@@ -1173,13 +1593,18 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                               loss=_loss3,
                               metrics=['accuracy'])
                 
-            hist3 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch3), callbacks=callbacks)            
+            hist3 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch3), 
+                              callbacks=callbacks)            
         
     # CPU or single GPU   
     else:
         base_model.trainable = False
         # Add a new classifier layers on top of the base model
-        inputs = tf.keras.Input(shape=(_img_height, _img_width, int(variables["channel"].get())))
+        inputs = tf.keras.Input(shape=(_img_height, 
+                                       _img_width, 
+                                       int(variables["channel"].get())))
         x = base_model(inputs, training=False)
         x = layers.GlobalAveragePooling2D()(x)
         outputs = layers.Dense(variables["classes"].get())(x) 
@@ -1191,7 +1616,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                       metrics=['accuracy'])
     
         # Train the model
-        hist = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch1), callbacks=callbacks) 
+        hist = model.fit(ds_train, 
+                         validation_data=ds_valid, 
+                         epochs=int(_epoch1), 
+                         callbacks=callbacks) 
 
         if (strategie == 2):
                 
@@ -1202,7 +1630,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           loss=_loss2,
                           metrics=['accuracy'])
             
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)    
+            hist2 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch2), 
+                              callbacks=callbacks)    
                 
         if (strategie == 3):
 
@@ -1212,7 +1643,10 @@ def training(_img_height, _img_width, strategie, multigpu, base_model, model_nam
                           metrics=['accuracy'])
          
             # Train the model
-            hist2 = model.fit(ds_train, validation_data=ds_valid, epochs=int(_epoch2), callbacks=callbacks)                
+            hist2 = model.fit(ds_train, 
+                              validation_data=ds_valid, 
+                              epochs=int(_epoch2), 
+                              callbacks=callbacks)                
                 
             # Fine-tune the base model
             base_model.trainable = True
@@ -1354,11 +1788,37 @@ def run():
     if (models["Xception"].get() == 1):
         model_name = "Xception"  
         
-        base_model = Xception(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = Xception(input_shape=(img_height, 
+                                           img_width, 
+                                           int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
             
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
@@ -1367,11 +1827,37 @@ def run():
     if (models["VGG16"].get() == 1):
         model_name = "VGG16"
         
-        base_model = VGG16(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = VGG16(input_shape=(img_height, 
+                                        img_width, 
+                                        int(variables["channel"].get())),
                            include_top=False,
                            weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(),
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1380,11 +1866,37 @@ def run():
     if (models["VGG19"].get() == 1):
         model_name = "VGG19"
         
-        base_model = VGG19(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = VGG19(input_shape=(img_height, 
+                                        img_width, 
+                                        int(variables["channel"].get())),
                            include_top=False,
                            weights='imagenet')  
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1397,7 +1909,31 @@ def run():
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1406,11 +1942,37 @@ def run():
     if (models["ResNet50V2"].get() == 1):
         model_name = "ResNet50_V2"
         
-        base_model = ResNet50V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNet50V2(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                 include_top=False,
                                 weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
         
@@ -1419,11 +1981,37 @@ def run():
     if (models["ResNetRS50"].get() == 1):
         model_name = "ResNetRS50"
         
-        base_model = ResNetRS50(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS50(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1432,12 +2020,37 @@ def run():
     if (models["ResNet101"].get() == 1):
         model_name = "ResNet101"
         
-        base_model = ResNet101(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNet101(input_shape=(img_height, 
+                                            img_width, 
+                                            int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
         
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
      
         cpt = pb_progress(cpt, total)   
         
@@ -1446,11 +2059,37 @@ def run():
     if (models["ResNet101V2"].get() == 1):
         model_name = "ResNet101_V2"
         
-        base_model = ResNet101V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNet101V2(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
         
@@ -1459,11 +2098,37 @@ def run():
     if (models["ResNetRS101"].get() == 1):
         model_name = "ResNetRS101"
         
-        base_model = ResNetRS101(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS101(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
         
@@ -1471,11 +2136,37 @@ def run():
     ### ResNet152 ###
     if (models["ResNet152"].get() == 1):
         model_name = "ResNet152"
-        base_model = ResNet152(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNet152(input_shape=(img_height, 
+                                            img_width, 
+                                            int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
@@ -1483,11 +2174,37 @@ def run():
     ### ResNet152 V2 ###
     if (models["ResNet152V2"].get() == 1):
         model_name = "ResNet152_V2"
-        base_model = ResNet152V2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNet152V2(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
 
@@ -1495,11 +2212,37 @@ def run():
     ### ResNetRS 152 ###
     if (models["ResNetRS152"].get() == 1):
         model_name = "ResNetRS152"
-        base_model = ResNetRS152(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS152(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
 
@@ -1507,11 +2250,37 @@ def run():
     ### ResNetRS 200 ###
     if (models["ResNetRS200"].get() == 1):
         model_name = "ResNetRS200"
-        base_model = ResNetRS200(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS200(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
   
@@ -1519,11 +2288,37 @@ def run():
     ### ResNetRS 270 ###
     if (models["ResNetRS270"].get() == 1):
         model_name = "ResNetRS270"
-        base_model = ResNetRS270(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS270(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1531,11 +2326,37 @@ def run():
     ### ResNetRS 350 ###
     if (models["ResNetRS350"].get() == 1):
         model_name = "ResNetRS350"
-        base_model = ResNetRS350(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS350(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(),
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)  
 
@@ -1543,11 +2364,37 @@ def run():
     ### ResNetRS 420 ###
     if (models["ResNetRS420"].get() == 1):
         model_name = "ResNetRS420"
-        base_model = ResNetRS420(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ResNetRS420(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                               include_top=False,
                               weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1555,11 +2402,37 @@ def run():
     ### Inception V3 ###
     if (models["InceptionV3"].get() == 1):
         model_name = "Inception_V3"
-        base_model = InceptionV3(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = InceptionV3(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
 
@@ -1567,11 +2440,37 @@ def run():
     ### InceptionResNet V2 ###
     if (models["InceptionResNetV2"].get() == 1):
         model_name = "InceptionResNet_V2"
-        base_model = InceptionResNetV2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = InceptionResNetV2(input_shape=(img_height, 
+                                                    img_width, 
+                                                    int(variables["channel"].get())),
                                        include_top=False,
                                        weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1579,11 +2478,37 @@ def run():
     ### MobileNet ###
     if (models["MobileNet"].get() == 1):
         model_name = "MobileNet"
-        base_model = MobileNet(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = MobileNet(input_shape=(img_height, 
+                                            img_width, 
+                                            int(variables["channel"].get())),
                                include_top=False,
                                weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1591,11 +2516,37 @@ def run():
     ### MobileNet V2 ###
     if (models["MobileNetV2"].get() == 1):
         model_name = "MobileNet_V2"
-        base_model = MobileNetV2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = MobileNetV2(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1603,11 +2554,37 @@ def run():
     ### MobileNet V3 Small ###
     if (models["MobileNetV3Small"].get() == 1):
         model_name = "MobileNet_V3_Small"
-        base_model = MobileNetV3Small(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = MobileNetV3Small(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                       include_top=False,
                                       weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1616,11 +2593,37 @@ def run():
     if (models["MobileNetV3Large"].get() == 1):
         model_name = "MobileNet_V3_Large"
 
-        base_model = MobileNetV3Large(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = MobileNetV3Large(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                       include_top=False,
                                       weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
 
         cpt = pb_progress(cpt, total)
     
@@ -1628,11 +2631,37 @@ def run():
     ### DenseNet 121 ###
     if (models["DenseNet121"].get() == 1):
         model_name = "DenseNet121"
-        base_model = DenseNet121(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = DenseNet121(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1640,11 +2669,37 @@ def run():
     ### DenseNet 169 ###
     if (models["DenseNet169"].get() == 1):
         model_name = "DenseNet169"
-        base_model = DenseNet169(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = DenseNet169(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
         
@@ -1652,11 +2707,37 @@ def run():
     ### DenseNet 201 ###
     if (models["DenseNet201"].get() == 1):
         model_name = "DenseNet201"
-        base_model = DenseNet201(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = DenseNet201(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                  include_top=False,
                                  weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1664,11 +2745,37 @@ def run():
     ### NASNetMobile ###
     if (models["NASNetMobile"].get() == 1):
         model_name = "NASNetMobile"
-        base_model = NASNetMobile(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = NASNetMobile(input_shape=(img_height, 
+                                               img_width, 
+                                               int(variables["channel"].get())),
                                   include_top=False,
                                   weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1676,11 +2783,37 @@ def run():
     ### NASNetLarge ###
     if (models["NASNetLarge"].get() == 1):
         model_name = "NASNetLarge"
-        base_model = NASNetLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = NASNetLarge(input_shape=(img_height, 
+                                              img_width, 
+                                              int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1688,11 +2821,37 @@ def run():
     ### EfficientNetB0 ###
     if (models["EfficientNetB0"].get() == 1):
         model_name = "EfficientNet_B0"
-        base_model = EfficientNetB0(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB0(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1700,11 +2859,37 @@ def run():
     ### EfficientNetB0 V2 ###
     if (models["EfficientNetB0V2"].get() == 1):
         model_name = "EfficientNet_B0_V2"
-        base_model = EfficientNetV2B0(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2B0(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
 
@@ -1712,11 +2897,37 @@ def run():
     ### EfficientNetB1 ###
     if (models["EfficientNetB1"].get() == 1):
         model_name = "EfficientNet_B1"
-        base_model = EfficientNetB1(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB1(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1724,11 +2935,37 @@ def run():
     ### EfficientNetB1 V2 ###
     if (models["EfficientNetB1V2"].get() == 1):
         model_name = "EfficientNet_B1_V2"
-        base_model = EfficientNetV2B1(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2B1(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1736,11 +2973,37 @@ def run():
     ### EfficientNetB2 ###
     if (models["EfficientNetB2"].get() == 1):
         model_name = "EfficientNet_B2"
-        base_model = EfficientNetB2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB2(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1748,11 +3011,37 @@ def run():
     ### EfficientNetB2 V2 ###
     if (models["EfficientNetB2V2"].get() == 1):
         model_name = "EfficientNet_B2_V2"
-        base_model = EfficientNetV2B2(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2B2(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1760,11 +3049,37 @@ def run():
     ### EfficientNetB3 ###
     if (models["EfficientNetB3"].get() == 1):
         model_name = "EfficientNet_B3"
-        base_model = EfficientNetB3(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB3(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1772,11 +3087,37 @@ def run():
     ### EfficientNetB3 V2 ###
     if (models["EfficientNetB3V2"].get() == 1):
         model_name = "EfficientNet_B3_V2"
-        base_model = EfficientNetV2B3(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2B3(input_shape=(img_height, 
+                                                   img_width, 
+                                                   int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1784,11 +3125,37 @@ def run():
     ### EfficientNetB4 ###
     if (models["EfficientNetB4"].get() == 1):
         model_name = "EfficientNet_B4"
-        base_model = EfficientNetB4(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB4(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1796,11 +3163,37 @@ def run():
     ### EfficientNetB5 ###
     if (models["EfficientNetB5"].get() == 1):
         model_name = "EfficientNet_B5"
-        base_model = EfficientNetB5(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB5(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
       
         cpt = pb_progress(cpt, total)
     
@@ -1820,11 +3213,37 @@ def run():
     ### EfficientNetB7 ###
     if (models["EfficientNetB7"].get() == 1):
         model_name = "EfficientNet_B7"
-        base_model = EfficientNetB7(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB7(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
         
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1832,11 +3251,37 @@ def run():
     ### EfficientNet2S ###
     if (models["EfficientNetV2Small"].get() == 1): 
         model_name = "EfficientNet_V2_Small"
-        base_model = EfficientNetV2S(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2S(input_shape=(img_height, 
+                                                  img_width, 
+                                                  int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1844,11 +3289,37 @@ def run():
     ### EfficientNet2M ###
     if (models["EfficientNetV2Medium"].get() == 1):
         model_name = "EfficientNet_V2_Medium"
-        base_model = EfficientNetV2M(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2M(input_shape=(img_height, 
+                                                  img_width, 
+                                                  int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1856,11 +3327,37 @@ def run():
     ### EfficientNet2L ###
     if (models["EfficientNetV2Large"].get() == 1):
         model_name = "EfficientNet_V2_Large"
-        base_model = EfficientNetV2L(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetV2L(input_shape=(img_height, 
+                                                  img_width, 
+                                                  int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1868,11 +3365,37 @@ def run():
     ### ConvNeXtTiny ###
     if (models["ConvNeXtTiny"].get() == 1):
         model_name = "ConvNeXtTiny"
-        base_model = ConvNeXtTiny(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ConvNeXtTiny(input_shape=(img_height, 
+                                               img_width, 
+                                               int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1880,11 +3403,37 @@ def run():
     ### ConvNeXtSmall ###
     if (models["ConvNeXtSmall"].get() == 1):
         model_name = "ConvNeXtSmall"
-        base_model = ConvNeXtSmall(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ConvNeXtSmall(input_shape=(img_height,
+                                                img_width, 
+                                                int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1896,7 +3445,31 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
         
         cpt = pb_progress(cpt, total)
     
@@ -1904,11 +3477,37 @@ def run():
     ### ConvNeXtLarge ###
     if (models["ConvNeXtLarge"].get() == 1):
         model_name = "ConvNeXtLarge"
-        base_model = ConvNeXtLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ConvNeXtLarge(input_shape=(img_height, 
+                                                img_width, 
+                                                int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -1916,121 +3515,407 @@ def run():
     ### ConvNeXtXLarge ###
     if (models["ConvNeXtXLarge"].get() == 1):
         model_name = "ConvNeXtXLarge"
-        base_model = ConvNeXtXLarge(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ConvNeXtXLarge(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
     ### RegNetX002 ###
     if (models["RegNetX002"].get() == 1):
         model_name = "RegNetX002"
-        base_model = RegNetX002(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX002(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY002 ###
     if (models["RegNetY002"].get() == 1):
         model_name = "RegNetY002"
-        base_model = RegNetY002(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY002(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total) 
         
     ### RegNetX004 ###
     if (models["RegNetX004"].get() == 1):
         model_name = "RegNetX004"
-        base_model = RegNetX004(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX004(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY004 ###
     if (models["RegNetY004"].get() == 1):
         model_name = "RegNetY004"
-        base_model = RegNetY004(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY004(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
     ### RegNetX006 ###
     if (models["RegNetX006"].get() == 1):
         model_name = "RegNetX006"
-        base_model = RegNetX006(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX006(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY006 ###
     if (models["RegNetY006"].get() == 1):
         model_name = "RegNetY006"
-        base_model = RegNetY006(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY006(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)         
 
     ### RegNetX008 ###
     if (models["RegNetX008"].get() == 1):
         model_name = "RegNetX008"
-        base_model = RegNetX008(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX008(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY008 ###
     if (models["RegNetY008"].get() == 1):
         model_name = "RegNetY008"
-        base_model = RegNetY008(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY008(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total) 
         
     ### RegNetX016 ###
     if (models["RegNetX016"].get() == 1):
         model_name = "RegNetX016"
-        base_model = RegNetX016(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX016(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
     ### RegNetY016 ###
     if (models["RegNetY016"].get() == 1):
         model_name = "RegNetY016"
-        base_model = RegNetY016(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY016(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
 
@@ -2041,158 +3926,528 @@ def run():
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
    
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY032 ###
     if (models["RegNetY032"].get() == 1):
         model_name = "RegNetY032"
-        base_model = RegNetY032(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY032(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
 
     ### RegNetX040 ###
     if (models["RegNetX040"].get() == 1):
         model_name = "RegNetX040"
-        base_model = RegNetX040(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX040(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY040 ###
     if (models["RegNetY040"].get() == 1):
         model_name = "RegNetY040"
-        base_model = RegNetY040(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY040(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
    
         cpt = pb_progress(cpt, total)
 
     ### RegNetX064 ###
     if (models["RegNetX064"].get() == 1):
         model_name = "RegNetX064"
-        base_model = RegNetX064(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX064(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
    
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY064 ###
     if (models["RegNetY064"].get() == 1):
         model_name = "RegNetY064"
-        base_model = RegNetY064(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY064(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
     ### RegNetX080 ###
     if (models["RegNetX080"].get() == 1):
         model_name = "RegNetX080"
-        base_model = RegNetX080(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX080(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY080 ###
     if (models["RegNetY080"].get() == 1):
         model_name = "RegNetY080"
-        base_model = RegNetY080(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY080(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
    
         cpt = pb_progress(cpt, total)  
         
     ### RegNetX120 ###
     if (models["RegNetX120"].get() == 1):
         model_name = "RegNetX120"
-        base_model = RegNetX120(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX120(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY120 ###
     if (models["RegNetY120"].get() == 1):
         model_name = "RegNetY120"
-        base_model = RegNetY120(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY120(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
     ### RegNetX160 ###
     if (models["RegNetX160"].get() == 1):
         model_name = "RegNetX160"
-        base_model = RegNetX160(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX160(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY160 ###
     if (models["RegNetY160"].get() == 1):
         model_name = "RegNetY160"
-        base_model = RegNetY160(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY160(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
  
     ### RegNetX320 ###
     if (models["RegNetX320"].get() == 1):
         model_name = "RegNetX320"
-        base_model = RegNetX320(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX320(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY080 ###
     if (models["RegNetY320"].get() == 1):
         model_name = "RegNetY320"
-        base_model = RegNetY320(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetY320(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(),
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(), 
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
         
     print ("End")
 
 # Execution 
-ttk.Button(exec_info, text="Reset", command=reset).grid(row=0, column=0, padx=5, pady=5, sticky=(tk.W + tk.E))
-ttk.Button(exec_info, text="Run", command=run).grid(row=0, column=4, padx=5, pady=5, sticky=(tk.W + tk.E))
+ttk.Button(exec_info, text="Reset", command=reset).grid(row=0, 
+                                                        column=0, 
+                                                        padx=5, 
+                                                        pady=5, 
+                                                        sticky=(tk.W + tk.E))
+ttk.Button(exec_info, text="Run", command=run).grid(row=0, 
+                                                    column=4, 
+                                                    padx=5, 
+                                                    pady=5, 
+                                                    sticky=(tk.W + tk.E))
 
 
 # Show the window 

@@ -122,8 +122,8 @@ data_info = ttk.LabelFrame(mc, text='Data Parameters')
 data_info.grid(padx=5, 
                pady=5, 
                sticky=tk.W + tk.E)
-for i in range(4):
-    data_info.columnconfigure(i, weight=1)
+for i1 in range(4):
+    data_info.columnconfigure(i1, weight=1)
  
 variables["datapath"] = tk.StringVar()
 ttk.Label(data_info, 
@@ -269,8 +269,8 @@ augment_info = ttk.LabelFrame(mc, text='Data Augmentation')
 augment_info.grid(padx=5, 
                   pady=5, 
                   sticky=tk.W + tk.E)
-for i in range(8):
-    augment_info.columnconfigure(i, weight=1)
+for i2 in range(8):
+    augment_info.columnconfigure(i2, weight=1)
    
 
    
@@ -427,8 +427,8 @@ mc_info = ttk.LabelFrame(mc, text='Model(s) selection')
 mc_info.grid(padx=5, 
              pady=5, 
              sticky=tk.W + tk.E)
-for i in range(8):
-    mc_info.columnconfigure(i, weight=1)
+for i3 in range(8):
+    mc_info.columnconfigure(i3, weight=1)
     
 # Xception       
 models['Xception'] = tk.BooleanVar()
@@ -1228,12 +1228,12 @@ model_RegNetY320.grid(row=9,
 
 
 def selectall():
-    for i in models.keys():
-        models[i].set(1)
+    for i4 in models:
+        models[i4].set(1)
         
 def unselect():
-    for i in models.keys():
-        models[i].set(0)
+    for i5 in models:
+        models[i5].set(0)
     
 # Select all
 ttk.Button(mc_info, 
@@ -1340,8 +1340,8 @@ def sel():
 
 train_info = ttk.LabelFrame(mc, text='Training parameters')
 train_info.grid(padx=5, pady=5, sticky=tk.W + tk.E)
-for i in range(8):
-    train_info.columnconfigure(i, weight=1)
+for i6 in range(8):
+    train_info.columnconfigure(i6, weight=1)
     
 variables['strategie'] = tk.IntVar()    
 ttk.Label(train_info, text="Training step(s)").grid(row=0, 
@@ -1745,8 +1745,8 @@ xai_info.grid(padx=5,
               pady=5, 
               sticky=tk.W + tk.E)
 
-for i in range(8):
-    xai_info.columnconfigure(i, weight=1)
+for i7 in range(8):
+    xai_info.columnconfigure(i7, weight=1)
  
 # ActivationMaximization
 variables["activationmaximization"] = tk.IntVar()
@@ -1859,8 +1859,8 @@ output_info.grid(padx=5,
                  pady=5, 
                  sticky=tk.W + tk.E)
 
-for i in range(5):
-    output_info.columnconfigure(i, weight=1)
+for i8 in range(5):
+    output_info.columnconfigure(i8, weight=1)
     
 # Chechkbox Save Model
 variables["savemodel"] = tk.IntVar()
@@ -1933,8 +1933,8 @@ info_info = ttk.LabelFrame(mc, text='Info')
 info_info.grid(padx=5, 
                pady=5, 
                sticky=tk.W + tk.E)
-for i in range(1):
-    info_info.columnconfigure(i, weight=1)
+for i9 in range(1):
+    info_info.columnconfigure(i9, weight=1)
     
 ttk.Label(info_info, 
           text="GPUs Available: " 
@@ -1961,8 +1961,8 @@ ttk.Label(info_info,
 # Execution
 exec_info = ttk.LabelFrame(mc, text='Execution')
 exec_info.grid(padx=5, pady=5, sticky=tk.W + tk.E)
-for i in range(5):
-    exec_info.columnconfigure(i, weight=1)
+for i10 in range(5):
+    exec_info.columnconfigure(i10, weight=1)
 
 pgb = tk.IntVar()
 pb = ttk.Progressbar(exec_info, 
@@ -2311,8 +2311,8 @@ def training(_img_height,
             y_val.extend(labels.numpy())
             x_val.extend(images.numpy())
         predictions=model.predict(np.array(x_val))
-        for i in predictions:
-            y_pred.append(np.argmax(i))
+        for i11 in predictions:
+            y_pred.append(np.argmax(i11))
         df=pd.DataFrame()
         df['Actual'],df['Prediction']=y_val,y_pred
         df
@@ -2394,8 +2394,8 @@ def run():
     mc.update()
 
     # Progressbar configuration
-    for i in models.keys():
-        if models[i].get() == 1:
+    for i12 in models:
+        if models[i12].get() == 1:
             total = total + 1
 
  

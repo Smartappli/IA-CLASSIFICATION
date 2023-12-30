@@ -275,6 +275,7 @@ for i2 in range(8):
 
    
 def augment_sel():
+    """Method to select all augmentation params"""
     if variables["augment"].get() == 0:
         crop['state'] = 'disabled'
         crop.state(['!selected'])

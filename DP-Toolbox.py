@@ -904,155 +904,326 @@ model_EfficientNetV2Large.grid(row=6,
 
 # ConvNetXt Tiny
 models["ConvNeXtTiny"] = tk.BooleanVar()
-model_ConvNeXtTiny = ttk.Checkbutton(mc_info, text="ConvNeXtTiny", variable=models["ConvNeXtTiny"], onvalue = 1, offvalue = 0)
+model_ConvNeXtTiny = ttk.Checkbutton(mc_info, 
+                                     text="ConvNeXtTiny", 
+                                     variable=models["ConvNeXtTiny"], 
+                                     onvalue=True,
+                                     offvalue=False)
 model_ConvNeXtTiny.grid(row=6, 
                         column=2, sticky=tk.W + tk.E)
 
 # ConvNetXt Small
 models["ConvNeXtSmall"] = tk.BooleanVar()
-model_ConvNeXtSmall = ttk.Checkbutton(mc_info, text="ConvNeXtSmall", variable=models["ConvNeXtSmall"], onvalue = 1, offvalue = 0)
-model_ConvNeXtSmall.grid(row=6, column=3, sticky=tk.W + tk.E)
+model_ConvNeXtSmall = ttk.Checkbutton(mc_info, 
+                                      text="ConvNeXtSmall", 
+                                      variable=models["ConvNeXtSmall"], 
+                                      onvalue=True, 
+                                      offvalue=False)
+model_ConvNeXtSmall.grid(row=6, 
+                         column=3, 
+                         sticky=tk.W + tk.E)
 
 # ConvNetXt Base
 models["ConvNeXtBase"] = tk.BooleanVar()
-model_ConvNeXtBase = ttk.Checkbutton(mc_info, text="ConvNeXtBase", variable=models["ConvNeXtBase"], onvalue = 1, offvalue = 0)
-model_ConvNeXtBase.grid(row=6, column=4, sticky=tk.W + tk.E)
+model_ConvNeXtBase = ttk.Checkbutton(mc_info, 
+                                     text="ConvNeXtBase", 
+                                     variable=models["ConvNeXtBase"], 
+                                     onvalue=True, 
+                                     offvalue=False)
+model_ConvNeXtBase.grid(row=6, 
+                        column=4, 
+                        sticky=tk.W + tk.E)
 
 # ConvNetXt Large
 models["ConvNeXtLarge"] = tk.BooleanVar()
-model_ConvNeXtLarge = ttk.Checkbutton(mc_info, text="ConvNeXtLarge", variable=models["ConvNeXtLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtLarge.grid(row=6, column=5, sticky=tk.W + tk.E)
+model_ConvNeXtLarge = ttk.Checkbutton(mc_info, 
+                                      text="ConvNeXtLarge", 
+                                      variable=models["ConvNeXtLarge"], 
+                                      onvalue = 1, 
+                                      offvalue = 0)
+model_ConvNeXtLarge.grid(row=6, 
+                         column=5, 
+                         sticky=tk.W + tk.E)
 
 # ConvNetXt XLarge
 models["ConvNeXtXLarge"] = tk.BooleanVar()
-model_ConvNeXtXLarge = ttk.Checkbutton(mc_info, text="ConvNeXtXLarge", variable=models["ConvNeXtXLarge"], onvalue = 1, offvalue = 0)
-model_ConvNeXtXLarge.grid(row=6, column=6, sticky=tk.W + tk.E)
+model_ConvNeXtXLarge = ttk.Checkbutton(mc_info, 
+                                       text="ConvNeXtXLarge", 
+                                       variable=models["ConvNeXtXLarge"], 
+                                       onvalue=True, 
+                                       offvalue=False)
+model_ConvNeXtXLarge.grid(row=6, 
+                          column=6, 
+                          sticky=tk.W + tk.E)
 
 # RegNetX002
 models["RegNetX002"] = tk.BooleanVar()
-model_RegNetX002 = ttk.Checkbutton(mc_info, text="RegNetX002", variable=models["RegNetX002"], onvalue = 1, offvalue = 0)
-model_RegNetX002.grid(row=6, column=7, sticky=tk.W + tk.E)
+model_RegNetX002 = ttk.Checkbutton(mc_info, text="RegNetX002", 
+                                   variable=models["RegNetX002"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX002.grid(row=6, 
+                      column=7, 
+                      sticky=tk.W + tk.E)
 
 
 
 # RegNetY002
 models["RegNetY002"] = tk.BooleanVar()
-model_RegNetY002 = ttk.Checkbutton(mc_info, text="RegNetY002", variable=models["RegNetY002"], onvalue = 1, offvalue = 0)
-model_RegNetY002.grid(row=7, column=0, sticky=tk.W + tk.E)
+model_RegNetY002 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY002", 
+                                   variable=models["RegNetY002"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY002.grid(row=7, 
+                      column=0, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX004
 models["RegNetX004"] = tk.BooleanVar()
-model_RegNetX004 = ttk.Checkbutton(mc_info, text="RegNetX004", variable=models["RegNetX004"], onvalue = 1, offvalue = 0)
-model_RegNetX004.grid(row=7, column=1, sticky=tk.W + tk.E)
+model_RegNetX004 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX004", 
+                                   variable=models["RegNetX004"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX004.grid(row=7, 
+                      column=1, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY004
 models["RegNetY004"] = tk.BooleanVar()
-model_RegNetY004 = ttk.Checkbutton(mc_info, text="RegNetY004", variable=models["RegNetY004"], onvalue = 1, offvalue = 0)
-model_RegNetY004.grid(row=7, column=2, sticky=tk.W + tk.E)
+model_RegNetY004 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY004", 
+                                   variable=models["RegNetY004"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY004.grid(row=7, 
+                      column=2, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX006
 models["RegNetX006"] = tk.BooleanVar()
-model_RegNetX006 = ttk.Checkbutton(mc_info, text="RegNetX006", variable=models["RegNetX006"], onvalue = 1, offvalue = 0)
-model_RegNetX006.grid(row=7, column=3, sticky=tk.W + tk.E)
+model_RegNetX006 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX006", 
+                                   variable=models["RegNetX006"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX006.grid(row=7, 
+                      column=3, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY006
 models["RegNetY006"] = tk.BooleanVar()
-model_RegNetY006 = ttk.Checkbutton(mc_info, text="RegNetY006", variable=models["RegNetY006"], onvalue = 1, offvalue = 0)
-model_RegNetY006.grid(row=7, column=4, sticky=tk.W + tk.E)
+model_RegNetY006 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY006", 
+                                   variable=models["RegNetY006"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY006.grid(row=7, 
+                      column=4, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX008
 models["RegNetX008"] = tk.BooleanVar()
-model_RegNetX008 = ttk.Checkbutton(mc_info, text="RegNetX008", variable=models["RegNetX008"], onvalue = 1, offvalue = 0)
-model_RegNetX008.grid(row=7, column=5, sticky=tk.W + tk.E)
+model_RegNetX008 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX008", 
+                                   variable=models["RegNetX008"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX008.grid(row=7, 
+                      column=5, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY008
 models["RegNetY008"] = tk.BooleanVar()
-model_RegNetY008 = ttk.Checkbutton(mc_info, text="RegNetY008", variable=models["RegNetY008"], onvalue = 1, offvalue = 0)
-model_RegNetY008.grid(row=7, column=6, sticky=tk.W + tk.E)
+model_RegNetY008 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY008", 
+                                   variable=models["RegNetY008"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY008.grid(row=7, 
+                      column=6, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX016
 models["RegNetX016"] = tk.BooleanVar()
-model_RegNetX016 = ttk.Checkbutton(mc_info, text="RegNetX016", variable=models["RegNetX016"], onvalue = 1, offvalue = 0)
-model_RegNetX016.grid(row=7, column=7, sticky=tk.W + tk.E)
+model_RegNetX016 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX016", 
+                                   variable=models["RegNetX016"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX016.grid(row=7, 
+                      column=7, 
+                      sticky=tk.W + tk.E)
 
 
 
 # RegNetY016
 models["RegNetY016"] = tk.BooleanVar()
-model_RegNetY016 = ttk.Checkbutton(mc_info, text="RegNetY016", variable=models["RegNetY016"], onvalue = 1, offvalue = 0)
-model_RegNetY016.grid(row=8, column=0, sticky=tk.W + tk.E)
+model_RegNetY016 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY016", 
+                                   variable=models["RegNetY016"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY016.grid(row=8, 
+                      column=0, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX032
 models["RegNetX032"] = tk.BooleanVar()
-model_RegNetX032 = ttk.Checkbutton(mc_info, text="RegNetX032", variable=models["RegNetX032"], onvalue = 1, offvalue = 0)
-model_RegNetX032.grid(row=8, column=1, sticky=tk.W + tk.E)
+model_RegNetX032 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX032", 
+                                   variable=models["RegNetX032"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX032.grid(row=8, 
+                      column=1, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY032
 models["RegNetY032"] = tk.BooleanVar()
-model_RegNetY032 = ttk.Checkbutton(mc_info, text="RegNetY032", variable=models["RegNetY032"], onvalue = 1, offvalue = 0)
-model_RegNetY032.grid(row=8, column=2, sticky=tk.W + tk.E)
+model_RegNetY032 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY032", 
+                                   variable=models["RegNetY032"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY032.grid(row=8, 
+                      column=2, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX040
 models["RegNetX040"] = tk.BooleanVar()
-model_RegNetX040 = ttk.Checkbutton(mc_info, text="RegNetX040", variable=models["RegNetX040"], onvalue = 1, offvalue = 0)
-model_RegNetX040.grid(row=8, column=3, sticky=tk.W + tk.E)
+model_RegNetX040 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX040", 
+                                   variable=models["RegNetX040"], 
+                                   onvalue=True,
+                                   offvalue=False)
+model_RegNetX040.grid(row=8, 
+                      column=3, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY040
 models["RegNetY040"] = tk.BooleanVar()
-model_RegNetY040 = ttk.Checkbutton(mc_info, text="RegNetY040", variable=models["RegNetY040"], onvalue = 1, offvalue = 0)
-model_RegNetY040.grid(row=8, column=4, sticky=tk.W + tk.E)
+model_RegNetY040 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY040", 
+                                   variable=models["RegNetY040"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY040.grid(row=8, 
+                      column=4, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX064
 models["RegNetX064"] = tk.BooleanVar()
-model_RegNetX064 = ttk.Checkbutton(mc_info, text="RegNetX064", variable=models["RegNetX064"], onvalue = 1, offvalue = 0)
-model_RegNetX064.grid(row=8, column=5, sticky=tk.W + tk.E)
+model_RegNetX064 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX064", 
+                                   variable=models["RegNetX064"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX064.grid(row=8, 
+                      column=5, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY064
 models["RegNetY064"] = tk.BooleanVar()
-model_RegNetY064 = ttk.Checkbutton(mc_info, text="RegNetY064", variable=models["RegNetY064"], onvalue = 1, offvalue = 0)
-model_RegNetY064.grid(row=8, column=6, sticky=tk.W + tk.E)
+model_RegNetY064 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY064", 
+                                   variable=models["RegNetY064"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY064.grid(row=8, 
+                      column=6, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX080
 models["RegNetX080"] = tk.BooleanVar()
-model_RegNetX080 = ttk.Checkbutton(mc_info, text="RegNetX080", variable=models["RegNetX080"], onvalue = 1, offvalue = 0)
-model_RegNetX080.grid(row=8, column=7, sticky=tk.W + tk.E)
+model_RegNetX080 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX080", 
+                                   variable=models["RegNetX080"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX080.grid(row=8, 
+                      column=7, 
+                      sticky=tk.W + tk.E)
 
 
 
 # RegNetY080
 models["RegNetY080"] = tk.BooleanVar()
-model_RegNetY080 = ttk.Checkbutton(mc_info, text="RegNetY080", variable=models["RegNetY080"], onvalue = 1, offvalue = 0)
-model_RegNetY080.grid(row=9, column=0, sticky=tk.W + tk.E)
+model_RegNetY080 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY080", 
+                                   variable=models["RegNetY080"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY080.grid(row=9, 
+                      column=0, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX120
 models["RegNetX120"] = tk.BooleanVar()
-model_RegNetX120 = ttk.Checkbutton(mc_info, text="RegNetX120", variable=models["RegNetX120"], onvalue = 1, offvalue = 0)
-model_RegNetX120.grid(row=9, column=1, sticky=tk.W + tk.E)
+model_RegNetX120 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX120", 
+                                   variable=models["RegNetX120"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX120.grid(row=9, 
+                      column=1, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY120
 models["RegNetY120"] = tk.BooleanVar()
-model_RegNetY120 = ttk.Checkbutton(mc_info, text="RegNetY120", variable=models["RegNetY120"], onvalue = 1, offvalue = 0)
-model_RegNetY120.grid(row=9, column=2, sticky=tk.W + tk.E)
+model_RegNetY120 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY120", 
+                                   variable=models["RegNetY120"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY120.grid(row=9, 
+                      column=2, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX160
 models["RegNetX160"] = tk.BooleanVar()
-model_RegNetX160 = ttk.Checkbutton(mc_info, text="RegNetX160", variable=models["RegNetX160"], onvalue = 1, offvalue = 0)
-model_RegNetX160.grid(row=9, column=3, sticky=tk.W + tk.E)
+model_RegNetX160 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX160", 
+                                   variable=models["RegNetX160"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX160.grid(row=9, 
+                      column=3, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY160
 models["RegNetY160"] = tk.BooleanVar()
-model_RegNetY160 = ttk.Checkbutton(mc_info, text="RegNetY160", variable=models["RegNetY160"], onvalue = 1, offvalue = 0)
-model_RegNetY160.grid(row=9, column=4, sticky=tk.W + tk.E)
+model_RegNetY160 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY160", 
+                                   variable=models["RegNetY160"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY160.grid(row=9, 
+                      column=4, 
+                      sticky=tk.W + tk.E)
 
 # RegNetX320
 models["RegNetX320"] = tk.BooleanVar()
-model_RegNetX320 = ttk.Checkbutton(mc_info, text="RegNetX320", variable=models["RegNetX320"], onvalue = 1, offvalue = 0)
-model_RegNetX320.grid(row=9, column=5, sticky=tk.W + tk.E)
+model_RegNetX320 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetX320", 
+                                   variable=models["RegNetX320"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetX320.grid(row=9, 
+                      column=5, 
+                      sticky=tk.W + tk.E)
 
 # RegNetY320
 models["RegNetY320"] = tk.BooleanVar()
-model_RegNetY320 = ttk.Checkbutton(mc_info, text="RegNetY320", variable=models["RegNetY320"], onvalue = 1, offvalue = 0)
-model_RegNetY320.grid(row=9, column=6, sticky=tk.W + tk.E)
+model_RegNetY320 = ttk.Checkbutton(mc_info, 
+                                   text="RegNetY320", 
+                                   variable=models["RegNetY320"], 
+                                   onvalue=True, 
+                                   offvalue=False)
+model_RegNetY320.grid(row=9, 
+                      column=6, 
+                      sticky=tk.W + tk.E)
 
 
 
@@ -1065,11 +1236,23 @@ def unselect():
         models[i].set(0)
     
 # Select all
-ttk.Button(mc_info, text="Select All", command=selectall).grid(row=10, column=6, padx=5, pady=5, sticky=tk.W + tk.E)
-ttk.Button(mc_info, text="Unselect All", command=unselect).grid(row=10, column=7, padx=5, pady=5, sticky=tk.W + tk.E)
+ttk.Button(mc_info, 
+           text="Select All", 
+           command=selectall).grid(row=10, 
+                                   column=6, 
+                                   padx=5, 
+                                   pady=5, 
+                                   sticky=tk.W + tk.E)
+ttk.Button(mc_info, 
+           text="Unselect All", 
+           command=unselect).grid(row=10, 
+                                  column=7, 
+                                  padx=5, 
+                                  pady=5, 
+                                  sticky=tk.W + tk.E)
 
 def sel():
-    if (variables['strategie'].get()==1):
+    if variables['strategie'].get()==1:
         optimizer2['state']='disabled'
         optimizer3['state']='disabled'
         
@@ -1215,7 +1398,7 @@ multi_gpu.grid(row=1,
 multi_gpu.state(['disabled'])
 variables["multigpu"].set(0)
 
-if (numgpu > 1) :
+if numgpu > 1:
     multi_gpu.state(['enabled'])
     multi_gpu.state(['selected'])
     variables["multigpu"].set(1)
@@ -1926,18 +2109,18 @@ def training(_img_height,
             
             
     if strategie == 2:
-        if (variables["earlystopping2"].get() == 1):
+        if variables["earlystopping2"].get() == 1:
             callbacks.append(model_earlystopping_callback)
             
-        if (variables["lrdecay2"].get() == 1):
+        if variables["lrdecay2"].get() == 1:
             callbacks.append(model_learningscheduler_callback)
             
             
     if strategie == 3:
-        if (variables["earlystopping3"].get() == 1):
+        if variables["earlystopping3"].get() == 1:
             callbacks.append(model_earlystopping_callback)
             
-        if (variables["lrdecay3"].get() == 1):
+        if variables["lrdecay3"].get() == 1:
             callbacks.append(model_learningscheduler_callback)
     
     print (model_name)
@@ -2091,9 +2274,9 @@ def training(_img_height,
             json_file.write(model_json)        
 
     if traingraph == 1:
-        if (strategie == 1):
+        if strategie == 1:
             hist_ = pd.DataFrame(hist.history)
-        elif(strategie == 2):
+        elif strategie == 2:
             hist_ = pd.DataFrame(merge_dictionaries(hist.history, hist2.history))
         else:
             hist_ = pd.DataFrame(merge_dictionaries(merge_dictionaries(hist.history, hist2.history), hist3.history))
@@ -2116,7 +2299,7 @@ def training(_img_height,
         plt.savefig(output_dir+"/fig/"+model_name+'_model_performance.png')
         plt.show()
         
-    if (confmatrix == 1):
+    if confmatrix == 1:
         x_val,y_val,y_pred=[],[],[]
         for images, labels in ds_valid:
             y_val.extend(labels.numpy())
@@ -2138,11 +2321,11 @@ def training(_img_height,
         plt.show()
         CM
         
-    if (classreport == 1):
+    if classreport == 1:
         ClassificationReport = classification_report(y_val, y_pred)
         print('Classification Report is : ', ClassificationReport )
         
-    if (tflite == 1):
+    if tflite == 1:
         path = output_dir+'/model/'+model_name+".tf"    
             
         if os.path.exists(path) :

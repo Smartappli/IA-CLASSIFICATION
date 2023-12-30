@@ -113,11 +113,15 @@ root.title('Ai Toolbox - Deep Learning - Classifier')
 root.columnconfigure(0, weight=1)
 
 mc = ttk.Frame(root)
-mc.grid(padx=10, pady=10, sticky=(tk.W + tk.E))
+mc.grid(padx=10, 
+        pady=10, 
+        sticky=tk.W + tk.E)
 mc.columnconfigure(0, weight=1)
 
 data_info = ttk.LabelFrame(mc, text='Data Parameters')
-data_info.grid(padx=5, pady=5, sticky=(tk.W + tk.E))
+data_info.grid(padx=5, 
+               pady=5, 
+               sticky=tk.W + tk.E)
 for i in range(4):
     data_info.columnconfigure(i, weight=1)
  
@@ -125,7 +129,7 @@ variables["datapath"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Data Path").grid(row=0, 
                                  column=0, 
-                                 sticky=(tk.W + tk.E), 
+                                 sticky=tk.W + tk.E, 
                                  padx=5, 
                                  pady=5)
 datapath = ttk.Entry(data_info, textvariable=variables["datapath"])
@@ -133,14 +137,14 @@ datapath.grid(row=1,
               columnspan=2, 
               padx=5, 
               pady=5, 
-              sticky=(tk.W + tk.E))
+              sticky=tk.W + tk.E)
 variables["datapath"].set(data_dir)
 
 variables["outputdata"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Output Path").grid(row=0, 
                                    column=3, 
-                                   sticky=(tk.W + tk.E), 
+                                   sticky=tk.W + tk.E, 
                                    padx=5, 
                                    pady=5)
 outputpath = ttk.Entry(data_info, textvariable=variables["outputdata"])
@@ -149,7 +153,7 @@ outputpath.grid(row=1,
                 column=3, 
                 padx=5, 
                 pady=5, 
-                sticky=(tk.W + tk.E))
+                sticky=tk.W + tk.E)
 variables["outputdata"].set(output_dir)
 
 variables["imgresizing"] = tk.StringVar()
@@ -271,7 +275,7 @@ for i in range(8):
 
    
 def augment_sel():
-    if (variables["augment"].get() == 0):
+    if variables["augment"].get() == 0:
         crop['state'] = 'disabled'
         crop.state(['!selected'])
         horizflip['state'] = 'disabled'

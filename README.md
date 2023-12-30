@@ -1,14 +1,22 @@
-# IA-CLASSIFICATION
+# Deep Learning Classifier ( DP Toolbox )
 
 ## Dependencies
 
- - pip install tensorflow==2.14.1
- - pip install keras==2.14
- - pip install seaborn==0.12.2
- - pip install pandas==2.0.3
- - pip install numpy==1.24.3
- - pip install matplotlib==3.7.2
- - pip install scikit-learn==1.3.0
+ - tk 0.1.0
+ - ttkbootstrap 1.10.1 
+ - tensorflow 2.14.1
+ - seaborn 0.12.2
+ - pandas 2.0.3
+ - numpy 1.24.3
+ - matplotlib 3.7.2
+ - scikit-learn 1.3.0
+ - keras-tuner 1.4.6
+
+## Installation & Run
+
+- python -m pip install --upgrade pip
+- pip install -r requirements.txt
+- python DP-Toolbox.py
 
 ## 71 Models implemented
 

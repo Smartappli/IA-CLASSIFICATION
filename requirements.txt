@@ -1,7 +1,9 @@
-tensorflow==2.14
-keras==2.14
+tk==0.1.0
+ttkbootstrap==1.10.1 
+tensorflow==2.14.1
 numpy==1.24.3
 pandas==2.0.3
 scikit-learn==1.3.0
-seaborn==0.12.2
+seaborn==0.13.0
 matplotlib==3.7.2
+keras-tuner==1.4.6

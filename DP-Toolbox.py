@@ -3816,11 +3816,37 @@ def run():
     ### EfficientNetB6 ###
     if models["EfficientNetB6"].get() == 1:
         model_name = "EfficientNet_B6"
-        base_model = EfficientNetB6(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = EfficientNetB6(input_shape=(img_height, 
+                                                 img_width, 
+                                                 int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
-        training(img_height, img_width, variables['strategie'].get(), variables["multigpu"].get(), base_model, model_name, variables['optimizer1'].get(), variables['loss1'].get(), variables['epoch1'].get(), variables['lr1'].get(), variables['optimizer2'].get(), variables['loss2'].get(), variables['epoch2'].get(), variables['lr2'].get(), variables['optimizer3'].get(), variables['loss3'].get(), variables['epoch3'].get(), variables['lr3'].get(), train_ds, val_ds, variables["savemodel"].get(), variables["traingraph"].get(), variables["confmatrix"].get(), variables["classreport"].get(), variables["tflite"].get())
+        training(img_height, 
+                 img_width, 
+                 variables['strategie'].get(), 
+                 variables["multigpu"].get(), 
+                 base_model, 
+                 model_name, 
+                 variables['optimizer1'].get(), 
+                 variables['loss1'].get(), 
+                 variables['epoch1'].get(), 
+                 variables['lr1'].get(), 
+                 variables['optimizer2'].get(), 
+                 variables['loss2'].get(), 
+                 variables['epoch2'].get(),
+                 variables['lr2'].get(), 
+                 variables['optimizer3'].get(), 
+                 variables['loss3'].get(), 
+                 variables['epoch3'].get(), 
+                 variables['lr3'].get(), 
+                 train_ds, 
+                 val_ds, 
+                 variables["savemodel"].get(), 
+                 variables["traingraph"].get(), 
+                 variables["confmatrix"].get(), 
+                 variables["classreport"].get(), 
+                 variables["tflite"].get())
     
         cpt = pb_progress(cpt, total)
     
@@ -4056,7 +4082,9 @@ def run():
     ### ConvNeXtBase ###
     if models["ConvNeXtBase"].get() == 1:
         model_name = "ConvNeXtBase"
-        base_model = ConvNeXtBase(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = ConvNeXtBase(input_shape=(img_height, 
+                                               img_width, 
+                                               int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     
@@ -4537,7 +4565,9 @@ def run():
     ### RegNetX032 ###
     if models["RegNetX032"].get() == 1:
         model_name = "RegNetX032"
-        base_model = RegNetX032(input_shape=(img_height, img_width, int(variables["channel"].get())),
+        base_model = RegNetX032(input_shape=(img_height, 
+                                             img_width, 
+                                             int(variables["channel"].get())),
                                     include_top=False,
                                     weights='imagenet')
     

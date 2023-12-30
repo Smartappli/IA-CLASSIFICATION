@@ -121,7 +121,7 @@ mc.columnconfigure(0, weight=1)
 data_info = ttk.LabelFrame(mc, text='Data Parameters')
 data_info.grid(padx=5, 
                pady=5, 
-               sticky=tk.W + tk.E)
+               sticky=(tk.W + tk.E))
 for i in range(4):
     data_info.columnconfigure(i, weight=1)
  
@@ -129,7 +129,7 @@ variables["datapath"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Data Path").grid(row=0, 
                                  column=0, 
-                                 sticky=tk.W + tk.E, 
+                                 sticky=(tk.W + tk.E), 
                                  padx=5, 
                                  pady=5)
 datapath = ttk.Entry(data_info, textvariable=variables["datapath"])
@@ -137,14 +137,14 @@ datapath.grid(row=1,
               columnspan=2, 
               padx=5, 
               pady=5, 
-              sticky=tk.W + tk.E)
+              sticky=(tk.W + tk.E))
 variables["datapath"].set(data_dir)
 
 variables["outputdata"] = tk.StringVar()
 ttk.Label(data_info, 
           text="Output Path").grid(row=0, 
                                    column=3, 
-                                   sticky=tk.W + tk.E, 
+                                   sticky=(tk.W + tk.E), 
                                    padx=5, 
                                    pady=5)
 outputpath = ttk.Entry(data_info, textvariable=variables["outputdata"])
@@ -153,7 +153,7 @@ outputpath.grid(row=1,
                 column=3, 
                 padx=5, 
                 pady=5, 
-                sticky=tk.W + tk.E)
+                sticky=(tk.W + tk.E))
 variables["outputdata"].set(output_dir)
 
 variables["imgresizing"] = tk.StringVar()
@@ -364,7 +364,7 @@ translation = ttk.Checkbutton(augment_info,
                               offvalue=False)
 translation.grid(row=2, 
                  column=3, 
-                 sticky=(tk.W + tk.E), 
+                 sticky=tk.W + tk.E, 
                  padx=5, 
                  pady=5)
 translation['state'] = 'disabled'
@@ -377,7 +377,7 @@ rotation = ttk.Checkbutton(augment_info,
                            offvalue=False)
 rotation.grid(row=2, 
               column=4, 
-              sticky=(tk.W + tk.E), 
+              sticky=tk.W + tk.E, 
               padx=5, 
               pady=5)
 rotation['state'] = 'disabled'
@@ -416,7 +416,7 @@ brightness = ttk.Checkbutton(augment_info,
                              offvalue=False)
 brightness.grid(row=2, 
                 column=7, 
-                sticky=(tk.W + tk.E), 
+                sticky=tk.W + tk.E, 
                 padx=5, 
                 pady=5)
 brightness['state'] = 'disabled'
@@ -426,7 +426,7 @@ brightness['state'] = 'disabled'
 mc_info = ttk.LabelFrame(mc, text='Model(s) selection')
 mc_info.grid(padx=5, 
              pady=5, 
-             sticky=(tk.W + tk.E))
+             sticky=tk.W + tk.E)
 for i in range(8):
     mc_info.columnconfigure(i, weight=1)
     
@@ -450,7 +450,7 @@ model_VGG16 = ttk.Checkbutton(mc_info,
                               offvalue=False)
 model_VGG16.grid(row=1, 
                  column=1, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 
 # VGG 19
 models['VGG19'] = tk.BooleanVar()
@@ -461,7 +461,7 @@ model_VGG19 = ttk.Checkbutton(mc_info,
                               offvalue=False)
 model_VGG19.grid(row=1, 
                  column=2, 
-                 sticky=(tk.W + tk.E))
+                 sticky=tk.W + tk.E)
 
 # ResNet 50
 models['ResNet50'] = tk.BooleanVar()
@@ -483,7 +483,7 @@ model_ResNet50V2 = ttk.Checkbutton(mc_info,
                                    offvalue=False)
 model_ResNet50V2.grid(row=1, 
                       column=4, 
-                      sticky=(tk.W + tk.E))
+                      sticky=tk.W + tk.E)
 
 # ResNetRS 50 
 models["ResNetRS50"] = tk.BooleanVar()
@@ -494,7 +494,7 @@ model_ResNetRS50 = ttk.Checkbutton(mc_info,
                                    offvalue=False)
 model_ResNetRS50.grid(row=1, 
                       column=5, 
-                      sticky=(tk.W + tk.E))
+                      sticky=tk.W + tk.E)
 
 # ResNet 101
 models['ResNet101'] = tk.BooleanVar()
@@ -505,7 +505,7 @@ model_ResNet101 = ttk.Checkbutton(mc_info,
                                   offvalue=False)
 model_ResNet101.grid(row=1, 
                      column=6, 
-                     sticky=(tk.W + tk.E))
+                     sticky=tk.W + tk.E)
 
 # ResNet 101 Version 2
 models["ResNet101V2"] = tk.BooleanVar()
@@ -516,7 +516,7 @@ model_ResNet101V2 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNet101V2.grid(row=1, 
                        column=7, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 
 
@@ -529,7 +529,7 @@ model_ResNetRS101 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS101.grid(row=2, 
                        column=0, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNet 152
 models["ResNet152"] = tk.BooleanVar()
@@ -540,7 +540,7 @@ model_ResNet152 = ttk.Checkbutton(mc_info,
                                   offvalue=False)
 model_ResNet152.grid(row=2, 
                      column=1, 
-                     sticky=(tk.W + tk.E))
+                     sticky=tk.W + tk.E)
 
 # ResNet 152 Version 2
 models["ResNet152V2"] = tk.BooleanVar()
@@ -551,7 +551,7 @@ model_ResNet152V2 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNet152V2.grid(row=2, 
                        column=2, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNetRS 152
 models["ResNetRS152"] = tk.BooleanVar()
@@ -562,7 +562,7 @@ model_ResNetRS152 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS152.grid(row=2, 
                        column=3, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNetRS 200
 models["ResNetRS200"] = tk.BooleanVar()
@@ -573,7 +573,7 @@ model_ResNetRS200 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS200.grid(row=2, 
                        column=4, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNetRS 270
 models["ResNetRS270"] = tk.BooleanVar()
@@ -584,7 +584,7 @@ model_ResNetRS270 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS270.grid(row=2, 
                        column=5, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # ResNetRS 350
 models["ResNetRS350"] = tk.BooleanVar()
@@ -606,7 +606,7 @@ model_ResNetRS420 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_ResNetRS420.grid(row=2,
                        column=7, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 
 
@@ -619,7 +619,7 @@ model_InceptionV3 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_InceptionV3.grid(row=3, 
                        column=0, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # Incception ResNet Version 2
 models["InceptionResNetV2"] = tk.BooleanVar()
@@ -630,7 +630,7 @@ model_InceptionResNetV2 = ttk.Checkbutton(mc_info,
                                           offvalue=False)
 model_InceptionResNetV2.grid(row=3, 
                              column=1, 
-                             sticky=(tk.W + tk.E))
+                             sticky=tk.W + tk.E)
 
 # MobileNet
 models["MobileNet"] = tk.BooleanVar()
@@ -640,8 +640,8 @@ model_MobileNet = ttk.Checkbutton(mc_info,
                                   onvalue=True, 
                                   offvalue=False)
 model_MobileNet.grid(row=3, 
-                     c010olumn=2, 
-                     sticky=(tk.W + tk.E))
+                     column=2, 
+                     sticky=tk.W + tk.E)
 
 # MobileNet Version 2
 models["MobileNetV2"] = tk.BooleanVar()
@@ -652,7 +652,7 @@ model_MobileNetV2 = ttk.Checkbutton(mc_info,
                                     offvalue=False)
 model_MobileNetV2.grid(row=3, 
                        column=3, 
-                       sticky=(tk.W + tk.E))
+                       sticky=tk.W + tk.E)
 
 # MobileNet Version 3 Small
 models["MobileNetV3Small"] = tk.BooleanVar()
@@ -663,7 +663,7 @@ model_MobileNetV3Small = ttk.Checkbutton(mc_info,
                                          offvalue=False)
 model_MobileNetV3Small.grid(row=3, 
                             column=4, 
-                            sticky=(tk.W + tk.E))
+                            sticky=tk.W + tk.E)
 
 # MobileNet Version 3 Large
 models["MobileNetV3Large"] = tk.BooleanVar()

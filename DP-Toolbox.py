@@ -3955,7 +3955,7 @@ def run():
         cpt = pb_progress(cpt, total)  
     
     ### RegNetY032 ###
-    if (models["RegNetY032"].get() == 1):
+    if models["RegNetY032"].get() == 1:
         model_name = "RegNetY032"
         base_model = RegNetY032(input_shape=(img_height, 
                                              img_width, 
@@ -3992,7 +3992,7 @@ def run():
         cpt = pb_progress(cpt, total)
 
     ### RegNetX040 ###
-    if (models["RegNetX040"].get() == 1):
+    if models["RegNetX040"].get() == 1:
         model_name = "RegNetX040"
         base_model = RegNetX040(input_shape=(img_height, 
                                              img_width, 
@@ -4029,7 +4029,7 @@ def run():
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY040 ###
-    if (models["RegNetY040"].get() == 1):
+    if models["RegNetY040"].get() == 1:
         model_name = "RegNetY040"
         base_model = RegNetY040(input_shape=(img_height, 
                                              img_width, 
@@ -4066,7 +4066,7 @@ def run():
         cpt = pb_progress(cpt, total)
 
     ### RegNetX064 ###
-    if (models["RegNetX064"].get() == 1):
+    if models["RegNetX064"].get() == 1:
         model_name = "RegNetX064"
         base_model = RegNetX064(input_shape=(img_height, 
                                              img_width, 
@@ -4103,7 +4103,7 @@ def run():
         cpt = pb_progress(cpt, total)   
     
     ### RegNetY064 ###
-    if (models["RegNetY064"].get() == 1):
+    if models["RegNetY064"].get() == 1:
         model_name = "RegNetY064"
         base_model = RegNetY064(input_shape=(img_height, 
                                              img_width, 
@@ -4140,7 +4140,7 @@ def run():
         cpt = pb_progress(cpt, total)
         
     ### RegNetX080 ###
-    if (models["RegNetX080"].get() == 1):
+    if models["RegNetX080"].get() == 1:
         model_name = "RegNetX080"
         base_model = RegNetX080(input_shape=(img_height, 
                                              img_width, 

@@ -1,5 +1,5 @@
 tk==0.1.0
-ttkbootstrap==1.12.2 
+ttkbootstrap==1.14.7 
 tensorflow==2.19.0
 numpy==2.2.5
 pandas==2.2.3

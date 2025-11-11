@@ -6,7 +6,7 @@ pandas==2.3.3
 scikit-learn==1.7.2
 seaborn==0.13.2
 matplotlib==3.10.7
-keras-tuner==1.4.7
+keras-tuner==1.4.8
 pillow>=10.3.0 # not directly required, pinned by Snyk to avoid a vulnerability
 urllib3>=2.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
 keras>=3.9.0 # not directly required, pinned by Snyk to avoid a vulnerability
